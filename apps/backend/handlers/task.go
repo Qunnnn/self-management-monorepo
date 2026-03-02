@@ -15,6 +15,8 @@ import (
 // GetTasks returns all active tasks (not soft-deleted), with optional filtering
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	completedStr := r.URL.Query().Get("completed")
+	limitStr := r.URL.Query().Get("limit")
+	offsetStr := r.URL.Query().Get("offset")
 
 	query := `
 		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
@@ -34,6 +36,26 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	query += " ORDER BY id"
+
+	if limitStr != "" {
+		limit, err := strconv.Atoi(limitStr)
+		if err != nil || limit < 0 {
+			http.Error(w, "Invalid limit parameter", http.StatusBadRequest)
+			return
+		}
+		args = append(args, limit)
+		query += fmt.Sprintf(" LIMIT $%d", len(args))
+	}
+
+	if offsetStr != "" {
+		offset, err := strconv.Atoi(offsetStr)
+		if err != nil || offset < 0 {
+			http.Error(w, "Invalid offset parameter", http.StatusBadRequest)
+			return
+		}
+		args = append(args, offset)
+		query += fmt.Sprintf(" OFFSET $%d", len(args))
+	}
 
 	rows, err := db.DB.Query(query, args...)
 	if err != nil {
@@ -94,12 +116,50 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.DB.Query(`
+	completedStr := r.URL.Query().Get("completed")
+	limitStr := r.URL.Query().Get("limit")
+	offsetStr := r.URL.Query().Get("offset")
+
+	query := `
 		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
 		FROM tasks
 		WHERE user_id = $1 AND deleted_at IS NULL
-		ORDER BY id
-	`, userID)
+	`
+	args := []interface{}{userID}
+
+	if completedStr != "" {
+		completed, err := strconv.ParseBool(completedStr)
+		if err != nil {
+			http.Error(w, "Invalid completed parameter", http.StatusBadRequest)
+			return
+		}
+		args = append(args, completed)
+		query += fmt.Sprintf(" AND is_completed = $%d", len(args))
+	}
+
+	query += " ORDER BY id"
+
+	if limitStr != "" {
+		limit, err := strconv.Atoi(limitStr)
+		if err != nil || limit < 0 {
+			http.Error(w, "Invalid limit parameter", http.StatusBadRequest)
+			return
+		}
+		args = append(args, limit)
+		query += fmt.Sprintf(" LIMIT $%d", len(args))
+	}
+
+	if offsetStr != "" {
+		offset, err := strconv.Atoi(offsetStr)
+		if err != nil || offset < 0 {
+			http.Error(w, "Invalid offset parameter", http.StatusBadRequest)
+			return
+		}
+		args = append(args, offset)
+		query += fmt.Sprintf(" OFFSET $%d", len(args))
+	}
+
+	rows, err := db.DB.Query(query, args...)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
