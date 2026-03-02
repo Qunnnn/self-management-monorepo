@@ -26,3 +26,9 @@ type ModifyUserRequest struct {
 	Email       string `json:"email,omitempty"`
 	PhoneNumber string `json:"phoneNumber,omitempty"`
 }
+
+// UserStats represents database-level performance/overview information
+type UserStats struct {
+	TotalUsers  int `json:"totalUsers"`
+	ActiveTasks int `json:"activeTasks"`
+}

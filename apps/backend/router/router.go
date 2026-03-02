@@ -11,6 +11,7 @@ func New() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// User routes
+	mux.HandleFunc("GET /users/stats", handlers.GetUserStats)
 	mux.HandleFunc("GET /users", handlers.GetUsers)
 	mux.HandleFunc("POST /users", handlers.CreateUser)
 	mux.HandleFunc("GET /users/{id}", handlers.GetUser)

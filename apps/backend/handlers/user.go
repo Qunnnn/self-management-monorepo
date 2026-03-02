@@ -207,3 +207,25 @@ func ModifyUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(u)
 }
+
+// GetUserStats returns an overview of total users and active tasks
+func GetUserStats(w http.ResponseWriter, r *http.Request) {
+	var stats models.UserStats
+
+	// Count total users
+	err := db.DB.QueryRow("SELECT COUNT(*) FROM users").Scan(&stats.TotalUsers)
+	if err != nil {
+		http.Error(w, "Failed to count users: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Count active tasks (not completed and not deleted)
+	err = db.DB.QueryRow("SELECT COUNT(*) FROM tasks WHERE is_completed = false AND deleted_at IS NULL").Scan(&stats.ActiveTasks)
+	if err != nil {
+		http.Error(w, "Failed to count active tasks: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(stats)
+}

@@ -27,7 +27,7 @@ You have a working REST API with:
 - [x] **Update Logic:** Implement `PUT /users/{id}` to modify existing records.
 - [x] **Filtering:** Use `r.URL.Query()` to filter tasks (e.g., `/tasks?completed=true`).
 - [x] **Pagination:** Implement `limit` and `offset` in your SQL queries to handle large datasets.
-- [ ] **Exercise:** Create a `GET /users/stats` endpoint returning a summary of total users and active tasks.
+- [x] **Exercise:** Create a `GET /users/stats` endpoint returning a summary of total users and active tasks.
 
 ### Level 3: Robustness & Context
 **Goals:** Handle errors like a pro and manage request lifecycles.
