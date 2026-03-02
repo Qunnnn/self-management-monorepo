@@ -25,7 +25,7 @@ You have a working REST API with:
 **Goals:** Handle dynamic data and advanced SQL.
 
 - [x] **Update Logic:** Implement `PUT /users/{id}` to modify existing records.
-- [ ] **Filtering:** Use `r.URL.Query()` to filter tasks (e.g., `/tasks?completed=true`).
+- [x] **Filtering:** Use `r.URL.Query()` to filter tasks (e.g., `/tasks?completed=true`).
 - [ ] **Pagination:** Implement `limit` and `offset` in your SQL queries to handle large datasets.
 - [ ] **Exercise:** Create a `GET /users/stats` endpoint returning a summary of total users and active tasks.
 

@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,14 +12,30 @@ import (
 	"self-management-monorepo/apps/backend/models"
 )
 
-// GetTasks returns all active tasks (not soft-deleted)
+// GetTasks returns all active tasks (not soft-deleted), with optional filtering
 func GetTasks(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.DB.Query(`
+	completedStr := r.URL.Query().Get("completed")
+
+	query := `
 		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
 		FROM tasks
 		WHERE deleted_at IS NULL
-		ORDER BY id
-	`)
+	`
+	var args []interface{}
+
+	if completedStr != "" {
+		completed, err := strconv.ParseBool(completedStr)
+		if err != nil {
+			http.Error(w, "Invalid completed parameter", http.StatusBadRequest)
+			return
+		}
+		args = append(args, completed)
+		query += fmt.Sprintf(" AND is_completed = $%d", len(args))
+	}
+
+	query += " ORDER BY id"
+
+	rows, err := db.DB.Query(query, args...)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
