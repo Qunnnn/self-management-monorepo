@@ -32,10 +32,10 @@ You have a working REST API with:
 ### Level 3: Robustness & Context
 **Goals:** Handle errors like a pro and manage request lifecycles.
 
-- [ ] **Structured Logging:** Replace `log.Printf` with the standard library's `slog` package for JSON logs.
-- [ ] **Context Handling:** Pass `r.Context()` to all `db.QueryContext` calls to handle timeouts/cancellations.
+- [x] **Structured Logging:** Replace `log.Printf` with the standard library's `slog` package for JSON logs.
+- [x] **Context Handling:** Pass `r.Context()` to all `db.QueryContext` calls to handle timeouts/cancellations.
 - [x] **Validation:** Create a helper package to validate email formats and required fields.
-- [ ] **Exercise:** Create a global Error Handler that returns consistent JSON error objects.
+- [x] **Exercise:** Create a global Error Handler that returns consistent JSON error objects.
 
 ### Level 4: Architecture & Dependency Injection
 **Goals:** Write maintainable, decoupled code.

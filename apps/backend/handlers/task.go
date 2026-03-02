@@ -10,6 +10,7 @@ import (
 
 	"self-management-monorepo/apps/backend/db"
 	"self-management-monorepo/apps/backend/models"
+	"self-management-monorepo/apps/backend/utils"
 )
 
 // GetTasks returns all active tasks (not soft-deleted), with optional filtering
@@ -28,7 +29,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	if completedStr != "" {
 		completed, err := strconv.ParseBool(completedStr)
 		if err != nil {
-			http.Error(w, "Invalid completed parameter", http.StatusBadRequest)
+			utils.WriteError(w, "Invalid completed parameter", http.StatusBadRequest, err)
 			return
 		}
 		args = append(args, completed)
@@ -57,9 +58,9 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 		query += fmt.Sprintf(" OFFSET $%d", len(args))
 	}
 
-	rows, err := db.DB.Query(query, args...)
+	rows, err := db.DB.QueryContext(r.Context(), query, args...)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 	defer rows.Close()
@@ -68,7 +69,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var t models.Task
 		if err := rows.Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 			return
 		}
 		tasks = append(tasks, t)
@@ -83,23 +84,23 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid task ID", http.StatusBadRequest)
+		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, err)
 		return
 	}
 
 	var t models.Task
-	err = db.DB.QueryRow(`
+	err = db.DB.QueryRowContext(r.Context(), `
 		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
 		FROM tasks
 		WHERE id = $1 AND deleted_at IS NULL
 	`, id).Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt)
 
 	if err == sql.ErrNoRows {
-		http.Error(w, "Task not found", http.StatusNotFound)
+		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
 	}
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 
@@ -112,7 +113,7 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 	userIDStr := r.PathValue("id")
 	userID, err := strconv.Atoi(userIDStr)
 	if err != nil {
-		http.Error(w, "Invalid user ID", http.StatusBadRequest)
+		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, err)
 		return
 	}
 
@@ -159,9 +160,9 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 		query += fmt.Sprintf(" OFFSET $%d", len(args))
 	}
 
-	rows, err := db.DB.Query(query, args...)
+	rows, err := db.DB.QueryContext(r.Context(), query, args...)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 	defer rows.Close()
@@ -170,7 +171,7 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 	for rows.Next() {
 		var t models.Task
 		if err := rows.Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 			return
 		}
 		tasks = append(tasks, t)
@@ -184,17 +185,17 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	var req models.CreateTaskRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
 		return
 	}
 
 	if req.Title == "" || req.UserID == 0 {
-		http.Error(w, "Title and user_id are required", http.StatusBadRequest)
+		utils.WriteError(w, "Title and user_id are required", http.StatusBadRequest, nil)
 		return
 	}
 
 	var t models.Task
-	err := db.DB.QueryRow(`
+	err := db.DB.QueryRowContext(r.Context(), `
 		INSERT INTO tasks (user_id, title, description)
 		VALUES ($1, $2, $3)
 		RETURNING id, user_id, title, description, is_completed, created_at, deleted_at
@@ -204,10 +205,10 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		if strings.Contains(err.Error(), "foreign key") {
-			http.Error(w, "User not found", http.StatusBadRequest)
+			utils.WriteError(w, "User not found", http.StatusBadRequest, nil)
 			return
 		}
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 
@@ -221,23 +222,23 @@ func CompleteTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid task ID", http.StatusBadRequest)
+		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, err)
 		return
 	}
 
 	var t models.Task
-	err = db.DB.QueryRow(`
+	err = db.DB.QueryRowContext(r.Context(), `
 		UPDATE tasks SET is_completed = true
 		WHERE id = $1 AND deleted_at IS NULL
 		RETURNING id, user_id, title, description, is_completed, created_at, deleted_at
 	`, id).Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt)
 
 	if err == sql.ErrNoRows {
-		http.Error(w, "Task not found", http.StatusNotFound)
+		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
 	}
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 
@@ -250,22 +251,22 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid task ID", http.StatusBadRequest)
+		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, err)
 		return
 	}
 
-	result, err := db.DB.Exec(`
+	result, err := db.DB.ExecContext(r.Context(), `
 		UPDATE tasks SET deleted_at = NOW()
 		WHERE id = $1 AND deleted_at IS NULL
 	`, id)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 
 	rowsAffected, _ := result.RowsAffected()
 	if rowsAffected == 0 {
-		http.Error(w, "Task not found", http.StatusNotFound)
+		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
 	}
 

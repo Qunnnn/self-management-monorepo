@@ -1,17 +1,20 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"self-management-monorepo/apps/backend/db"
 	"self-management-monorepo/apps/backend/router"
 )
 
 func main() {
+	// Set up structured logging
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
 	// Database configuration
-	// For local development, PostgreSQL typically uses your system username
-	// with no password when connecting via socket
 	cfg := db.Config{
 		Host:     "/tmp", // Unix socket path for local PostgreSQL
 		Port:     5432,
@@ -22,12 +25,16 @@ func main() {
 
 	// Connect to database
 	if err := db.Connect(cfg); err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		slog.Error("Failed to connect to database", "error", err)
+		os.Exit(1)
 	}
 	defer db.Close()
 
 	mux := router.New()
 
-	log.Println("Server starting on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	slog.Info("Server starting", "url", "http://localhost:8080")
+	if err := http.ListenAndServe(":8080", mux); err != nil {
+		slog.Error("Server crashed", "error", err)
+		os.Exit(1)
+	}
 }

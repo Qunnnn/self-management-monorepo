@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"log"
+	"log/slog"
 
 	_ "github.com/lib/pq"
 )
@@ -46,7 +46,7 @@ func Connect(cfg Config) error {
 		return fmt.Errorf("failed to ping database: %w", err)
 	}
 
-	log.Println("Connected to PostgreSQL successfully!")
+	slog.Info("Connected to PostgreSQL successfully!")
 	return nil
 }
 
