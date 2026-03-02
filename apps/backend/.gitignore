@@ -1,0 +1,15 @@
+# Binary
+pg-api
+
+# Test binary
+*.test
+
+# Coverage
+*.out
+
+# Vendor (if used)
+vendor/
+
+# Database files
+*.db
+*.sqlite
