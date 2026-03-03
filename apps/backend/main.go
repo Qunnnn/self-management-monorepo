@@ -10,6 +10,7 @@ import (
 	"self-management-monorepo/apps/backend/middleware"
 	"self-management-monorepo/apps/backend/repository"
 	"self-management-monorepo/apps/backend/router"
+	"self-management-monorepo/apps/backend/service"
 )
 
 func main() {
@@ -37,9 +38,13 @@ func main() {
 	userRepo := repository.NewUserRepository(db.DB)
 	taskRepo := repository.NewTaskRepository(db.DB)
 
+	// Initialize services (New Layer!)
+	userSvc := service.NewUserService(userRepo)
+	taskSvc := service.NewTaskService(taskRepo)
+
 	// Initialize handlers
-	userHandler := handlers.NewUserHandler(userRepo)
-	taskHandler := handlers.NewTaskHandler(taskRepo)
+	userHandler := handlers.NewUserHandler(userSvc)
+	taskHandler := handlers.NewTaskHandler(taskSvc)
 
 	// Create router
 	mux := router.New(userHandler, taskHandler)

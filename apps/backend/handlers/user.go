@@ -3,28 +3,29 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"self-management-monorepo/apps/backend/models"
-	"self-management-monorepo/apps/backend/repository"
+	"self-management-monorepo/apps/backend/service"
 	"self-management-monorepo/apps/backend/utils"
 )
 
 // UserHandler handles user-related HTTP requests
 type UserHandler struct {
-	repo repository.UserRepository
+	svc service.UserService
 }
 
-// NewUserHandler creates a new UserHandler with the given repository
-func NewUserHandler(repo repository.UserRepository) *UserHandler {
-	return &UserHandler{repo: repo}
+// NewUserHandler creates a new UserHandler with the given service
+func NewUserHandler(svc service.UserService) *UserHandler {
+	return &UserHandler{svc: svc}
 }
 
 // GetUsers returns all users
 func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
-	users, err := h.repo.GetAll(r.Context())
+	users, err := h.svc.GetAllUsers(r.Context())
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
@@ -43,8 +44,8 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u, err := h.repo.GetByID(r.Context(), id)
-	if err == sql.ErrNoRows {
+	u, err := h.svc.GetUserByID(r.Context(), id)
+	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
 		return
 	}
@@ -65,23 +66,12 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Name == "" || req.Email == "" {
-		utils.WriteError(w, "Name and email are required", http.StatusBadRequest, nil)
-		return
-	}
-
-	if !utils.IsValidEmail(req.Email) {
-		utils.WriteError(w, "Invalid email format", http.StatusBadRequest, nil)
-		return
-	}
-
-	if !utils.IsValidPhone(req.PhoneNumber) {
-		utils.WriteError(w, "Invalid phone number format", http.StatusBadRequest, nil)
-		return
-	}
-
-	u, err := h.repo.Create(r.Context(), req.Name, req.Email, req.PhoneNumber, req.Password)
+	u, err := h.svc.CreateUser(r.Context(), req)
 	if err != nil {
+		if errors.Is(err, service.ErrInvalidInput) {
+			utils.WriteError(w, "Invalid input", http.StatusBadRequest, nil)
+			return
+		}
 		if strings.Contains(err.Error(), "unique") {
 			utils.WriteError(w, "Email already exists", http.StatusConflict, nil)
 			return
@@ -104,8 +94,8 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.repo.Delete(r.Context(), id)
-	if err == sql.ErrNoRows {
+	err = h.svc.DeleteUser(r.Context(), id)
+	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
 		return
 	}
@@ -132,27 +122,16 @@ func (h *UserHandler) ModifyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Name == "" || req.Email == "" {
-		utils.WriteError(w, "Name and email are required", http.StatusBadRequest, nil)
-		return
-	}
-
-	if !utils.IsValidEmail(req.Email) {
-		utils.WriteError(w, "Invalid email format", http.StatusBadRequest, nil)
-		return
-	}
-
-	if !utils.IsValidPhone(req.PhoneNumber) {
-		utils.WriteError(w, "Invalid phone number format", http.StatusBadRequest, nil)
-		return
-	}
-
-	u, err := h.repo.Update(r.Context(), id, req.Name, req.Email, req.PhoneNumber)
-	if err == sql.ErrNoRows {
+	u, err := h.svc.UpdateUser(r.Context(), id, req)
+	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
 		return
 	}
 	if err != nil {
+		if errors.Is(err, service.ErrInvalidInput) {
+			utils.WriteError(w, "Invalid input", http.StatusBadRequest, nil)
+			return
+		}
 		if strings.Contains(err.Error(), "unique") {
 			utils.WriteError(w, "Email already exists", http.StatusConflict, nil)
 			return
@@ -167,7 +146,7 @@ func (h *UserHandler) ModifyUser(w http.ResponseWriter, r *http.Request) {
 
 // GetUserStats returns an overview of total users and active tasks
 func (h *UserHandler) GetUserStats(w http.ResponseWriter, r *http.Request) {
-	stats, err := h.repo.GetStats(r.Context())
+	stats, err := h.svc.GetStats(r.Context())
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return

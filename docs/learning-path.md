@@ -49,9 +49,9 @@ You have a working REST API with:
 ### Level 5: Testing & Mocking
 **Goals:** Prove your code works without a database.
 
-- [ ] **Unit Testing:** Use the `testing` package to verify your validation logic.
-- [ ] **Mocking:** Create a "Mock" Repository to test handlers in isolation.
-- [ ] **Integration Tests:** Set up a separate test database to verify actual SQL query results.
+- [x] **Unit Testing:** Use the `testing` package to verify your validation logic.
+- [x] **Mocking:** Create a "Mock" Repository to test handlers in isolation.
+- [x] **Integration Tests:** Set up a separate test database to verify actual SQL query results.
 
 ### Level 6: Security & Auth
 **Goals:** Protect user data and identify sessions.

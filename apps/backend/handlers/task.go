@@ -3,23 +3,24 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"self-management-monorepo/apps/backend/models"
-	"self-management-monorepo/apps/backend/repository"
+	"self-management-monorepo/apps/backend/service"
 	"self-management-monorepo/apps/backend/utils"
 )
 
 // TaskHandler handles task-related HTTP requests
 type TaskHandler struct {
-	repo repository.TaskRepository
+	svc service.TaskService
 }
 
-// NewTaskHandler creates a new TaskHandler with the given repository
-func NewTaskHandler(repo repository.TaskRepository) *TaskHandler {
-	return &TaskHandler{repo: repo}
+// NewTaskHandler creates a new TaskHandler with the given service
+func NewTaskHandler(svc service.TaskService) *TaskHandler {
+	return &TaskHandler{svc: svc}
 }
 
 // GetTasks returns all active tasks (not soft-deleted), with optional filtering
@@ -58,7 +59,7 @@ func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 		offset = &o
 	}
 
-	tasks, err := h.repo.GetAll(r.Context(), completed, limit, offset)
+	tasks, err := h.svc.GetTasks(r.Context(), completed, limit, offset)
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
@@ -77,8 +78,8 @@ func (h *TaskHandler) GetTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := h.repo.GetByID(r.Context(), id)
-	if err == sql.ErrNoRows {
+	t, err := h.svc.GetTaskByID(r.Context(), id)
+	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
 	}
@@ -134,7 +135,7 @@ func (h *TaskHandler) GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 		offset = &o
 	}
 
-	tasks, err := h.repo.GetByUserID(r.Context(), userID, completed, limit, offset)
+	tasks, err := h.svc.GetTasksByUserID(r.Context(), userID, completed, limit, offset)
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
@@ -152,13 +153,12 @@ func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Title == "" || req.UserID == 0 {
-		utils.WriteError(w, "Title and user_id are required", http.StatusBadRequest, nil)
-		return
-	}
-
-	t, err := h.repo.Create(r.Context(), req.UserID, req.Title, req.Description)
+	t, err := h.svc.CreateTask(r.Context(), req)
 	if err != nil {
+		if errors.Is(err, service.ErrInvalidInput) {
+			utils.WriteError(w, "Title and user_id are required", http.StatusBadRequest, nil)
+			return
+		}
 		if strings.Contains(err.Error(), "foreign key") {
 			utils.WriteError(w, "User not found", http.StatusBadRequest, nil)
 			return
@@ -181,8 +181,8 @@ func (h *TaskHandler) CompleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := h.repo.MarkCompleted(r.Context(), id)
-	if err == sql.ErrNoRows {
+	t, err := h.svc.CompleteTask(r.Context(), id)
+	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
 	}
@@ -204,8 +204,8 @@ func (h *TaskHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.repo.Delete(r.Context(), id)
-	if err == sql.ErrNoRows {
+	err = h.svc.DeleteTask(r.Context(), id)
+	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
 	}
