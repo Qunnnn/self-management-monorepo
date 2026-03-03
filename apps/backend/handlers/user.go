@@ -7,32 +7,27 @@ import (
 	"strconv"
 	"strings"
 
-	"self-management-monorepo/apps/backend/db"
 	"self-management-monorepo/apps/backend/models"
+	"self-management-monorepo/apps/backend/repository"
 	"self-management-monorepo/apps/backend/utils"
 )
 
+// UserHandler handles user-related HTTP requests
+type UserHandler struct {
+	repo repository.UserRepository
+}
+
+// NewUserHandler creates a new UserHandler with the given repository
+func NewUserHandler(repo repository.UserRepository) *UserHandler {
+	return &UserHandler{repo: repo}
+}
+
 // GetUsers returns all users
-func GetUsers(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.DB.QueryContext(r.Context(), "SELECT id, name, email, phone_number, created_at FROM users ORDER BY id")
+func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := h.repo.GetAll(r.Context())
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
-	}
-	defer rows.Close()
-
-	var users []models.User
-	for rows.Next() {
-		var u models.User
-		var phone sql.NullString
-		if err := rows.Scan(&u.ID, &u.Name, &u.Email, &phone, &u.CreatedAt); err != nil {
-			utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
-			return
-		}
-		if phone.Valid {
-			u.PhoneNumber = phone.String
-		}
-		users = append(users, u)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -40,7 +35,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetUser returns a single user by ID
-func GetUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -48,14 +43,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var u models.User
-	var phone sql.NullString
-	err = db.DB.QueryRowContext(
-		r.Context(),
-		"SELECT id, name, email, phone_number, created_at FROM users WHERE id = $1",
-		id,
-	).Scan(&u.ID, &u.Name, &u.Email, &phone, &u.CreatedAt)
-
+	u, err := h.repo.GetByID(r.Context(), id)
 	if err == sql.ErrNoRows {
 		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
 		return
@@ -65,16 +53,12 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if phone.Valid {
-		u.PhoneNumber = phone.String
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(u)
 }
 
 // CreateUser creates a new user
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var req models.CreateUserRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
@@ -96,18 +80,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	phone := utils.ToNullString(req.PhoneNumber)
-
-	var u models.User
-	var resPhone sql.NullString
-	err := db.DB.QueryRowContext(
-		r.Context(),
-		"INSERT INTO users (name, email, phone_number, password) VALUES ($1, $2, $3, $4) RETURNING id, name, email, phone_number, created_at",
-		req.Name, req.Email, phone, req.Password,
-	).Scan(&u.ID, &u.Name, &u.Email, &resPhone, &u.CreatedAt)
-
+	u, err := h.repo.Create(r.Context(), req.Name, req.Email, req.PhoneNumber, req.Password)
 	if err != nil {
-		// Check for unique constraint violation
 		if strings.Contains(err.Error(), "unique") {
 			utils.WriteError(w, "Email already exists", http.StatusConflict, nil)
 			return
@@ -116,17 +90,13 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if resPhone.Valid {
-		u.PhoneNumber = resPhone.String
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(u)
 }
 
 // DeleteUser deletes a user by ID
-func DeleteUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -134,15 +104,13 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := db.DB.ExecContext(r.Context(), "DELETE FROM users WHERE id = $1", id)
-	if err != nil {
-		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
+	err = h.repo.Delete(r.Context(), id)
+	if err == sql.ErrNoRows {
+		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
 		return
 	}
-
-	rowsAffected, _ := result.RowsAffected()
-	if rowsAffected == 0 {
-		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
+	if err != nil {
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 
@@ -150,7 +118,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // ModifyUser updates an existing user
-func ModifyUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) ModifyUser(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -179,17 +147,7 @@ func ModifyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	phone := utils.ToNullString(req.PhoneNumber)
-
-	var u models.User
-	var resPhone sql.NullString
-
-	err = db.DB.QueryRowContext(
-		r.Context(),
-		"UPDATE users SET name = $1, email = $2, phone_number = $3 WHERE id = $4 RETURNING id, name, email, phone_number, created_at",
-		req.Name, req.Email, phone, id,
-	).Scan(&u.ID, &u.Name, &u.Email, &resPhone, &u.CreatedAt)
-
+	u, err := h.repo.Update(r.Context(), id, req.Name, req.Email, req.PhoneNumber)
 	if err == sql.ErrNoRows {
 		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
 		return
@@ -203,29 +161,15 @@ func ModifyUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if resPhone.Valid {
-		u.PhoneNumber = resPhone.String
-	}
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(u)
 }
 
 // GetUserStats returns an overview of total users and active tasks
-func GetUserStats(w http.ResponseWriter, r *http.Request) {
-	var stats models.UserStats
-
-	// Count total users
-	err := db.DB.QueryRowContext(r.Context(), "SELECT COUNT(*) FROM users").Scan(&stats.TotalUsers)
+func (h *UserHandler) GetUserStats(w http.ResponseWriter, r *http.Request) {
+	stats, err := h.repo.GetStats(r.Context())
 	if err != nil {
-		utils.WriteError(w, "Failed to count users", http.StatusInternalServerError, err)
-		return
-	}
-
-	// Count active tasks (not completed and not deleted)
-	err = db.DB.QueryRowContext(r.Context(), "SELECT COUNT(*) FROM tasks WHERE is_completed = false AND deleted_at IS NULL").Scan(&stats.ActiveTasks)
-	if err != nil {
-		utils.WriteError(w, "Failed to count active tasks", http.StatusInternalServerError, err)
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 

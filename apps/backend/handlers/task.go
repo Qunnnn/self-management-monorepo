@@ -3,76 +3,65 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 
-	"self-management-monorepo/apps/backend/db"
 	"self-management-monorepo/apps/backend/models"
+	"self-management-monorepo/apps/backend/repository"
 	"self-management-monorepo/apps/backend/utils"
 )
 
+// TaskHandler handles task-related HTTP requests
+type TaskHandler struct {
+	repo repository.TaskRepository
+}
+
+// NewTaskHandler creates a new TaskHandler with the given repository
+func NewTaskHandler(repo repository.TaskRepository) *TaskHandler {
+	return &TaskHandler{repo: repo}
+}
+
 // GetTasks returns all active tasks (not soft-deleted), with optional filtering
-func GetTasks(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 	completedStr := r.URL.Query().Get("completed")
 	limitStr := r.URL.Query().Get("limit")
 	offsetStr := r.URL.Query().Get("offset")
 
-	query := `
-		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
-		FROM tasks
-		WHERE deleted_at IS NULL
-	`
-	var args []interface{}
-
+	var completed *bool
 	if completedStr != "" {
-		completed, err := strconv.ParseBool(completedStr)
+		c, err := strconv.ParseBool(completedStr)
 		if err != nil {
 			utils.WriteError(w, "Invalid completed parameter", http.StatusBadRequest, err)
 			return
 		}
-		args = append(args, completed)
-		query += fmt.Sprintf(" AND is_completed = $%d", len(args))
+		completed = &c
 	}
 
-	query += " ORDER BY id"
-
+	var limit *int
 	if limitStr != "" {
-		limit, err := strconv.Atoi(limitStr)
-		if err != nil || limit < 0 {
-			http.Error(w, "Invalid limit parameter", http.StatusBadRequest)
+		l, err := strconv.Atoi(limitStr)
+		if err != nil || l < 0 {
+			utils.WriteError(w, "Invalid limit parameter", http.StatusBadRequest, err)
 			return
 		}
-		args = append(args, limit)
-		query += fmt.Sprintf(" LIMIT $%d", len(args))
+		limit = &l
 	}
 
+	var offset *int
 	if offsetStr != "" {
-		offset, err := strconv.Atoi(offsetStr)
-		if err != nil || offset < 0 {
-			http.Error(w, "Invalid offset parameter", http.StatusBadRequest)
+		o, err := strconv.Atoi(offsetStr)
+		if err != nil || o < 0 {
+			utils.WriteError(w, "Invalid offset parameter", http.StatusBadRequest, err)
 			return
 		}
-		args = append(args, offset)
-		query += fmt.Sprintf(" OFFSET $%d", len(args))
+		offset = &o
 	}
 
-	rows, err := db.DB.QueryContext(r.Context(), query, args...)
+	tasks, err := h.repo.GetAll(r.Context(), completed, limit, offset)
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
-	}
-	defer rows.Close()
-
-	var tasks []models.Task
-	for rows.Next() {
-		var t models.Task
-		if err := rows.Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt); err != nil {
-			utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
-			return
-		}
-		tasks = append(tasks, t)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -80,7 +69,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetTask returns a single task by ID
-func GetTask(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandler) GetTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -88,13 +77,7 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var t models.Task
-	err = db.DB.QueryRowContext(r.Context(), `
-		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
-		FROM tasks
-		WHERE id = $1 AND deleted_at IS NULL
-	`, id).Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt)
-
+	t, err := h.repo.GetByID(r.Context(), id)
 	if err == sql.ErrNoRows {
 		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
@@ -109,7 +92,7 @@ func GetTask(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetTasksByUser returns all tasks for a specific user
-func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandler) GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 	userIDStr := r.PathValue("id")
 	userID, err := strconv.Atoi(userIDStr)
 	if err != nil {
@@ -121,60 +104,40 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 	limitStr := r.URL.Query().Get("limit")
 	offsetStr := r.URL.Query().Get("offset")
 
-	query := `
-		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
-		FROM tasks
-		WHERE user_id = $1 AND deleted_at IS NULL
-	`
-	args := []interface{}{userID}
-
+	var completed *bool
 	if completedStr != "" {
-		completed, err := strconv.ParseBool(completedStr)
+		c, err := strconv.ParseBool(completedStr)
 		if err != nil {
-			http.Error(w, "Invalid completed parameter", http.StatusBadRequest)
+			utils.WriteError(w, "Invalid completed parameter", http.StatusBadRequest, err)
 			return
 		}
-		args = append(args, completed)
-		query += fmt.Sprintf(" AND is_completed = $%d", len(args))
+		completed = &c
 	}
 
-	query += " ORDER BY id"
-
+	var limit *int
 	if limitStr != "" {
-		limit, err := strconv.Atoi(limitStr)
-		if err != nil || limit < 0 {
-			http.Error(w, "Invalid limit parameter", http.StatusBadRequest)
+		l, err := strconv.Atoi(limitStr)
+		if err != nil || l < 0 {
+			utils.WriteError(w, "Invalid limit parameter", http.StatusBadRequest, err)
 			return
 		}
-		args = append(args, limit)
-		query += fmt.Sprintf(" LIMIT $%d", len(args))
+		limit = &l
 	}
 
+	var offset *int
 	if offsetStr != "" {
-		offset, err := strconv.Atoi(offsetStr)
-		if err != nil || offset < 0 {
-			http.Error(w, "Invalid offset parameter", http.StatusBadRequest)
+		o, err := strconv.Atoi(offsetStr)
+		if err != nil || o < 0 {
+			utils.WriteError(w, "Invalid offset parameter", http.StatusBadRequest, err)
 			return
 		}
-		args = append(args, offset)
-		query += fmt.Sprintf(" OFFSET $%d", len(args))
+		offset = &o
 	}
 
-	rows, err := db.DB.QueryContext(r.Context(), query, args...)
+	tasks, err := h.repo.GetByUserID(r.Context(), userID, completed, limit, offset)
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
-	}
-	defer rows.Close()
-
-	var tasks []models.Task
-	for rows.Next() {
-		var t models.Task
-		if err := rows.Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt); err != nil {
-			utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
-			return
-		}
-		tasks = append(tasks, t)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -182,7 +145,7 @@ func GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 }
 
 // CreateTask creates a new task
-func CreateTask(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 	var req models.CreateTaskRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
@@ -194,15 +157,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var t models.Task
-	err := db.DB.QueryRowContext(r.Context(), `
-		INSERT INTO tasks (user_id, title, description)
-		VALUES ($1, $2, $3)
-		RETURNING id, user_id, title, description, is_completed, created_at, deleted_at
-	`, req.UserID, req.Title, req.Description).Scan(
-		&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt,
-	)
-
+	t, err := h.repo.Create(r.Context(), req.UserID, req.Title, req.Description)
 	if err != nil {
 		if strings.Contains(err.Error(), "foreign key") {
 			utils.WriteError(w, "User not found", http.StatusBadRequest, nil)
@@ -218,7 +173,7 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 }
 
 // CompleteTask marks a task as completed
-func CompleteTask(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandler) CompleteTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -226,13 +181,7 @@ func CompleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var t models.Task
-	err = db.DB.QueryRowContext(r.Context(), `
-		UPDATE tasks SET is_completed = true
-		WHERE id = $1 AND deleted_at IS NULL
-		RETURNING id, user_id, title, description, is_completed, created_at, deleted_at
-	`, id).Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt)
-
+	t, err := h.repo.MarkCompleted(r.Context(), id)
 	if err == sql.ErrNoRows {
 		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
@@ -247,7 +196,7 @@ func CompleteTask(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteTask soft-deletes a task
-func DeleteTask(w http.ResponseWriter, r *http.Request) {
+func (h *TaskHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
@@ -255,18 +204,13 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := db.DB.ExecContext(r.Context(), `
-		UPDATE tasks SET deleted_at = NOW()
-		WHERE id = $1 AND deleted_at IS NULL
-	`, id)
-	if err != nil {
-		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
+	err = h.repo.Delete(r.Context(), id)
+	if err == sql.ErrNoRows {
+		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return
 	}
-
-	rowsAffected, _ := result.RowsAffected()
-	if rowsAffected == 0 {
-		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
+	if err != nil {
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
 	}
 

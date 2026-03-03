@@ -6,6 +6,9 @@ import (
 	"os"
 
 	"self-management-monorepo/apps/backend/db"
+	"self-management-monorepo/apps/backend/handlers"
+	"self-management-monorepo/apps/backend/middleware"
+	"self-management-monorepo/apps/backend/repository"
 	"self-management-monorepo/apps/backend/router"
 )
 
@@ -30,10 +33,22 @@ func main() {
 	}
 	defer db.Close()
 
-	mux := router.New()
+	// Initialize repositories
+	userRepo := repository.NewUserRepository(db.DB)
+	taskRepo := repository.NewTaskRepository(db.DB)
+
+	// Initialize handlers
+	userHandler := handlers.NewUserHandler(userRepo)
+	taskHandler := handlers.NewTaskHandler(taskRepo)
+
+	// Create router
+	mux := router.New(userHandler, taskHandler)
+
+	// Wrap router with logging middleware
+	handler := middleware.LoggingMiddleware(mux)
 
 	slog.Info("Server starting", "url", "http://localhost:8080")
-	if err := http.ListenAndServe(":8080", mux); err != nil {
+	if err := http.ListenAndServe(":8080", handler); err != nil {
 		slog.Error("Server crashed", "error", err)
 		os.Exit(1)
 	}

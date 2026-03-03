@@ -40,9 +40,9 @@ You have a working REST API with:
 ### Level 4: Architecture & Dependency Injection
 **Goals:** Write maintainable, decoupled code.
 
-- [ ] **Repository Pattern:** Move all SQL logic out of handlers and into a `Repository` layer.
-- [ ] **Dependency Injection:** Pass the Repository into your Handler structs instead of using global variables.
-- [ ] **Middleware:** Build a custom middleware that logs the execution time and status code of every request.
+- [x] **Repository Pattern:** Move all SQL logic out of handlers and into a `Repository` layer.
+- [x] **Dependency Injection:** Pass the Repository into your Handler structs instead of using global variables.
+- [x] **Middleware:** Build a custom middleware that logs the execution time and status code of every request.
 
 
 
