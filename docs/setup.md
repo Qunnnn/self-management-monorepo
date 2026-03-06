@@ -67,20 +67,21 @@ Type `\q` to exit psql.
 
 ### 5. Update Configuration
 
-Edit [main.go](main.go) line 19 if needed:
-```go
-User: "qun",  // <- Change to your macOS username
+The application uses environment variables for configuration. Copy the example file and update it with your settings:
+
+```bash
+cp .env.example .env
 ```
 
-Find your username:
-```bash
-whoami
-```
+Open [.env](.env) and update the values:
+- `DB_USER`: Set to your macOS username (run `whoami` to find it).
+- `DB_HOST`: For local development, this is usually `localhost` (or `/tmp` if using socket).
+- `JWT_SECRET`: Set to a random secret string.
 
 ### 6. Run the Server
 
 ```bash
-go run main.go
+go run cmd/main.go
 ```
 
 You should see:
@@ -139,7 +140,7 @@ lsof -i :8080  # Find what's using port 8080
 
 ### Start Server
 ```bash
-go run main.go
+go run cmd/main.go
 ```
 
 ### Build Executable

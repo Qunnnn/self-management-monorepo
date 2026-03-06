@@ -56,9 +56,9 @@ You have a working REST API with:
 ### Level 6: Security & Auth
 **Goals:** Protect user data and identify sessions.
 
-- [ ] **Password Hashing:** Implement `bcrypt` for secure password storage.
-- [ ] **JWT Auth:** Implement JSON Web Tokens to protect private API routes.
-- [ ] **Environment Secrets:** Use a `.env` file for DB credentials (never commit this to Git!).
+- [x] **Password Hashing:** Implement `bcrypt` for secure password storage.
+- [x] **JWT Auth:** Implement JSON Web Tokens to protect private API routes.
+- [x] **Environment Secrets:** Use a `.env` file for DB credentials (never commit this to Git!).
 
 ### Level 7: Production Ready
 **Goals:** Deploy and monitor.

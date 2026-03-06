@@ -4,7 +4,11 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"strconv"
 
+	"github.com/joho/godotenv"
+
+	"self-management-monorepo/apps/backend/internal/middleware"
 	"self-management-monorepo/apps/backend/internal/repository/postgres"
 	"self-management-monorepo/apps/backend/internal/service"
 
@@ -12,17 +16,38 @@ import (
 )
 
 func main() {
-	// Set up structured logging
-	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		slog.Warn("No .env file found, relying on environment variables")
+	}
+
+	// Set up structured logging based on environment
+	var handler slog.Handler
+	if os.Getenv("APP_ENV") == "development" {
+		handler = slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug})
+	} else {
+		handler = slog.NewJSONHandler(os.Stdout, nil)
+	}
+	logger := slog.New(handler)
 	slog.SetDefault(logger)
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	dbPort, _ := strconv.Atoi(os.Getenv("DB_PORT"))
+	if dbPort == 0 {
+		dbPort = 5432
+	}
 
 	// Database configuration
 	cfg := postgres.Config{
-		Host:     "/tmp", // Unix socket path for local PostgreSQL
-		Port:     5432,
-		User:     "qun", // Your PostgreSQL username
-		Password: "",    // Empty for local socket connection
-		DBName:   "pg_learning",
+		Host:     os.Getenv("DB_HOST"),
+		Port:     dbPort,
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		DBName:   os.Getenv("DB_NAME"),
 	}
 
 	// Connect to database
@@ -48,10 +73,10 @@ func main() {
 	mux := httpHandlers.New(userHandler, taskHandler)
 
 	// Wrap router with logging middleware
-	handler := httpHandlers.LoggingMiddleware(mux)
+	h := middleware.LoggingMiddleware(mux)
 
-	slog.Info("Server starting", "url", "http://localhost:8080")
-	if err := http.ListenAndServe(":8080", handler); err != nil {
+	slog.Info("Server starting", "url", "http://localhost:"+port)
+	if err := http.ListenAndServe(":"+port, h); err != nil {
 		slog.Error("Server crashed", "error", err)
 		os.Exit(1)
 	}

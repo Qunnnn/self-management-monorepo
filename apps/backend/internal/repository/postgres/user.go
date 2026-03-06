@@ -61,6 +61,28 @@ func (r *postgresUserRepository) GetByID(ctx context.Context, id int) (*entity.U
 	return &u, nil
 }
 
+func (r *postgresUserRepository) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
+	var u entity.User
+	var phone sql.NullString
+	err := r.db.QueryRowContext(
+		ctx,
+		"SELECT id, name, email, phone_number, password, created_at FROM users WHERE email = $1",
+		email,
+	).Scan(&u.ID, &u.Name, &u.Email, &phone, &u.Password, &u.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, sql.ErrNoRows
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	if phone.Valid {
+		u.PhoneNumber = phone.String
+	}
+	return &u, nil
+}
+
 func (r *postgresUserRepository) Create(ctx context.Context, name, email, phone, password string) (*entity.User, error) {
 	var u entity.User
 	var resPhone sql.NullString

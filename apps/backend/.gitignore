@@ -13,3 +13,4 @@ vendor/
 # Database files
 *.db
 *.sqlite
+.env

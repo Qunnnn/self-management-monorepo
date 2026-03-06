@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"self-management-monorepo/apps/backend/internal/delivery/http"
+	handlers "self-management-monorepo/apps/backend/internal/delivery/http"
 	"self-management-monorepo/apps/backend/internal/entity"
 )
 
@@ -20,6 +20,7 @@ type MockUserService struct {
 	UpdateUserFunc  func(ctx context.Context, id int, req entity.ModifyUserRequest) (*entity.User, error)
 	DeleteUserFunc  func(ctx context.Context, id int) error
 	GetStatsFunc    func(ctx context.Context) (*entity.UserStats, error)
+	LoginFunc       func(ctx context.Context, req entity.LoginRequest) (*entity.AuthResponse, error)
 }
 
 func (m *MockUserService) GetAllUsers(ctx context.Context) ([]entity.User, error) {
@@ -39,6 +40,9 @@ func (m *MockUserService) DeleteUser(ctx context.Context, id int) error {
 }
 func (m *MockUserService) GetStats(ctx context.Context) (*entity.UserStats, error) {
 	return m.GetStatsFunc(ctx)
+}
+func (m *MockUserService) Login(ctx context.Context, req entity.LoginRequest) (*entity.AuthResponse, error) {
+	return m.LoginFunc(ctx, req)
 }
 
 func TestGetUser(t *testing.T) {

@@ -32,3 +32,14 @@ type UserStats struct {
 	TotalUsers  int `json:"totalUsers"`
 	ActiveTasks int `json:"activeTasks"`
 }
+
+// LoginRequest is used when a user logs in
+type LoginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// AuthResponse is returned after a successful login
+type AuthResponse struct {
+	Token string `json:"token"`
+}

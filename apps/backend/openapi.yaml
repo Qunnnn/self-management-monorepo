@@ -8,11 +8,15 @@ servers:
   - url: http://localhost:8080
     description: Local development server
 
+security:
+  - bearerAuth: []
+
 paths:
   /health:
     get:
       summary: Health check
       description: Returns OK if the server is running.
+      security: []
       responses:
         '200':
           description: Server is up and running
@@ -22,9 +26,34 @@ paths:
                 type: string
                 example: OK
 
+  /login:
+    post:
+      summary: Authenticate a user
+      description: Returns a JWT token if credentials are valid.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid email or password
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /users:
     get:
       summary: Get all users
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: A list of users
@@ -39,6 +68,7 @@ paths:
     
     post:
       summary: Create a new user
+      security: []
       requestBody:
         required: true
         content:
@@ -70,6 +100,8 @@ paths:
     
     get:
       summary: Get a user by ID
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: User details
@@ -84,6 +116,8 @@ paths:
     
     put:
       summary: Update a user completely
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -106,6 +140,8 @@ paths:
           
     delete:
       summary: Delete a user
+      security:
+        - bearerAuth: []
       responses:
         '204':
           description: User deleted successfully
@@ -117,6 +153,8 @@ paths:
   /users/{id}/tasks:
     get:
       summary: Get all tasks for a specific user
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -139,6 +177,8 @@ paths:
   /tasks:
     get:
       summary: Get all tasks across all users
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: A list of all tasks
@@ -153,6 +193,8 @@ paths:
           
     post:
       summary: Create a new task
+      security:
+        - bearerAuth: []
       requestBody:
         required: true
         content:
@@ -182,6 +224,8 @@ paths:
         
     get:
       summary: Get a task by ID
+      security:
+        - bearerAuth: []
       responses:
         '200':
           description: Task details
@@ -196,6 +240,8 @@ paths:
           
     delete:
       summary: Delete a task
+      security:
+        - bearerAuth: []
       responses:
         '204':
           description: Task deleted successfully
@@ -207,6 +253,8 @@ paths:
   /tasks/{id}/complete:
     post:
       summary: Mark a task as completed
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -228,6 +276,8 @@ paths:
     
     patch:
       summary: Mark a task as completed (alias for POST)
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: id
@@ -246,8 +296,52 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /users/stats:
+    get:
+      summary: Get user and task statistics
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Statistics summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
 components:
   schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    UserStats:
+      type: object
+      properties:
+        totalUsers:
+          type: integer
+        activeTasks:
+          type: integer
+
     User:
       type: object
       properties:
@@ -349,9 +443,17 @@ components:
           example: "Read the official documentation"
 
   responses:
+    Unauthorized:
+      description: Authentication is required or invalid
     BadRequest:
       description: Invalid request data or parameters
     NotFound:
       description: The requested resource was not found
     InternalServerError:
       description: Something went wrong on the server
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -155,3 +155,21 @@ func (h *UserHandler) GetUserStats(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(stats)
 }
+
+// LoginUser authenticates a user and returns a JWT
+func (h *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
+	var req entity.LoginRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
+		return
+	}
+
+	res, err := h.svc.Login(r.Context(), req)
+	if err != nil {
+		utils.WriteError(w, err.Error(), http.StatusUnauthorized, nil)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}

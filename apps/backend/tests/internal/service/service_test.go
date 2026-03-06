@@ -11,12 +11,13 @@ import (
 
 // MockUserRepository is a manual mock of the UserRepository interface
 type MockUserRepository struct {
-	GetAllFunc   func(ctx context.Context) ([]entity.User, error)
-	GetByIDFunc  func(ctx context.Context, id int) (*entity.User, error)
-	CreateFunc   func(ctx context.Context, name, email, phone, password string) (*entity.User, error)
-	UpdateFunc   func(ctx context.Context, id int, name, email, phone string) (*entity.User, error)
-	DeleteFunc   func(ctx context.Context, id int) error
-	GetStatsFunc func(ctx context.Context) (*entity.UserStats, error)
+	GetAllFunc     func(ctx context.Context) ([]entity.User, error)
+	GetByIDFunc    func(ctx context.Context, id int) (*entity.User, error)
+	GetByEmailFunc func(ctx context.Context, email string) (*entity.User, error)
+	CreateFunc     func(ctx context.Context, name, email, phone, password string) (*entity.User, error)
+	UpdateFunc     func(ctx context.Context, id int, name, email, phone string) (*entity.User, error)
+	DeleteFunc     func(ctx context.Context, id int) error
+	GetStatsFunc   func(ctx context.Context) (*entity.UserStats, error)
 }
 
 func (m *MockUserRepository) GetAll(ctx context.Context) ([]entity.User, error) {
@@ -24,6 +25,9 @@ func (m *MockUserRepository) GetAll(ctx context.Context) ([]entity.User, error) 
 }
 func (m *MockUserRepository) GetByID(ctx context.Context, id int) (*entity.User, error) {
 	return m.GetByIDFunc(ctx, id)
+}
+func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
+	return m.GetByEmailFunc(ctx, email)
 }
 func (m *MockUserRepository) Create(ctx context.Context, name, email, phone, password string) (*entity.User, error) {
 	return m.CreateFunc(ctx, name, email, phone, password)
