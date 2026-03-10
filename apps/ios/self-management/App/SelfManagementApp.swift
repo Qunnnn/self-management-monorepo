@@ -21,8 +21,11 @@ struct SelfManagementApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environment(container)
+            RootView(
+                loginUseCase: container.loginUseCase,
+                sessionService: container.sessionService
+            )
+            .environment(container)
         }
     }
 }

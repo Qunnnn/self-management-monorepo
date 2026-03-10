@@ -22,25 +22,43 @@ import SwiftUI
 @Observable
 final class DependencyContainer {
 
+    // MARK: - Core Services
+    
+    /// Global session and authentication state
+    let sessionService: SessionService
+
     // MARK: - Repositories
 
     /// Notes repository for CRUD operations on notes
     let notesRepository: NotesRepositoryProtocol
+    
+    /// Auth repository for authentication operations
+    let authRepository: AuthRepositoryProtocol
 
     // MARK: - Use Cases
 
     /// Use case for managing notes
     let notesUseCase: NotesUseCase
+    
+    /// Use case for user authentication
+    let loginUseCase: LoginUseCase
 
     // MARK: - Initialization
 
     init() {
-        // Initialize repositories first
+        // Initialize Core Services first
+        self.sessionService = SessionService()
+        
+        // Initialize repositories
         let notesRepo = NotesRepository()
         self.notesRepository = notesRepo
+        
+        let authRepo = AuthRepository()
+        self.authRepository = authRepo
 
         // Then initialize use cases with their dependencies
         self.notesUseCase = NotesUseCase(repository: notesRepo)
+        self.loginUseCase = LoginUseCase(repository: authRepo)
     }
 }
 
@@ -62,7 +80,7 @@ extension EnvironmentValues {
 
 extension View {
     /// Inject the dependency container into the environment
-    func environment(_ container: DependencyContainer) -> some View {
+    func environment(container: DependencyContainer) -> some View {
         self.environment(\.dependencyContainer, container)
     }
 }

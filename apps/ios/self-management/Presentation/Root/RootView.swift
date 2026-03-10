@@ -4,29 +4,80 @@
 //
 //  LEARNING: Root View & Navigation
 //
-//  This is the app's main navigation hub.
-//  It uses TabView to organize different features.
-//
 
 import SwiftUI
 
 /// Main navigation container for the app
 struct RootView: View {
 
+    // MARK: - Dependencies
+
+    @Environment(\.dependencyContainer) private var container
+
+    @State private var viewModel: RootViewModel
+
+    // Store dependencies for creating LoginViewModel
+    private let loginUseCase: LoginUseCase
+    private let sessionService: SessionService
+
     // MARK: - State
 
     @State private var selectedTab: Tab = .notes
 
+    // MARK: - Initialization
+
+    init(loginUseCase: @autoclosure @escaping () -> LoginUseCase, sessionService: @autoclosure @escaping () -> SessionService) {
+        let useCase = loginUseCase()
+        let service = sessionService()
+        self.loginUseCase = useCase
+        self.sessionService = service
+        self._viewModel = State(wrappedValue: RootViewModel(loginUseCase: useCase, sessionService: service))
+    }
+
     // MARK: - Body
 
     var body: some View {
+        Group {
+            if viewModel.isCheckingSession {
+                splashView
+            } else if !viewModel.isAuthenticated {
+                authFlow
+            } else {
+                mainAppFlow
+            }
+        }
+        .task {
+            // Check for existing session on startup
+            await viewModel.checkSession()
+        }
+    }
+    
+    // MARK: - View Sections
+    
+    private var splashView: some View {
+        ProgressView {
+            Text("Starting up...")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+    
+    @ViewBuilder
+    private var authFlow: some View {
+        LoginView(viewModel: LoginViewModel(
+            useCase: loginUseCase,
+            sessionService: sessionService
+        ))
+    }
+    
+    private var mainAppFlow: some View {
         TabView(selection: $selectedTab) {
             ForEach(Tab.allCases) { tab in
                 Group {
                     switch tab {
                     case .notes:
                         NotesListView()
-                    case .tasks, .habits, .finance, .health:
+                    default:
                         ComingSoonView(feature: tab.title)
                     }
                 }
@@ -36,29 +87,19 @@ struct RootView: View {
                 .tag(tab)
             }
         }
+        .transition(.opacity) // Smooth transition after login
     }
 }
 
 // MARK: - Tab Definition
 
-/// Available tabs in the app
 enum Tab: String, CaseIterable, Identifiable {
-    case notes
-    case tasks
-    case habits
-    case finance
-    case health
+    case notes, tasks, habits, finance, health
     
     var id: String { rawValue }
     
     var title: String {
-        switch self {
-        case .notes: return "Notes"
-        case .tasks: return "Tasks"
-        case .habits: return "Habits"
-        case .finance: return "Finance"
-        case .health: return "Health"
-        }
+        self.rawValue.capitalized
     }
     
     var icon: String {
@@ -75,6 +116,9 @@ enum Tab: String, CaseIterable, Identifiable {
 // MARK: - Preview
 
 #Preview {
-    RootView()
-        .environment(DependencyContainer())
+    RootView(
+        loginUseCase: LoginUseCase(repository: AuthRepository()),
+        sessionService: SessionService()
+    )
+    .environment(DependencyContainer())
 }
