@@ -43,3 +43,6 @@ xcuserdata/
 Pods/
 *.xcodeproj/xcuserdata/
 *.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Docs
+docs/ideas.md
