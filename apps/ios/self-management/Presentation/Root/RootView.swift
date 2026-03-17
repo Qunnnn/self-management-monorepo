@@ -62,7 +62,6 @@ struct RootView: View {
         }
     }
     
-    @ViewBuilder
     private var authFlow: some View {
         LoginView(viewModel: LoginViewModel(
             useCase: loginUseCase,
