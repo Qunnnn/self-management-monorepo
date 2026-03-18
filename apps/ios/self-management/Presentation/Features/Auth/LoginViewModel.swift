@@ -46,10 +46,10 @@ final class LoginViewModel {
         errorMessage = nil
         
         do {
-            let user = try await loginUseCase.execute(email: email, password: password)
+            let (_, tokens) = try await loginUseCase.execute(email: email, password: password)
             
-            // Update global session
-            sessionService.startSession(for: user)
+            // Persist tokens and update auth state
+            sessionService.startSession(tokens: tokens)
             
             // Mark local login success
             isLoggedIn = true

@@ -27,9 +27,9 @@ final class LoginUseCase {
     /// - Parameters:
     ///   - email: User's email
     ///   - password: User's password
-    /// - Returns: The logged in user
+    /// - Returns: A tuple with the logged-in User and authentication tokens
     /// - Throws: Login errors from repository
-    func execute(email: String, password: String) async throws -> User {
+    func execute(email: String, password: String) async throws -> (User, AuthTokens) {
         // Business Rule: Ensure email is not empty before even calling repository
         guard !email.isEmpty else {
             throw AuthError.emptyEmail
@@ -44,10 +44,11 @@ final class LoginUseCase {
         return try await repository.login(email: email, password: password)
     }
     
-    /// Check if a user is already logged in
-    /// - Returns: Current user if exists
-    func checkSession() async -> User? {
-        return await repository.getCurrentUser()
+    /// Fetch the current user profile using a stored access token
+    /// - Parameter accessToken: A valid access token
+    /// - Returns: Current user if the token is valid
+    func fetchCurrentUser(accessToken: String) async -> User? {
+        return await repository.fetchCurrentUser(accessToken: accessToken)
     }
 }
 

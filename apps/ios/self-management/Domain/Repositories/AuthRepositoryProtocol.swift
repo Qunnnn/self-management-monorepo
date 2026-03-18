@@ -15,13 +15,14 @@ protocol AuthRepositoryProtocol {
     /// - Parameters:
     ///   - email: User's email
     ///   - password: User's password
-    /// - Returns: A result with the logged in User or an error
-    func login(email: String, password: String) async throws -> User
+    /// - Returns: A tuple with the logged-in User and authentication tokens
+    func login(email: String, password: String) async throws -> (User, AuthTokens)
     
     /// Logout current user
     func logout() async throws
     
-    /// Check for an existing session
-    /// - Returns: Current logged-in User if session exists
-    func getCurrentUser() async -> User?
+    /// Fetch the current user profile using an access token
+    /// - Parameter accessToken: A valid access token
+    /// - Returns: The current User if the token is valid, nil otherwise
+    func fetchCurrentUser(accessToken: String) async -> User?
 }

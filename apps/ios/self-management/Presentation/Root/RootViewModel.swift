@@ -38,12 +38,9 @@ final class RootViewModel {
     // MARK: - Actions
     
     /// Check if a user session already exists
+    /// Session is already restored from stored tokens in SessionService.init
     func checkSession() async {
         isCheckingSession = true
-        
-        if let user = await loginUseCase.checkSession() {
-            sessionService.startSession(for: user)
-        }
         
         // Brief delay to prevent flicker if session check is instant
         try? await Task.sleep(nanoseconds: 500_000_000)

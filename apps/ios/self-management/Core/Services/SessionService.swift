@@ -12,36 +12,46 @@ import SwiftUI
 @Observable
 final class SessionService {
     
+    // MARK: - Dependencies
+    
+    private let tokenStorage: TokenStorage
+    
     // MARK: - App State
     
-    /// The currently logged-in user (nil if guest)
-    private(set) var currentUser: User?
-    
-    /// Global authentication status
-    var isAuthenticated: Bool {
-        currentUser != nil
-    }
+    /// Global authentication status (based on token existence)
+    private(set) var isAuthenticated = false
     
     // MARK: - Initialization
     
-    init(user: User? = nil) {
-        self.currentUser = user
+    init(tokenStorage: TokenStorage = TokenStorage()) {
+        self.tokenStorage = tokenStorage
+        self.isAuthenticated = tokenStorage.loadTokens() != nil
     }
     
     // MARK: - Actions
     
     /// Start a new user session (usually called after login)
-    /// - Parameter user: The authenticated user profile
-    func startSession(for user: User) {
+    /// Saves the authentication tokens locally for persistence across app launches
+    /// - Parameter tokens: The access and refresh tokens to persist
+    func startSession(tokens: AuthTokens) {
+        tokenStorage.saveTokens(tokens)
         withAnimation(.default) {
-            self.currentUser = user
+            self.isAuthenticated = true
         }
     }
     
+    /// Restore the saved tokens from local storage
+    /// - Returns: The stored AuthTokens if a saved session exists, nil otherwise
+    func restoreTokens() -> AuthTokens? {
+        return tokenStorage.loadTokens()
+    }
+    
     /// End the current session (Logout)
+    /// Clears the locally stored tokens
     func endSession() {
+        tokenStorage.clearTokens()
         withAnimation(.default) {
-            self.currentUser = nil
+            self.isAuthenticated = false
         }
     }
 }
