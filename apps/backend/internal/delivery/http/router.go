@@ -17,6 +17,7 @@ func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler) *http.Serve
 		w.Write([]byte("OK"))
 	})
 
+	mux.Handle("GET /users/me", middleware.AuthMiddleware(http.HandlerFunc(userH.GetMe)))
 	mux.Handle("GET /users/stats", middleware.AuthMiddleware(http.HandlerFunc(userH.GetUserStats)))
 	mux.Handle("GET /users", middleware.AuthMiddleware(http.HandlerFunc(userH.GetUsers)))
 	mux.Handle("GET /users/{id}", middleware.AuthMiddleware(http.HandlerFunc(userH.GetUser)))

@@ -10,6 +10,7 @@ import (
 
 	"self-management-monorepo/apps/backend/internal/entity"
 	"self-management-monorepo/apps/backend/internal/service"
+	"self-management-monorepo/apps/backend/pkg/constants"
 	"self-management-monorepo/apps/backend/pkg/utils"
 )
 
@@ -41,6 +42,29 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, err)
+		return
+	}
+
+	u, err := h.svc.GetUserByID(r.Context(), id)
+	if errors.Is(err, sql.ErrNoRows) {
+		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
+		return
+	}
+	if err != nil {
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(u)
+}
+
+// GetMe returns the currently authenticated user
+func (h *UserHandler) GetMe(w http.ResponseWriter, r *http.Request) {
+	idVal := r.Context().Value(constants.UserIDKey)
+	id, ok := idVal.(int)
+	if !ok {
+		utils.WriteError(w, "Unauthorized", http.StatusUnauthorized, nil)
 		return
 	}
 

@@ -41,5 +41,6 @@ type LoginRequest struct {
 
 // AuthResponse is returned after a successful login
 type AuthResponse struct {
+	User  *User  `json:"user"`
 	Token string `json:"token"`
 }
