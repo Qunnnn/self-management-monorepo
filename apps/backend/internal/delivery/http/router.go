@@ -7,12 +7,12 @@ import (
 )
 
 // New initializes and returns a new HTTP multiplexer with all application routes registered.
-func New(userH *UserHandler, taskH *TaskHandler) *http.ServeMux {
+func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// Public routes
-	mux.HandleFunc("POST /login", userH.LoginUser)
-	mux.HandleFunc("POST /users", userH.CreateUser)
+	mux.HandleFunc("POST /auth/login", authH.Login)
+	mux.HandleFunc("POST /auth/register", authH.Register)
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	})

@@ -42,14 +42,14 @@ func (m *MockUserRepository) GetStats(ctx context.Context) (*entity.UserStats, e
 	return m.GetStatsFunc(ctx)
 }
 
-func TestCreateUserValidation(t *testing.T) {
+func TestRegisterValidation(t *testing.T) {
 	mockRepo := &MockUserRepository{}
-	s := service.NewUserService(mockRepo)
+	s := service.NewAuthService(mockRepo)
 	ctx := context.Background()
 
 	t.Run("Empty Name", func(t *testing.T) {
 		req := entity.CreateUserRequest{Email: "test@test.com"}
-		_, err := s.CreateUser(ctx, req)
+		_, err := s.Register(ctx, req)
 		if !errors.Is(err, service.ErrInvalidInput) {
 			t.Errorf("Expected ErrInvalidInput, got %v", err)
 		}
@@ -57,7 +57,7 @@ func TestCreateUserValidation(t *testing.T) {
 
 	t.Run("Invalid Email", func(t *testing.T) {
 		req := entity.CreateUserRequest{Name: "Name", Email: "invalid"}
-		_, err := s.CreateUser(ctx, req)
+		_, err := s.Register(ctx, req)
 		if !errors.Is(err, service.ErrInvalidInput) {
 			t.Errorf("Expected ErrInvalidInput, got %v", err)
 		}

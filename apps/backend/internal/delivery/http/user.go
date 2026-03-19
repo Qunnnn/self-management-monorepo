@@ -58,33 +58,6 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(u)
 }
 
-// CreateUser creates a new user
-func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var req entity.CreateUserRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
-		return
-	}
-
-	u, err := h.svc.CreateUser(r.Context(), req)
-	if err != nil {
-		if errors.Is(err, service.ErrInvalidInput) {
-			utils.WriteError(w, "Invalid input", http.StatusBadRequest, nil)
-			return
-		}
-		if strings.Contains(err.Error(), "unique") {
-			utils.WriteError(w, "Email already exists", http.StatusConflict, nil)
-			return
-		}
-		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(u)
-}
-
 // DeleteUser deletes a user by ID
 func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
@@ -156,20 +129,3 @@ func (h *UserHandler) GetUserStats(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(stats)
 }
 
-// LoginUser authenticates a user and returns a JWT
-func (h *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
-	var req entity.LoginRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
-		return
-	}
-
-	res, err := h.svc.Login(r.Context(), req)
-	if err != nil {
-		utils.WriteError(w, err.Error(), http.StatusUnauthorized, nil)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(res)
-}

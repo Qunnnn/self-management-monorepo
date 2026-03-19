@@ -64,13 +64,15 @@ func main() {
 	// Initialize services
 	userSvc := service.NewUserService(userRepo)
 	taskSvc := service.NewTaskService(taskRepo)
+	authSvc := service.NewAuthService(userRepo)
 
 	// Initialize handlers
 	userHandler := httpHandlers.NewUserHandler(userSvc)
 	taskHandler := httpHandlers.NewTaskHandler(taskSvc)
+	authHandler := httpHandlers.NewAuthHandler(authSvc)
 
 	// Create router
-	mux := httpHandlers.New(userHandler, taskHandler)
+	mux := httpHandlers.New(authHandler, userHandler, taskHandler)
 
 	// Wrap router with logging middleware
 	h := middleware.LoggingMiddleware(mux)
