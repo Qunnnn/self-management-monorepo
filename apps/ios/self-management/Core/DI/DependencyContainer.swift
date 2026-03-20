@@ -26,6 +26,9 @@ final class DependencyContainer {
     
     /// Global session and authentication state
     let sessionService: SessionService
+    
+    /// Core HTTP client for API requests
+    let apiClient: APIClientProtocol
 
     // MARK: - Repositories
 
@@ -48,12 +51,14 @@ final class DependencyContainer {
     init() {
         // Initialize Core Services first
         self.sessionService = SessionService()
+        self.apiClient = APIClient()
         
         // Initialize repositories
         let notesRepo = NotesRepository()
         self.notesRepository = notesRepo
         
-        let authRepo = AuthRepository()
+        // Inject APIClient into AuthRepository
+        let authRepo = AuthRepository(apiClient: self.apiClient)
         self.authRepository = authRepo
 
         // Then initialize use cases with their dependencies

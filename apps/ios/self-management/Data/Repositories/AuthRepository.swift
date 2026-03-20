@@ -11,12 +11,37 @@ import Foundation
 /// This is a Data Adapter - implementation detail of the Domain Repository Port
 final class AuthRepository: AuthRepositoryProtocol {
     
+    // MARK: - Properties
+    
+    private let apiClient: APIClientProtocol
+
     // MARK: - Initialization
     
-    init() {
-        // Mocking an initial state - optional
+    init(apiClient: APIClientProtocol = APIClient()) {
+        self.apiClient = apiClient
     }
     
+    // MARK: - API DTOs
+    
+    // Private DTOs for decoding backend responses
+    private struct UserDTO: Decodable {
+        let id: Int
+        let name: String
+        let email: String
+        let phoneNumber: String?
+    }
+
+    private struct AuthResponseDTO: Decodable {
+        let user: UserDTO
+        let token: String
+    }
+
+    // Request DTOs
+    private struct LoginRequestDTO: Encodable {
+        let email: String
+        let password: String
+    }
+
     // MARK: - Repository Methods
 
     /// Login implementation
@@ -25,49 +50,68 @@ final class AuthRepository: AuthRepositoryProtocol {
     ///   - password: User's password
     /// - Returns: A tuple with the logged-in User and authentication tokens
     func login(email: String, password: String) async throws -> (User, AuthTokens) {
-        // MOCK: Simulate network call
-        try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second delay
+        let requestBody = LoginRequestDTO(email: email, password: password)
         
-        // Mock validation: any email with "password" as password succeeds
-        if !email.isEmpty && password == "password" {
-            let mockUser = User(
-                email: email,
-                name: "John Doe",
-                profilePictureUrl: URL(string: "https://placekitten.com/200/200")
+        do {
+            let authResponse: AuthResponseDTO = try await apiClient.request(
+                path: "/auth/login",
+                method: "POST",
+                body: requestBody,
+                headers: nil as [String: String]?
             )
             
-            // MOCK: Generate fake tokens
-            let mockTokens = AuthTokens(
-                accessToken: "mock_access_token_\(UUID().uuidString)",
-                refreshToken: "mock_refresh_token_\(UUID().uuidString)"
+            let user = User(
+                id: authResponse.user.id,
+                email: authResponse.user.email,
+                name: authResponse.user.name,
+                profilePictureUrl: nil
             )
             
-            return (mockUser, mockTokens)
-        } else {
+            // BE only returns a single token for now
+            let tokens = AuthTokens(
+                accessToken: authResponse.token,
+                refreshToken: "refresh_not_supported"
+            )
+            
+            return (user, tokens)
+            
+        } catch let apiError as APIError {
+            // Map API errors to domain errors if needed
+            print("Login failed: \(apiError.localizedDescription)")
+            throw AuthError.invalidCredentials
+        } catch {
             throw AuthError.invalidCredentials
         }
     }
     
     /// Logout implementation
     func logout() async throws {
-        // MOCK: Simulate network call
-        try await Task.sleep(nanoseconds: 500_000_000) // 0.5 second delay
+        // No server-side logout configured, just cleanup locally
     }
     
     /// Fetch the current user profile using an access token
     /// - Parameter accessToken: A valid access token
     /// - Returns: Current logged-in User if the token is valid
     func fetchCurrentUser(accessToken: String) async -> User? {
-        // MOCK: Simulate network call
-        try? await Task.sleep(nanoseconds: 500_000_000)
-        
-        // MOCK: If we have a non-empty access token, return a mock user
         guard !accessToken.isEmpty else { return nil }
         
-        return User(
-            email: "restored@example.com",
-            name: "John Doe",
-            profilePictureUrl: URL(string: "https://placekitten.com/200/200")
-        )
+        do {
+            let userDTO: UserDTO = try await apiClient.request(
+                path: "/users/me",
+                method: "GET",
+                headers: ["Authorization": "Bearer \(accessToken)"]
+            )
+            
+            return User(
+                id: userDTO.id,
+                email: userDTO.email,
+                name: userDTO.name,
+                profilePictureUrl: nil
+            )
+            
+        } catch {
+            print("Failed to fetch current user: \(error)")
+            return nil
+        }
     }
 }
