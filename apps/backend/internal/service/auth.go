@@ -11,8 +11,9 @@ import (
 )
 
 type AuthService interface {
-	Register(ctx context.Context, req entity.CreateUserRequest) (*entity.User, error)
+	Register(ctx context.Context, req entity.CreateUserRequest) (*entity.AuthResponse, error)
 	Login(ctx context.Context, req entity.LoginRequest) (*entity.AuthResponse, error)
+	RefreshToken(ctx context.Context, refreshToken string) (*entity.AuthResponse, error)
 }
 
 type authService struct {
@@ -23,7 +24,7 @@ func NewAuthService(repo UserRepository) AuthService {
 	return &authService{repo: repo}
 }
 
-func (s *authService) Register(ctx context.Context, req entity.CreateUserRequest) (*entity.User, error) {
+func (s *authService) Register(ctx context.Context, req entity.CreateUserRequest) (*entity.AuthResponse, error) {
 	if req.Name == "" || req.Email == "" {
 		return nil, ErrInvalidInput
 	}
@@ -39,7 +40,26 @@ func (s *authService) Register(ctx context.Context, req entity.CreateUserRequest
 		return nil, err
 	}
 
-	return s.repo.Create(ctx, req.Name, req.Email, req.PhoneNumber, string(hashedPassword))
+	user, err := s.repo.Create(ctx, req.Name, req.Email, req.PhoneNumber, string(hashedPassword))
+	if err != nil {
+		return nil, err
+	}
+
+	accessToken, err := utils.GenerateAccessToken(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := utils.GenerateRefreshToken(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &entity.AuthResponse{
+		UserID:       user.ID,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
 }
 
 func (s *authService) Login(ctx context.Context, req entity.LoginRequest) (*entity.AuthResponse, error) {
@@ -54,13 +74,48 @@ func (s *authService) Login(ctx context.Context, req entity.LoginRequest) (*enti
 		return nil, errors.New("invalid email or password")
 	}
 
-	tokenStr, err := utils.GenerateJWT(user.ID)
+	accessToken, err := utils.GenerateAccessToken(user.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	refreshToken, err := utils.GenerateRefreshToken(user.ID)
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.AuthResponse{
-		User:  user,
-		Token: tokenStr,
+		UserID:       user.ID,
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}, nil
+}
+
+func (s *authService) RefreshToken(ctx context.Context, refreshToken string) (*entity.AuthResponse, error) {
+	claims, err := utils.ValidateJWT(refreshToken)
+	if err != nil {
+		return nil, errors.New("invalid refresh token")
+	}
+
+	userIDFloat, ok := claims["user_id"].(float64)
+	if !ok {
+		return nil, errors.New("invalid token claims")
+	}
+
+	userID := int(userIDFloat)
+	accessToken, err := utils.GenerateAccessToken(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	newRefreshToken, err := utils.GenerateRefreshToken(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &entity.AuthResponse{
+		UserID:       userID,
+		AccessToken:  accessToken,
+		RefreshToken: newRefreshToken,
 	}, nil
 }

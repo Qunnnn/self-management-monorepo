@@ -13,6 +13,7 @@ func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler) *http.Serve
 	// Public routes
 	mux.HandleFunc("POST /auth/login", authH.Login)
 	mux.HandleFunc("POST /auth/register", authH.Register)
+	mux.HandleFunc("POST /auth/refresh", authH.Refresh)
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	})

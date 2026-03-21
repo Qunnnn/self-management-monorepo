@@ -39,8 +39,14 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-// AuthResponse is returned after a successful login
+// AuthResponse is returned after a successful registration or login
 type AuthResponse struct {
-	User  *User  `json:"user"`
-	Token string `json:"token"`
+	UserID       int    `json:"userId"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
+}
+
+// RefreshRequest is used to get a new access token
+type RefreshRequest struct {
+	RefreshToken string `json:"refreshToken"`
 }

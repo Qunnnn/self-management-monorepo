@@ -27,7 +27,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u, err := h.svc.Register(r.Context(), req)
+	res, err := h.svc.Register(r.Context(), req)
 	if err != nil {
 		if errors.Is(err, service.ErrInvalidInput) {
 			utils.WriteError(w, "Invalid input", http.StatusBadRequest, nil)
@@ -43,7 +43,7 @@ func (h *AuthHandler) Register(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(u)
+	json.NewEncoder(w).Encode(res)
 }
 
 // Login authenticates a user and returns a JWT
@@ -55,6 +55,24 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res, err := h.svc.Login(r.Context(), req)
+	if err != nil {
+		utils.WriteError(w, err.Error(), http.StatusUnauthorized, nil)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(res)
+}
+
+// Refresh handles token refresh requests
+func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
+	var req entity.RefreshRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
+		return
+	}
+
+	res, err := h.svc.RefreshToken(r.Context(), req.RefreshToken)
 	if err != nil {
 		utils.WriteError(w, err.Error(), http.StatusUnauthorized, nil)
 		return

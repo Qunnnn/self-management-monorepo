@@ -18,11 +18,22 @@ func getSecret() []byte {
 	return []byte(secret)
 }
 
-// GenerateJWT creates a new token valid for 72 hours
-func GenerateJWT(userID int) (string, error) {
+// GenerateAccessToken creates a new token valid for 24 hours
+func GenerateAccessToken(userID int) (string, error) {
 	claims := jwt.MapClaims{
 		constants.JWTUserIDClaim: userID,
-		"exp":                    time.Now().Add(time.Hour * 72).Unix(),
+		"exp":                    time.Now().Add(time.Hour * 24).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(getSecret())
+}
+
+// GenerateRefreshToken creates a new token valid for 7 days
+func GenerateRefreshToken(userID int) (string, error) {
+	claims := jwt.MapClaims{
+		constants.JWTUserIDClaim: userID,
+		"exp":                    time.Now().Add(time.Hour * 24 * 7).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
