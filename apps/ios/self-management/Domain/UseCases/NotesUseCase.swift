@@ -45,14 +45,14 @@ final class NotesUseCase {
     /// - Parameters:
     ///   - title: Note title
     ///   - content: Note content
-    ///   - colorTag: Optional color tag
+    ///   - status: Optional note status
     /// - Returns: The created note
     @discardableResult
-    func createNote(title: String, content: String = "", colorTag: NoteColor = .none) async -> Note {
+    func createNote(title: String, content: String = "", status: NoteStatus = .active) async -> Note {
         let note = Note(
             title: title,
             content: content,
-            colorTag: colorTag
+            status: status
         )
         await repository.saveNote(note)
         return note

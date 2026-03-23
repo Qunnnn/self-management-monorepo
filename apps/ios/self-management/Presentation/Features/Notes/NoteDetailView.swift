@@ -28,7 +28,7 @@ struct NoteDetailView: View {
 
     @State private var editedTitle: String
     @State private var editedContent: String
-    @State private var editedColorTag: NoteColor
+    @State private var editedStatus: NoteStatus
     @State private var showingDeleteConfirmation = false
     @State private var hasChanges = false
 
@@ -39,7 +39,7 @@ struct NoteDetailView: View {
         self.viewModel = viewModel
         self._editedTitle = State(initialValue: note.title)
         self._editedContent = State(initialValue: note.content)
-        self._editedColorTag = State(initialValue: note.colorTag)
+        self._editedStatus = State(initialValue: note.status)
     }
 
     // MARK: - Body
@@ -57,21 +57,14 @@ struct NoteDetailView: View {
                     .onChange(of: editedContent) { checkForChanges() }
             }
 
-            Section("Color Tag") {
-                Picker("Color", selection: $editedColorTag) {
-                    ForEach(NoteColor.allCases, id: \.self) { color in
-                        HStack {
-                            if color != .none {
-                                Circle()
-                                    .fill(colorForTag(color))
-                                    .frame(width: 12, height: 12)
-                            }
-                            Text(color.displayName)
-                        }
-                        .tag(color)
+            Section("Status") {
+                Picker("Status", selection: $editedStatus) {
+                    ForEach(NoteStatus.allCases, id: \.self) { status in
+                        Text(status.displayName)
+                            .tag(status)
                     }
                 }
-                .onChange(of: editedColorTag) { checkForChanges() }
+                .onChange(of: editedStatus) { checkForChanges() }
             }
 
             Section("Info") {
@@ -120,14 +113,14 @@ struct NoteDetailView: View {
     private func checkForChanges() {
         hasChanges = editedTitle != note.title ||
                      editedContent != note.content ||
-                     editedColorTag != note.colorTag
+                     editedStatus != note.status
     }
 
     private func saveChanges() {
         let updatedNote = note.updated(
             title: editedTitle,
             content: editedContent,
-            colorTag: editedColorTag
+            status: editedStatus
         )
 
         Task {
@@ -143,17 +136,6 @@ struct NoteDetailView: View {
         }
     }
 
-    private func colorForTag(_ tag: NoteColor) -> Color {
-        switch tag {
-        case .none: return .clear
-        case .red: return .red
-        case .orange: return .orange
-        case .yellow: return .yellow
-        case .green: return .green
-        case .blue: return .blue
-        case .purple: return .purple
-        }
-    }
 }
 
 // MARK: - Preview
@@ -164,7 +146,7 @@ struct NoteDetailView: View {
             note: Note(
                 title: "Sample Note",
                 content: "This is the content of the sample note.",
-                colorTag: .blue
+                status: .active
             ),
             viewModel: NotesViewModel(
                 useCase: NotesUseCase(

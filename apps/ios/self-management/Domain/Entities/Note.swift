@@ -39,8 +39,8 @@ struct Note: Identifiable, Equatable {
     /// When the note was last modified
     var updatedAt: Date
 
-    /// Color tag for visual organization
-    var colorTag: NoteColor
+    /// Lifecycle status of the note
+    var status: NoteStatus
 
     /// Whether the note is pinned to top
     var isPinned: Bool
@@ -53,7 +53,7 @@ struct Note: Identifiable, Equatable {
         content: String = "",
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
-        colorTag: NoteColor = .none,
+        status: NoteStatus = .active,
         isPinned: Bool = false
     ) {
         self.id = id
@@ -61,7 +61,7 @@ struct Note: Identifiable, Equatable {
         self.content = content
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.colorTag = colorTag
+        self.status = status
         self.isPinned = isPinned
     }
 
@@ -83,41 +83,16 @@ struct Note: Identifiable, Equatable {
     }
 
     /// Create an updated copy with new modification date
-    func updated(title: String? = nil, content: String? = nil, colorTag: NoteColor? = nil, isPinned: Bool? = nil) -> Note {
+    func updated(title: String? = nil, content: String? = nil, status: NoteStatus? = nil, isPinned: Bool? = nil) -> Note {
         Note(
             id: self.id,
             title: title ?? self.title,
             content: content ?? self.content,
             createdAt: self.createdAt,
             updatedAt: Date(),
-            colorTag: colorTag ?? self.colorTag,
+            status: status ?? self.status,
             isPinned: isPinned ?? self.isPinned
         )
     }
 }
 
-// MARK: - Note Color
-
-/// Available colors for note organization
-enum NoteColor: String, CaseIterable, Codable {
-    case none
-    case red
-    case orange
-    case yellow
-    case green
-    case blue
-    case purple
-
-    /// Display name for the color
-    var displayName: String {
-        switch self {
-        case .none: return "None"
-        case .red: return "Red"
-        case .orange: return "Orange"
-        case .yellow: return "Yellow"
-        case .green: return "Green"
-        case .blue: return "Blue"
-        case .purple: return "Purple"
-        }
-    }
-}

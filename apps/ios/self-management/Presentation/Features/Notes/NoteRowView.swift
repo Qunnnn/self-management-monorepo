@@ -19,12 +19,7 @@ struct NoteRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // Color indicator
-            if note.colorTag != .none {
-                Circle()
-                    .fill(colorForTag(note.colorTag))
-                    .frame(width: 8, height: 8)
-            }
+            // Theme indicator (to be implemented later via extension)
 
             VStack(alignment: .leading, spacing: 4) {
                 // Title
@@ -59,19 +54,6 @@ struct NoteRowView: View {
         .padding(.vertical, 4)
     }
 
-    // MARK: - Helpers
-
-    private func colorForTag(_ tag: NoteColor) -> Color {
-        switch tag {
-        case .none: return .clear
-        case .red: return .red
-        case .orange: return .orange
-        case .yellow: return .yellow
-        case .green: return .green
-        case .blue: return .blue
-        case .purple: return .purple
-        }
-    }
 }
 
 // MARK: - Preview
@@ -81,14 +63,14 @@ struct NoteRowView: View {
         NoteRowView(note: Note(
             title: "Sample Note",
             content: "This is a sample note with some content that might be quite long and need truncation.",
-            colorTag: .blue,
+            status: .active,
             isPinned: true
         ))
 
         NoteRowView(note: Note(
             title: "Another Note",
             content: "Short content",
-            colorTag: .none,
+            status: .active,
             isPinned: false
         ))
     }

@@ -75,18 +75,18 @@ final class NotesRepository: NotesRepositoryProtocol {
             Note(
                 title: "Welcome to Self-Management!",
                 content: "This is your first note. You can create, edit, and delete notes to organize your thoughts.\n\nTry creating a new note using the + button!",
-                colorTag: .blue,
+                status: .active,
                 isPinned: true
             ),
             Note(
                 title: "Learning Clean Architecture",
                 content: "Today I'm learning about:\n\n- Domain Layer: Pure business logic\n- Data Layer: Persistence & APIs\n- Presentation Layer: UI & ViewModels\n\nThe key principle: dependencies point inward!",
-                colorTag: .green
+                status: .active
             ),
             Note(
                 title: "Shopping List",
                 content: "- Milk\n- Bread\n- Eggs\n- Coffee\n- Fruits",
-                colorTag: .yellow
+                status: .active
             )
         ]
 
