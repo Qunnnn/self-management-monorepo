@@ -13,7 +13,7 @@ import Foundation
 
 /// Application-wide semantic theme options
 /// Used to represent status or severity that map to colors in the UI layer
-enum AppColorTheme: String, CaseIterable, Codable {
+public enum AppColorTheme: String, CaseIterable, Codable {
     case none
     case primary
     case secondary

@@ -18,20 +18,26 @@ struct NoteRowView: View {
     let note: Note
 
     var body: some View {
-        HStack(spacing: 12) {
-            // Theme indicator (to be implemented later via extension)
+        HStack(spacing: AppDesignSystem.spacing.md) {
+            // Status Indicator Circle
+            Circle()
+                .fill(note.status.color)
+                .frame(width: 8, height: 8)
+                .padding(.top, 6)
+                .frame(maxHeight: .infinity, alignment: .top)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: AppDesignSystem.spacing.xxs) {
                 // Title
                 HStack {
                     Text(note.title)
-                        .font(.headline)
+                        .font(AppDesignSystem.typography.title)
+                        .foregroundStyle(AppDesignSystem.colors.textPrimary)
                         .lineLimit(1)
 
                     if note.isPinned {
                         Image(systemName: "pin.fill")
-                            .font(.caption)
-                            .foregroundStyle(.orange)
+                            .font(AppDesignSystem.typography.caption)
+                            .foregroundStyle(AppDesignSystem.colors.warning)
                     }
                 }
 

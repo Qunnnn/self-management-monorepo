@@ -12,7 +12,7 @@
 import Foundation
 
 /// Represents the current status/state of a note
-enum NoteStatus: String, CaseIterable, Codable {
+public enum NoteStatus: String, CaseIterable, Codable {
     case active
     case archived
     case draft

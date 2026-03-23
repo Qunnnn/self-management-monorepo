@@ -60,10 +60,16 @@ struct NoteDetailView: View {
             Section("Status") {
                 Picker("Status", selection: $editedStatus) {
                     ForEach(NoteStatus.allCases, id: \.self) { status in
-                        Text(status.displayName)
-                            .tag(status)
+                        HStack {
+                            Circle()
+                                .fill(status.color)
+                                .frame(width: 8, height: 8)
+                            Text(status.displayName)
+                        }
+                        .tag(status)
                     }
                 }
+                .font(AppDesignSystem.typography.body)
                 .onChange(of: editedStatus) { checkForChanges() }
             }
 
