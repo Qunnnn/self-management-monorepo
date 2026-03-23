@@ -1,4 +1,4 @@
-.PHONY: backend-run backend-build ios-open
+.PHONY: backend-run backend-build ios-open ios-sync
 
 # Backend
 backend-run:
@@ -13,3 +13,6 @@ backend-test:
 # iOS
 ios-open:
 	open apps/ios/self-management.xcodeproj
+
+ios-sync:
+	cd apps/ios && ruby add_file.rb

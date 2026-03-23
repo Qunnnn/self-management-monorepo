@@ -13,8 +13,6 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A64F20612F3ED439003B9A45 /* self-management */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "self-management";
 			sourceTree = "<group>";
 		};
