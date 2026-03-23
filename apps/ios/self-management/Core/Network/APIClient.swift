@@ -68,10 +68,26 @@ struct EmptyEncodable: Encodable {}
 final class APIClient: APIClientProtocol {
     private let baseURL: URL
     private let session: URLSession
+    private let interceptor: RequestInterceptor?
     
-    init(baseURL: URL = URL(string: "http://localhost:8080")!, session: URLSession = .shared) {
+    init(
+        baseURL: URL = APIClient.defaultBaseURL,
+        session: URLSession = .shared,
+        interceptor: RequestInterceptor? = nil
+    ) {
         self.baseURL = baseURL
         self.session = session
+        self.interceptor = interceptor
+    }
+    
+    // Static base URL for convenient initialization
+    private static var defaultBaseURL: URL {
+        URL(string: "http://localhost:8080")!
+    }
+    
+    // Convenience init for easier adoption
+    convenience init(session: URLSession = .shared, interceptor: RequestInterceptor? = nil) {
+        self.init(baseURL: Self.defaultBaseURL, session: session, interceptor: interceptor)
     }
     
     func request<T: Decodable, B: Encodable>(
@@ -118,8 +134,13 @@ final class APIClient: APIClientProtocol {
     // MARK: - Core Execution Methods
     
     private func executeAndDecode<T: Decodable>(request: URLRequest) async throws -> T {
+        var adaptedRequest = request
+        if let interceptor = interceptor {
+            adaptedRequest = try await interceptor.adapt(request)
+        }
+        
         do {
-            let (data, response) = try await session.data(for: request)
+            let (data, response) = try await session.data(for: adaptedRequest)
             try validateResponse(response)
             
             do {
@@ -128,20 +149,43 @@ final class APIClient: APIClientProtocol {
             } catch {
                 throw APIError.decodingFailed(error)
             }
-        } catch let error as APIError {
-            throw error
+        } catch let apiError as APIError {
+            // Check if we should retry
+            if let interceptor = interceptor, try await interceptor.retry(adaptedRequest, for: apiError) {
+                return try await executeAndDecode(request: request)
+            }
+            throw apiError
         } catch {
+            // Check if we should retry
+            if let interceptor = interceptor, try await interceptor.retry(adaptedRequest, for: error) {
+                return try await executeAndDecode(request: request)
+            }
             throw APIError.requestFailed(error)
         }
     }
     
     private func execute(request: URLRequest) async throws {
+        var adaptedRequest = request
+        if let interceptor = interceptor {
+            adaptedRequest = try await interceptor.adapt(request)
+        }
+        
         do {
-            let (_, response) = try await session.data(for: request)
+            let (_, response) = try await session.data(for: adaptedRequest)
             try validateResponse(response)
-        } catch let error as APIError {
-            throw error
+        } catch let apiError as APIError {
+            // Check if we should retry
+            if let interceptor = interceptor, try await interceptor.retry(adaptedRequest, for: apiError) {
+                try await execute(request: request)
+                return
+            }
+            throw apiError
         } catch {
+            // Check if we should retry
+            if let interceptor = interceptor, try await interceptor.retry(adaptedRequest, for: error) {
+                try await execute(request: request)
+                return
+            }
             throw APIError.requestFailed(error)
         }
     }

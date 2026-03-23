@@ -27,8 +27,11 @@ final class DependencyContainer {
     /// Global session and authentication state
     let sessionService: SessionService
     
-    /// Core HTTP client for API requests
-    let apiClient: APIClientProtocol
+    /// Client for public endpoints (no auth)
+    let publicApiClient: APIClientProtocol
+    
+    /// Client for protected endpoints (uses AuthInterceptor)
+    let authenticatedApiClient: APIClientProtocol
 
     // MARK: - Repositories
 
@@ -51,14 +54,20 @@ final class DependencyContainer {
     init() {
         // Initialize Core Services first
         self.sessionService = SessionService()
-        self.apiClient = APIClient()
+        
+        // 1. Create the Public Client
+        self.publicApiClient = APIClient()
+        
+        // 2. Create the Authenticated Client with the Interceptor
+        let authInterceptor = AuthInterceptor()
+        self.authenticatedApiClient = APIClient(interceptor: authInterceptor)
         
         // Initialize repositories
         let notesRepo = NotesRepository()
         self.notesRepository = notesRepo
         
-        // Inject APIClient into AuthRepository
-        let authRepo = AuthRepository(apiClient: self.apiClient)
+        // Inject the PUBLIC client into AuthRepository (login/register)
+        let authRepo = AuthRepository(apiClient: self.publicApiClient)
         self.authRepository = authRepo
 
         // Then initialize use cases with their dependencies

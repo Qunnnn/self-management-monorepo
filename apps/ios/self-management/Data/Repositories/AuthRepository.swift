@@ -32,8 +32,9 @@ final class AuthRepository: AuthRepositoryProtocol {
     }
 
     private struct AuthResponseDTO: Decodable {
-        let user: UserDTO
-        let token: String
+        let userId: Int
+        let accessToken: String
+        let refreshToken: String
     }
 
     // Request DTOs
@@ -54,23 +55,22 @@ final class AuthRepository: AuthRepositoryProtocol {
         
         do {
             let authResponse: AuthResponseDTO = try await apiClient.request(
-                path: "/auth/login",
+                path: APIEndpoint.login.path,
                 method: "POST",
                 body: requestBody,
                 headers: nil as [String: String]?
             )
             
             let user = User(
-                id: authResponse.user.id,
-                email: authResponse.user.email,
-                name: authResponse.user.name,
+                id: authResponse.userId,
+                email: email, // Email is provided in request
+                name: "User \(authResponse.userId)", // Name is not in the new AuthResponse
                 profilePictureUrl: nil
             )
             
-            // BE only returns a single token for now
             let tokens = AuthTokens(
-                accessToken: authResponse.token,
-                refreshToken: "refresh_not_supported"
+                accessToken: authResponse.accessToken,
+                refreshToken: authResponse.refreshToken
             )
             
             return (user, tokens)
@@ -97,7 +97,7 @@ final class AuthRepository: AuthRepositoryProtocol {
         
         do {
             let userDTO: UserDTO = try await apiClient.request(
-                path: "/users/me",
+                path: APIEndpoint.profile.path,
                 method: "GET",
                 headers: ["Authorization": "Bearer \(accessToken)"]
             )
