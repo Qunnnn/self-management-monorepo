@@ -13,6 +13,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A64F20612F3ED439003B9A45 /* self-management */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "self-management";
 			sourceTree = "<group>";
 		};
@@ -64,8 +66,6 @@
 				A64F20612F3ED439003B9A45 /* self-management */,
 			);
 			name = "self-management";
-			packageProductDependencies = (
-			);
 			productName = "self-management";
 			productReference = A64F205F2F3ED439003B9A45 /* self-management.app */;
 			productType = "com.apple.product-type.application";
