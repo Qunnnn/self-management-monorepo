@@ -15,22 +15,22 @@ import (
 // MockUserService is a manual mock of the UserService interface
 type MockUserService struct {
 	GetAllUsersFunc func(ctx context.Context) ([]entity.User, error)
-	GetUserByIDFunc func(ctx context.Context, id int) (*entity.User, error)
-	UpdateUserFunc  func(ctx context.Context, id int, req entity.ModifyUserRequest) (*entity.User, error)
-	DeleteUserFunc  func(ctx context.Context, id int) error
+	GetUserByIDFunc func(ctx context.Context, id string) (*entity.User, error)
+	UpdateUserFunc  func(ctx context.Context, id string, req entity.ModifyUserRequest) (*entity.User, error)
+	DeleteUserFunc  func(ctx context.Context, id string) error
 	GetStatsFunc    func(ctx context.Context) (*entity.UserStats, error)
 }
 
 func (m *MockUserService) GetAllUsers(ctx context.Context) ([]entity.User, error) {
 	return m.GetAllUsersFunc(ctx)
 }
-func (m *MockUserService) GetUserByID(ctx context.Context, id int) (*entity.User, error) {
+func (m *MockUserService) GetUserByID(ctx context.Context, id string) (*entity.User, error) {
 	return m.GetUserByIDFunc(ctx, id)
 }
-func (m *MockUserService) UpdateUser(ctx context.Context, id int, req entity.ModifyUserRequest) (*entity.User, error) {
+func (m *MockUserService) UpdateUser(ctx context.Context, id string, req entity.ModifyUserRequest) (*entity.User, error) {
 	return m.UpdateUserFunc(ctx, id, req)
 }
-func (m *MockUserService) DeleteUser(ctx context.Context, id int) error {
+func (m *MockUserService) DeleteUser(ctx context.Context, id string) error {
 	return m.DeleteUserFunc(ctx, id)
 }
 func (m *MockUserService) GetStats(ctx context.Context) (*entity.UserStats, error) {
@@ -39,9 +39,9 @@ func (m *MockUserService) GetStats(ctx context.Context) (*entity.UserStats, erro
 
 func TestGetUser(t *testing.T) {
 	mockSvc := &MockUserService{
-		GetUserByIDFunc: func(ctx context.Context, id int) (*entity.User, error) {
+		GetUserByIDFunc: func(ctx context.Context, id string) (*entity.User, error) {
 			return &entity.User{
-				ID:        1,
+				ID:        "1",
 				Name:      "Test User",
 				Email:     "test@user.com",
 				CreatedAt: time.Now(),

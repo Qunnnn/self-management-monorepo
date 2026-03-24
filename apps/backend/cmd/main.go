@@ -77,8 +77,8 @@ func main() {
 	// Wrap router with logging middleware
 	h := middleware.LoggingMiddleware(mux)
 
-	slog.Info("Server starting", "url", "http://localhost:"+port)
-	if err := http.ListenAndServe(":"+port, h); err != nil {
+	slog.Info("Server starting", "url", "http://0.0.0.0:"+port)
+	if err := http.ListenAndServe("0.0.0.0:"+port, h); err != nil {
 		slog.Error("Server crashed", "error", err)
 		os.Exit(1)
 	}

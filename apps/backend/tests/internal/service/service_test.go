@@ -12,18 +12,18 @@ import (
 // MockUserRepository is a manual mock of the UserRepository interface
 type MockUserRepository struct {
 	GetAllFunc     func(ctx context.Context) ([]entity.User, error)
-	GetByIDFunc    func(ctx context.Context, id int) (*entity.User, error)
+	GetByIDFunc    func(ctx context.Context, id string) (*entity.User, error)
 	GetByEmailFunc func(ctx context.Context, email string) (*entity.User, error)
 	CreateFunc     func(ctx context.Context, name, email, phone, password string) (*entity.User, error)
-	UpdateFunc     func(ctx context.Context, id int, name, email, phone string) (*entity.User, error)
-	DeleteFunc     func(ctx context.Context, id int) error
+	UpdateFunc     func(ctx context.Context, id string, name, email, phone string) (*entity.User, error)
+	DeleteFunc     func(ctx context.Context, id string) error
 	GetStatsFunc   func(ctx context.Context) (*entity.UserStats, error)
 }
 
 func (m *MockUserRepository) GetAll(ctx context.Context) ([]entity.User, error) {
 	return m.GetAllFunc(ctx)
 }
-func (m *MockUserRepository) GetByID(ctx context.Context, id int) (*entity.User, error) {
+func (m *MockUserRepository) GetByID(ctx context.Context, id string) (*entity.User, error) {
 	return m.GetByIDFunc(ctx, id)
 }
 func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*entity.User, error) {
@@ -32,10 +32,10 @@ func (m *MockUserRepository) GetByEmail(ctx context.Context, email string) (*ent
 func (m *MockUserRepository) Create(ctx context.Context, name, email, phone, password string) (*entity.User, error) {
 	return m.CreateFunc(ctx, name, email, phone, password)
 }
-func (m *MockUserRepository) Update(ctx context.Context, id int, name, email, phone string) (*entity.User, error) {
+func (m *MockUserRepository) Update(ctx context.Context, id string, name, email, phone string) (*entity.User, error) {
 	return m.UpdateFunc(ctx, id, name, email, phone)
 }
-func (m *MockUserRepository) Delete(ctx context.Context, id int) error {
+func (m *MockUserRepository) Delete(ctx context.Context, id string) error {
 	return m.DeleteFunc(ctx, id)
 }
 func (m *MockUserRepository) GetStats(ctx context.Context) (*entity.UserStats, error) {
