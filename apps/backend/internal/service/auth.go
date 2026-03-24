@@ -97,12 +97,10 @@ func (s *authService) RefreshToken(ctx context.Context, refreshToken string) (*e
 		return nil, errors.New("invalid refresh token")
 	}
 
-	userIDFloat, ok := claims["user_id"].(float64)
+	userID, ok := claims["user_id"].(string)
 	if !ok {
 		return nil, errors.New("invalid token claims")
 	}
-
-	userID := int(userIDFloat)
 	accessToken, err := utils.GenerateAccessToken(userID)
 	if err != nil {
 		return nil, err

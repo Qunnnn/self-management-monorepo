@@ -4,8 +4,8 @@ import "time"
 
 // Task represents a task in the database
 type Task struct {
-	ID          int        `json:"id"`
-	UserID      int        `json:"userId"`
+	ID          string     `json:"id"`
+	UserID      string     `json:"userId"`
 	Title       string     `json:"title"`
 	Description *string    `json:"description,omitempty"`
 	IsCompleted bool       `json:"isCompleted"`
@@ -15,7 +15,7 @@ type Task struct {
 
 // CreateTaskRequest is used when creating a new task
 type CreateTaskRequest struct {
-	UserID      int     `json:"userId"`
+	UserID      string  `json:"userId"`
 	Title       string  `json:"title"`
 	Description *string `json:"description,omitempty"`
 }

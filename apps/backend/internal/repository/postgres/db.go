@@ -25,8 +25,8 @@ func Connect(cfg Config) error {
 	if cfg.Password == "" {
 		// For local socket connection (no password)
 		connStr = fmt.Sprintf(
-			"host=%s user=%s dbname=%s sslmode=disable",
-			cfg.Host, cfg.User, cfg.DBName,
+			"host=%s port=%d user=%s dbname=%s sslmode=disable",
+			cfg.Host, cfg.Port, cfg.User, cfg.DBName,
 		)
 	} else {
 		connStr = fmt.Sprintf(

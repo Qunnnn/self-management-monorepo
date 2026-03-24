@@ -4,7 +4,7 @@ import "time"
 
 // User represents a user in the database
 type User struct {
-	ID          int       `json:"id"`
+	ID          string    `json:"id"`
 	Name        string    `json:"name"`
 	Email       string    `json:"email"`
 	CreatedAt   time.Time `json:"createdAt"`
@@ -41,7 +41,7 @@ type LoginRequest struct {
 
 // AuthResponse is returned after a successful registration or login
 type AuthResponse struct {
-	UserID       int    `json:"userId"`
+	UserID       string `json:"userId"`
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
 }

@@ -17,9 +17,9 @@ var (
 // UserService defines business logic for users
 type UserService interface {
 	GetAllUsers(ctx context.Context) ([]entity.User, error)
-	GetUserByID(ctx context.Context, id int) (*entity.User, error)
-	UpdateUser(ctx context.Context, id int, req entity.ModifyUserRequest) (*entity.User, error)
-	DeleteUser(ctx context.Context, id int) error
+	GetUserByID(ctx context.Context, id string) (*entity.User, error)
+	UpdateUser(ctx context.Context, id string, req entity.ModifyUserRequest) (*entity.User, error)
+	DeleteUser(ctx context.Context, id string) error
 	GetStats(ctx context.Context) (*entity.UserStats, error)
 }
 
@@ -35,7 +35,7 @@ func (s *userService) GetAllUsers(ctx context.Context) ([]entity.User, error) {
 	return s.repo.GetAll(ctx)
 }
 
-func (s *userService) GetUserByID(ctx context.Context, id int) (*entity.User, error) {
+func (s *userService) GetUserByID(ctx context.Context, id string) (*entity.User, error) {
 	user, err := s.repo.GetByID(ctx, id)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (s *userService) GetUserByID(ctx context.Context, id int) (*entity.User, er
 	return user, nil
 }
 
-func (s *userService) UpdateUser(ctx context.Context, id int, req entity.ModifyUserRequest) (*entity.User, error) {
+func (s *userService) UpdateUser(ctx context.Context, id string, req entity.ModifyUserRequest) (*entity.User, error) {
 	if req.Name == "" || req.Email == "" {
 		return nil, ErrInvalidInput
 	}
@@ -57,7 +57,7 @@ func (s *userService) UpdateUser(ctx context.Context, id int, req entity.ModifyU
 	return s.repo.Update(ctx, id, req.Name, req.Email, req.PhoneNumber)
 }
 
-func (s *userService) DeleteUser(ctx context.Context, id int) error {
+func (s *userService) DeleteUser(ctx context.Context, id string) error {
 	return s.repo.Delete(ctx, id)
 }
 

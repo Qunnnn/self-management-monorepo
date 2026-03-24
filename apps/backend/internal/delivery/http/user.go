@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"self-management-monorepo/apps/backend/internal/entity"
@@ -38,10 +37,9 @@ func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 // GetUser returns a single user by ID
 func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
-	idStr := r.PathValue("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, err)
+	id := r.PathValue("id")
+	if id == "" {
+		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, nil)
 		return
 	}
 
@@ -62,7 +60,7 @@ func (h *UserHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 // GetMe returns the currently authenticated user
 func (h *UserHandler) GetMe(w http.ResponseWriter, r *http.Request) {
 	idVal := r.Context().Value(constants.UserIDKey)
-	id, ok := idVal.(int)
+	id, ok := idVal.(string)
 	if !ok {
 		utils.WriteError(w, "Unauthorized", http.StatusUnauthorized, nil)
 		return
@@ -84,14 +82,13 @@ func (h *UserHandler) GetMe(w http.ResponseWriter, r *http.Request) {
 
 // DeleteUser deletes a user by ID
 func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
-	idStr := r.PathValue("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, err)
+	id := r.PathValue("id")
+	if id == "" {
+		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, nil)
 		return
 	}
 
-	err = h.svc.DeleteUser(r.Context(), id)
+	err := h.svc.DeleteUser(r.Context(), id)
 	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
 		return
@@ -106,10 +103,9 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 // ModifyUser updates an existing user
 func (h *UserHandler) ModifyUser(w http.ResponseWriter, r *http.Request) {
-	idStr := r.PathValue("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, err)
+	id := r.PathValue("id")
+	if id == "" {
+		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, nil)
 		return
 	}
 

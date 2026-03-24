@@ -39,7 +39,7 @@ func (r *postgresUserRepository) GetAll(ctx context.Context) ([]entity.User, err
 	return users, nil
 }
 
-func (r *postgresUserRepository) GetByID(ctx context.Context, id int) (*entity.User, error) {
+func (r *postgresUserRepository) GetByID(ctx context.Context, id string) (*entity.User, error) {
 	var u entity.User
 	var phone sql.NullString
 	err := r.db.QueryRowContext(
@@ -109,7 +109,7 @@ func (r *postgresUserRepository) Create(ctx context.Context, name, email, phone,
 	return &u, nil
 }
 
-func (r *postgresUserRepository) Update(ctx context.Context, id int, name, email, phone string) (*entity.User, error) {
+func (r *postgresUserRepository) Update(ctx context.Context, id string, name, email, phone string) (*entity.User, error) {
 	var u entity.User
 	var resPhone sql.NullString
 
@@ -137,7 +137,7 @@ func (r *postgresUserRepository) Update(ctx context.Context, id int, name, email
 	return &u, nil
 }
 
-func (r *postgresUserRepository) Delete(ctx context.Context, id int) error {
+func (r *postgresUserRepository) Delete(ctx context.Context, id string) error {
 	result, err := r.db.ExecContext(ctx, "DELETE FROM users WHERE id = $1", id)
 	if err != nil {
 		return err

@@ -71,10 +71,9 @@ func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 
 // GetTask returns a single task by ID
 func (h *TaskHandler) GetTask(w http.ResponseWriter, r *http.Request) {
-	idStr := r.PathValue("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, err)
+	id := r.PathValue("id")
+	if id == "" {
+		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, nil)
 		return
 	}
 
@@ -94,10 +93,9 @@ func (h *TaskHandler) GetTask(w http.ResponseWriter, r *http.Request) {
 
 // GetTasksByUser returns all tasks for a specific user
 func (h *TaskHandler) GetTasksByUser(w http.ResponseWriter, r *http.Request) {
-	userIDStr := r.PathValue("id")
-	userID, err := strconv.Atoi(userIDStr)
-	if err != nil {
-		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, err)
+	userID := r.PathValue("id")
+	if userID == "" {
+		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, nil)
 		return
 	}
 
@@ -174,10 +172,9 @@ func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 // CompleteTask marks a task as completed
 func (h *TaskHandler) CompleteTask(w http.ResponseWriter, r *http.Request) {
-	idStr := r.PathValue("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, err)
+	id := r.PathValue("id")
+	if id == "" {
+		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, nil)
 		return
 	}
 
@@ -197,14 +194,13 @@ func (h *TaskHandler) CompleteTask(w http.ResponseWriter, r *http.Request) {
 
 // DeleteTask soft-deletes a task
 func (h *TaskHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
-	idStr := r.PathValue("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, err)
+	id := r.PathValue("id")
+	if id == "" {
+		utils.WriteError(w, "Invalid task ID", http.StatusBadRequest, nil)
 		return
 	}
 
-	err = h.svc.DeleteTask(r.Context(), id)
+	err := h.svc.DeleteTask(r.Context(), id)
 	if errors.Is(err, sql.ErrNoRows) {
 		utils.WriteError(w, "Task not found", http.StatusNotFound, nil)
 		return

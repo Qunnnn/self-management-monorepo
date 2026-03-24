@@ -60,7 +60,7 @@ func (r *postgresTaskRepository) GetAll(ctx context.Context, completed *bool, li
 	return tasks, nil
 }
 
-func (r *postgresTaskRepository) GetByID(ctx context.Context, id int) (*entity.Task, error) {
+func (r *postgresTaskRepository) GetByID(ctx context.Context, id string) (*entity.Task, error) {
 	var t entity.Task
 	err := r.db.QueryRowContext(ctx, `
 		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
@@ -77,7 +77,7 @@ func (r *postgresTaskRepository) GetByID(ctx context.Context, id int) (*entity.T
 	return &t, nil
 }
 
-func (r *postgresTaskRepository) GetByUserID(ctx context.Context, userID int, completed *bool, limit, offset *int) ([]entity.Task, error) {
+func (r *postgresTaskRepository) GetByUserID(ctx context.Context, userID string, completed *bool, limit, offset *int) ([]entity.Task, error) {
 	query := `
 		SELECT id, user_id, title, description, is_completed, created_at, deleted_at
 		FROM tasks
@@ -119,7 +119,7 @@ func (r *postgresTaskRepository) GetByUserID(ctx context.Context, userID int, co
 	return tasks, nil
 }
 
-func (r *postgresTaskRepository) Create(ctx context.Context, userID int, title string, description *string) (*entity.Task, error) {
+func (r *postgresTaskRepository) Create(ctx context.Context, userID string, title string, description *string) (*entity.Task, error) {
 	var t entity.Task
 	err := r.db.QueryRowContext(ctx, `
 		INSERT INTO tasks (user_id, title, description)
@@ -135,7 +135,7 @@ func (r *postgresTaskRepository) Create(ctx context.Context, userID int, title s
 	return &t, nil
 }
 
-func (r *postgresTaskRepository) MarkCompleted(ctx context.Context, id int) (*entity.Task, error) {
+func (r *postgresTaskRepository) MarkCompleted(ctx context.Context, id string) (*entity.Task, error) {
 	var t entity.Task
 	err := r.db.QueryRowContext(ctx, `
 		UPDATE tasks SET is_completed = true
@@ -152,7 +152,7 @@ func (r *postgresTaskRepository) MarkCompleted(ctx context.Context, id int) (*en
 	return &t, nil
 }
 
-func (r *postgresTaskRepository) Delete(ctx context.Context, id int) error {
+func (r *postgresTaskRepository) Delete(ctx context.Context, id string) error {
 	result, err := r.db.ExecContext(ctx, `
 		UPDATE tasks SET deleted_at = NOW()
 		WHERE id = $1 AND deleted_at IS NULL

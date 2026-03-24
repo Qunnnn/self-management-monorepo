@@ -35,13 +35,13 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		userIDFloat, ok := claims[constants.JWTUserIDClaim].(float64)
+		userID, ok := claims[constants.JWTUserIDClaim].(string)
 		if !ok {
 			utils.WriteError(w, "invalid token claims", http.StatusUnauthorized, nil)
 			return
 		}
 
-		ctx := context.WithValue(r.Context(), constants.UserIDKey, int(userIDFloat))
+		ctx := context.WithValue(r.Context(), constants.UserIDKey, userID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
