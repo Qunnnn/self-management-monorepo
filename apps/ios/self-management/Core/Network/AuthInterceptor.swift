@@ -15,7 +15,7 @@ final class AuthInterceptor: RequestInterceptor {
     /// Use a separate URLSession for refresh to avoid interceptor loops
     private let refreshSession: URLSession = .shared
     
-    init(tokenStorage: TokenStorage = TokenStorage(), baseURL: URL = URL(string: "http://localhost:8080")!) {
+    init(tokenStorage: TokenStorage = TokenStorage(), baseURL: URL = URL(string: "http://192.168.100.199:8080")!) {
         self.tokenStorage = tokenStorage
         self.baseURL = baseURL
     }
@@ -67,7 +67,7 @@ final class AuthInterceptor: RequestInterceptor {
     }
     
     private struct RefreshResponseDTO: Decodable {
-        let userId: Int
+        let userId: String
         let accessToken: String
         let refreshToken: String
     }

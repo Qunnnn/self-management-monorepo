@@ -14,7 +14,7 @@ struct User: Identifiable, Equatable {
     // MARK: - Properties
     
     /// Unique identifier for the user
-    let id: Int
+    let id: String
     
     /// User's email address
     let email: String
@@ -28,7 +28,7 @@ struct User: Identifiable, Equatable {
     // MARK: - Initialization
     
     init(
-        id: Int = 0,
+        id: String = "",
         email: String,
         name: String,
         profilePictureUrl: URL? = nil

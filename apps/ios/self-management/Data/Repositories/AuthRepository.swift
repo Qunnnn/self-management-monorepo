@@ -25,14 +25,14 @@ final class AuthRepository: AuthRepositoryProtocol {
     
     // Private DTOs for decoding backend responses
     private struct UserDTO: Decodable {
-        let id: Int
+        let id: String
         let name: String
         let email: String
         let phoneNumber: String?
     }
 
     private struct AuthResponseDTO: Decodable {
-        let userId: Int
+        let userId: String
         let accessToken: String
         let refreshToken: String
     }
