@@ -37,8 +37,17 @@ db-console:
 backend-run:
 	cd apps/backend && go run cmd/main.go
 
+# Standard build with optimizations (smaller binary)
 backend-build:
-	cd apps/backend && go build -o pg-api cmd/main.go
+	cd apps/backend && go build -ldflags="-s -w" -o pg-api cmd/main.go
+
+# Cleanup build artifacts
+backend-clean:
+	rm -f apps/backend/pg-api apps/backend/main
+
+# Example for Linux deployment
+backend-build-linux:
+	cd apps/backend && GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o pg-api-linux cmd/main.go
 
 backend-test:
 	cd apps/backend && go test ./...
