@@ -8,7 +8,7 @@ struct LoginFormView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            AuthField(
+            AppTextField(
                 icon: "envelope.fill",
                 placeholder: "Email Address",
                 text: $email,
@@ -20,7 +20,7 @@ struct LoginFormView: View {
                 focusedField = .password
             }
             
-            AuthField(
+            AppTextField(
                 icon: "lock.fill",
                 placeholder: "Password",
                 text: $password,

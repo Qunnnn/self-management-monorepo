@@ -1,7 +1,7 @@
 import SwiftUI
 import UIKit
 
-struct AuthField: View {
+struct AppTextField: View {
     let icon: String
     let placeholder: String
     @Binding var text: String
