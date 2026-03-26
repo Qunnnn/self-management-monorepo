@@ -74,8 +74,8 @@ struct RootView: View {
             ForEach(Tab.allCases) { tab in
                 Group {
                     switch tab {
-                    case .notes:
-                        NotesListView()
+                    case .tasks:
+                        TasksListView()
                     default:
                         ComingSoonView(feature: tab.title)
                     }
@@ -93,7 +93,7 @@ struct RootView: View {
 // MARK: - Tab Definition
 
 enum Tab: String, CaseIterable, Identifiable {
-    case notes, tasks, habits, finance, health
+    case notes, tasks, finance
     
     var id: String { rawValue }
     
@@ -105,9 +105,7 @@ enum Tab: String, CaseIterable, Identifiable {
         switch self {
         case .notes: return "note.text"
         case .tasks: return "checkmark.circle"
-        case .habits: return "repeat"
         case .finance: return "dollarsign.circle"
-        case .health: return "heart"
         }
     }
 }

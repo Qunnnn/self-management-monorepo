@@ -36,6 +36,7 @@ protocol APIClientProtocol {
         path: String,
         method: String,
         body: B?,
+        query: [String: String]?,
         headers: [String: String]?
     ) async throws -> T
     
@@ -43,6 +44,7 @@ protocol APIClientProtocol {
     func request<T: Decodable>(
         path: String,
         method: String,
+        query: [String: String]?,
         headers: [String: String]?
     ) async throws -> T
     
@@ -51,6 +53,7 @@ protocol APIClientProtocol {
         path: String,
         method: String,
         body: B?,
+        query: [String: String]?,
         headers: [String: String]?
     ) async throws
     
@@ -58,6 +61,7 @@ protocol APIClientProtocol {
     func emptyRequest(
         path: String,
         method: String,
+        query: [String: String]?,
         headers: [String: String]?
     ) async throws
 }
@@ -94,20 +98,22 @@ final class APIClient: APIClientProtocol {
         path: String,
         method: String = "GET",
         body: B? = nil,
+        query: [String: String]? = nil,
         headers: [String: String]? = nil
     ) async throws -> T {
-        let request = try buildRequest(path: path, method: method, body: body, headers: headers)
+        let request = try buildRequest(path: path, method: method, body: body, query: query, headers: headers)
         return try await executeAndDecode(request: request)
     }
     
     func request<T: Decodable>(
         path: String,
         method: String = "GET",
+        query: [String: String]? = nil,
         headers: [String: String]? = nil
     ) async throws -> T {
         // Use a dummy struct since body is nil anyway
         let dummyBody: EmptyEncodable? = nil
-        let request = try buildRequest(path: path, method: method, body: dummyBody, headers: headers)
+        let request = try buildRequest(path: path, method: method, body: dummyBody, query: query, headers: headers)
         return try await executeAndDecode(request: request)
     }
     
@@ -115,19 +121,21 @@ final class APIClient: APIClientProtocol {
         path: String,
         method: String = "GET",
         body: B? = nil,
+        query: [String: String]? = nil,
         headers: [String: String]? = nil
     ) async throws {
-        let request = try buildRequest(path: path, method: method, body: body, headers: headers)
+        let request = try buildRequest(path: path, method: method, body: body, query: query, headers: headers)
         try await execute(request: request)
     }
     
     func emptyRequest(
         path: String,
         method: String = "GET",
+        query: [String: String]? = nil,
         headers: [String: String]? = nil
     ) async throws {
         let dummyBody: EmptyEncodable? = nil
-        let request = try buildRequest(path: path, method: method, body: dummyBody, headers: headers)
+        let request = try buildRequest(path: path, method: method, body: dummyBody, query: query, headers: headers)
         try await execute(request: request)
     }
     
@@ -204,13 +212,23 @@ final class APIClient: APIClientProtocol {
         path: String,
         method: String,
         body: B?,
+        query: [String: String]?,
         headers: [String: String]?
     ) throws -> URLRequest {
         var baseString = baseURL.absoluteString
         if baseString.hasSuffix("/") && path.hasPrefix("/") {
             baseString.removeLast()
         }
-        guard let url = URL(string: baseString + path) else {
+        
+        guard var components = URLComponents(string: baseString + path) else {
+            throw APIError.invalidURL
+        }
+        
+        if let query = query {
+            components.queryItems = query.map { URLQueryItem(name: $0.key, value: $0.value) }
+        }
+        
+        guard let url = components.url else {
             throw APIError.invalidURL
         }
         

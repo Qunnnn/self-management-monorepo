@@ -21,6 +21,9 @@ final class SessionService {
     /// Global authentication status (based on token existence)
     private(set) var isAuthenticated = false
     
+    /// Currently logged in user profile
+    private(set) var currentUser: User?
+    
     // MARK: - Initialization
     
     init(tokenStorage: TokenStorage = TokenStorage()) {
@@ -32,12 +35,21 @@ final class SessionService {
     
     /// Start a new user session (usually called after login)
     /// Saves the authentication tokens locally for persistence across app launches
-    /// - Parameter tokens: The access and refresh tokens to persist
-    func startSession(tokens: AuthTokens) {
+    /// - Parameters:
+    ///   - tokens: The access and refresh tokens to persist
+    ///   - user: The user profile of the logged-in user
+    func startSession(tokens: AuthTokens, user: User) {
         tokenStorage.saveTokens(tokens)
+        self.currentUser = user
         withAnimation(.default) {
             self.isAuthenticated = true
         }
+    }
+    
+    /// Update the current user profile
+    /// - Parameter user: The updated user profile
+    func updateCurrentUser(_ user: User) {
+        self.currentUser = user
     }
     
     /// Restore the saved tokens from local storage
@@ -50,6 +62,7 @@ final class SessionService {
     /// Clears the locally stored tokens
     func endSession() {
         tokenStorage.clearTokens()
+        self.currentUser = nil
         withAnimation(.default) {
             self.isAuthenticated = false
         }

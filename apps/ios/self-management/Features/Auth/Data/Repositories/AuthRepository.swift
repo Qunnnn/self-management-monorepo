@@ -58,13 +58,14 @@ final class AuthRepository: AuthRepositoryProtocol {
                 path: APIEndpoint.login.path,
                 method: "POST",
                 body: requestBody,
+                query: nil as [String: String]?,
                 headers: nil as [String: String]?
             )
             
             let user = User(
                 id: authResponse.userId,
                 email: email, // Email is provided in request
-                name: "User \(authResponse.userId)", // Name is not in the new AuthResponse
+                name: "User \(authResponse.userId)", // Placeholder, Use Case will fetch real name
                 profilePictureUrl: nil
             )
             
@@ -99,6 +100,7 @@ final class AuthRepository: AuthRepositoryProtocol {
             let userDTO: UserDTO = try await apiClient.request(
                 path: APIEndpoint.profile.path,
                 method: "GET",
+                query: nil as [String: String]?,
                 headers: ["Authorization": "Bearer \(accessToken)"]
             )
             

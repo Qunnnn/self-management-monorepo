@@ -41,7 +41,14 @@ final class LoginUseCase {
         }
         
         // Call repository for actual authentication
-        return try await repository.login(email: email, password: password)
+        let (partialUser, tokens) = try await repository.login(email: email, password: password)
+        
+        // Fetch full profile data to replace partial data (like hardcoded names)
+        if let fullUser = await repository.fetchCurrentUser(accessToken: tokens.accessToken) {
+            return (fullUser, tokens)
+        }
+        
+        return (partialUser, tokens)
     }
     
     /// Fetch the current user profile using a stored access token

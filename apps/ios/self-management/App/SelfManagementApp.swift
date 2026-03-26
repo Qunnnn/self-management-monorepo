@@ -25,7 +25,7 @@ struct SelfManagementApp: App {
                 loginUseCase: container.loginUseCase,
                 sessionService: container.sessionService
             )
-            .environment(container)
+            .environment(\.dependencyContainer, container)
         }
     }
 }

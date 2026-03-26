@@ -20,10 +20,21 @@ enum APIEndpoint: String, CaseIterable {
     // User Endpoints
     case profile = "/users/me"
     
-    // Notes Endpoints
-    case notes = "/notes"
+    // Tasks Endpoints
+    case tasks = "/tasks"
+    case userTasks = "/users/%@/tasks"
+    case completeTask = "/tasks/%@/complete"
+    case deleteTask = "/tasks/%@"
     
     /// The actual path string for the endpoint
+    func path(args: CVarArg...) -> String {
+        if args.isEmpty {
+            return self.rawValue
+        }
+        return String(format: self.rawValue, arguments: args)
+    }
+    
+    /// The raw path string for the endpoint
     var path: String {
         return self.rawValue
     }

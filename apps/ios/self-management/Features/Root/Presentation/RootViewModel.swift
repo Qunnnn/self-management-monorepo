@@ -45,6 +45,16 @@ final class RootViewModel {
         // Brief delay to prevent flicker if session check is instant
         try? await Task.sleep(nanoseconds: 500_000_000)
         
+        if isAuthenticated, let tokens = sessionService.restoreTokens() {
+            // Restore current user profile
+            if let user = await loginUseCase.fetchCurrentUser(accessToken: tokens.accessToken) {
+                sessionService.updateCurrentUser(user)
+            } else {
+                // Token might be invalid or expired
+                sessionService.endSession()
+            }
+        }
+        
         isCheckingSession = false
     }
     

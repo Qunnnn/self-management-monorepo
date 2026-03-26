@@ -40,6 +40,9 @@ final class DependencyContainer {
     
     /// Auth repository for authentication operations
     let authRepository: AuthRepositoryProtocol
+    
+    /// Tasks repository for CRUD operations on tasks
+    let taskRepository: TaskRepositoryProtocol
 
     // MARK: - Use Cases
 
@@ -48,6 +51,9 @@ final class DependencyContainer {
     
     /// Use case for user authentication
     let loginUseCase: LoginUseCase
+    
+    /// Use case for managing tasks
+    let tasksUseCase: TasksUseCase
 
     // MARK: - Initialization
 
@@ -69,10 +75,16 @@ final class DependencyContainer {
         // Inject the PUBLIC client into AuthRepository (login/register)
         let authRepo = AuthRepository(apiClient: self.publicApiClient)
         self.authRepository = authRepo
+        
+        // --- Tasks Setup ---
+        // Inject the AUTHENTICATED client into TaskRepository
+        let taskRepo = TaskRepository(apiClient: self.authenticatedApiClient)
+        self.taskRepository = taskRepo
 
         // Then initialize use cases with their dependencies
         self.notesUseCase = NotesUseCase(repository: notesRepo)
         self.loginUseCase = LoginUseCase(repository: authRepo)
+        self.tasksUseCase = TasksUseCase(repository: taskRepo)
     }
 }
 
