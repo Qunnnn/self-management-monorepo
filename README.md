@@ -38,3 +38,9 @@ See [docs/setup.md](docs/setup.md) for database setup and [docs/api-examples.md]
 - [API Examples](docs/api-examples.md) - REST API usage with curl examples
 - [Learning Path](docs/learning-path.md) - Backend development learning guide
 - [Cheatsheet](docs/cheatsheet.md) - Quick reference for Go and PostgreSQL
+
+## Developer Tools & Rules
+
+This project includes integrated rules and assistant skills to streamline development:
+
+- **Integrated Rules & Skills**: Coding standards and expert capabilities are defined in `.agents/skills/` (backend-go, ios-swift, monorepo, brainstorming).
