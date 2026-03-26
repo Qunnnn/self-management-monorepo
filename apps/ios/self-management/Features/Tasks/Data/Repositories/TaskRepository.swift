@@ -148,7 +148,7 @@ final class TaskRepository: TaskRepositoryProtocol {
         let path = APIEndpoint.completeTask.path(args: id.uuidString.lowercased())
         let dto: TaskDTO = try await apiClient.request(
             path: path,
-            method: "PUT",
+            method: "PATCH",
             query: nil as [String: String]?,
             headers: nil as [String: String]?
         )
@@ -163,7 +163,7 @@ final class TaskRepository: TaskRepositoryProtocol {
     /// Deletes a task through the API (usually soft-delete in the backend).
     func deleteTask(by id: UUID) async throws -> Void {
         let path = APIEndpoint.deleteTask.path(args: id.uuidString.lowercased())
-        let _: EmptyResponse = try await apiClient.request(
+        try await apiClient.emptyRequest(
             path: path,
             method: "DELETE",
             query: nil as [String: String]?,
@@ -172,5 +172,4 @@ final class TaskRepository: TaskRepositoryProtocol {
     }
 }
 
-/// A simple empty response for DELETE tasks
-private struct EmptyResponse: Decodable {}
+

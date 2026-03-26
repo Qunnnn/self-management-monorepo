@@ -76,7 +76,7 @@ final class TasksViewModel {
     }
     
     /// Toggles the completion status of a task.
-    /// Note: Currently the backend only has 'CompleteTask' (PUT /tasks/:id/complete).
+    /// Note: Currently the backend only has 'CompleteTask' (PATCH /tasks/:id/complete).
     @MainActor
     func completeTask(_ task: TodoTask) async {
         guard !task.isCompleted else { return } // Already completed
