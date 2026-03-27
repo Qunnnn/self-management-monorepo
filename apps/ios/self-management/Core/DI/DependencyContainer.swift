@@ -68,7 +68,7 @@ final class DependencyContainer {
         self.authenticatedApiClient = APIClient(interceptor: authInterceptor)
         
         // Initialize repositories
-        let diaryRepo = DiaryRepository()
+        let diaryRepo = APIDiaryRepository(apiClient: self.authenticatedApiClient)
         self.diaryRepository = diaryRepo
         
         let authRepo = AuthRepository(apiClient: self.publicApiClient)

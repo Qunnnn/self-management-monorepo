@@ -25,30 +25,30 @@ protocol DiaryRepositoryProtocol {
 
     /// Fetch all diary entries
     /// - Returns: Array of all diary entries
-    func getAllEntries() async -> [DiaryEntry]
+    func getAllEntries() async throws -> [DiaryEntry]
 
     /// Fetch a single diary entry by ID
     /// - Parameter id: The entry's unique identifier
     /// - Returns: The entry if found, nil otherwise
-    func getEntry(by id: UUID) async -> DiaryEntry?
+    func getEntry(by id: UUID) async throws -> DiaryEntry?
 
     // MARK: - Write Operations
 
     /// Save a new diary entry
     /// - Parameter entry: The entry to save
-    func saveEntry(_ entry: DiaryEntry) async
+    func saveEntry(_ entry: DiaryEntry) async throws
 
     /// Update an existing diary entry
     /// - Parameter entry: The entry with updated values
-    func updateEntry(_ entry: DiaryEntry) async
+    func updateEntry(_ entry: DiaryEntry) async throws
 
     /// Delete a diary entry by ID
     /// - Parameter id: The entry's unique identifier
-    func deleteEntry(by id: UUID) async
+    func deleteEntry(by id: UUID) async throws
 
     // MARK: - Batch Operations
 
     /// Delete multiple diary entries
     /// - Parameter ids: Array of entry IDs to delete
-    func deleteEntries(by ids: [UUID]) async
+    func deleteEntries(by ids: [UUID]) async throws
 }

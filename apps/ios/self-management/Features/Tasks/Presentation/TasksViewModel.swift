@@ -29,22 +29,16 @@ final class TasksViewModel {
     private let createUseCase: CreateTaskUseCase
     private let completeUseCase: CompleteTaskUseCase
     private let deleteUseCase: DeleteTaskUseCase
-    private let userId: String
-    
-    // MARK: - Initialization
-    
     init(
         fetchUseCase: FetchTasksUseCase,
         createUseCase: CreateTaskUseCase,
         completeUseCase: CompleteTaskUseCase,
-        deleteUseCase: DeleteTaskUseCase,
-        userId: String
+        deleteUseCase: DeleteTaskUseCase
     ) {
         self.fetchUseCase = fetchUseCase
         self.createUseCase = createUseCase
         self.completeUseCase = completeUseCase
         self.deleteUseCase = deleteUseCase
-        self.userId = userId
     }
     
     // MARK: - Actions
@@ -56,7 +50,7 @@ final class TasksViewModel {
         errorMessage = nil
         
         do {
-            tasks = try await fetchUseCase.execute(for: userId)
+            tasks = try await fetchUseCase.execute()
             isLoading = false
         } catch {
             errorMessage = "Failed to load tasks: \(error.localizedDescription)"
@@ -72,8 +66,7 @@ final class TasksViewModel {
         do {
             let task = try await createUseCase.execute(
                 title: newTaskTitle,
-                description: newTaskDescription.isEmpty ? nil : newTaskDescription,
-                for: userId
+                description: newTaskDescription.isEmpty ? nil : newTaskDescription
             )
             tasks.append(task)
             

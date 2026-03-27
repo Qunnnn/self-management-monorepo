@@ -26,6 +26,12 @@ enum APIEndpoint: String, CaseIterable {
     case completeTask = "/tasks/%@/complete"
     case deleteTask = "/tasks/%@"
     
+    // Diary Endpoints
+    case diary = "/diary"
+    case userDiary = "/users/%@/diary"
+    case diaryDetail = "/diary/%@"
+    case diaryAttachments = "/diary/%@/attachments"
+    
     /// The actual path string for the endpoint
     func path(args: CVarArg...) -> String {
         if args.isEmpty {

@@ -62,7 +62,6 @@ final class TaskRepository: TaskRepositoryProtocol {
 
     /// Data Transfer Object for the Request Body when creating a task
     private struct CreateTaskRequestDTO: Encodable {
-        let userId: String
         let title: String
         let description: String?
     }
@@ -88,26 +87,6 @@ final class TaskRepository: TaskRepositoryProtocol {
         return dtoList.compactMap { $0.toEntity() }
     }
     
-    /// Fetches all tasks for a specific user with optional filters.
-    func fetchTasks(for userId: UUID, completed: Bool?, limit: Int?, offset: Int?) async throws -> [TodoTask] {
-        var params: [String: String] = [:]
-        if let completed = completed { params["completed"] = String(completed) }
-        if let limit = limit { params["limit"] = String(limit) }
-        if let offset = offset { params["offset"] = String(offset) }
-        
-        let path = APIEndpoint.userTasks.path(args: userId.uuidString.lowercased())
-        let queryParams: [String: String]? = params.isEmpty ? nil : params
-        
-        let dtoList: [TaskDTO] = try await apiClient.request(
-            path: path,
-            method: "GET",
-            query: queryParams,
-            headers: nil as [String: String]?
-        )
-        
-        return dtoList.compactMap { $0.toEntity() }
-    }
-    
     /// Fetches a single task by ID.
     func fetchTask(by id: UUID) async throws -> TodoTask? {
         let path = "\(APIEndpoint.tasks.path)/\(id.uuidString.lowercased())"
@@ -121,9 +100,8 @@ final class TaskRepository: TaskRepositoryProtocol {
     }
     
     /// Creates a new task.
-    func createTask(title: String, description: String?, for userId: UUID) async throws -> TodoTask {
+    func createTask(title: String, description: String?) async throws -> TodoTask {
         let requestBody = CreateTaskRequestDTO(
-            userId: userId.uuidString.lowercased(),
             title: title,
             description: description
         )

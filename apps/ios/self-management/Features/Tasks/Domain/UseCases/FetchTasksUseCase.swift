@@ -16,18 +16,14 @@ final class FetchTasksUseCase {
         self.repository = repository
     }
 
-    /// Fetches all active tasks for the current user.
+    /// Fetches all active tasks for the current authenticated user.
     /// - Parameters:
-    ///   - userId: The ID of the user whose tasks to fetch.
     ///   - completed: Optional filter for completed/incomplete tasks.
     ///   - limit: Optional limit for the number of results.
     ///   - offset: Optional skip for the results.
     /// - Returns: An array of TodoTask entities.
-    func execute(for userId: String, completed: Bool? = nil, limit: Int? = nil, offset: Int? = nil) async throws -> [TodoTask] {
-        guard let userUUID = UUID(uuidString: userId) else {
-            throw NSError(domain: "FetchTasksUseCase", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid User ID format"])
-        }
-        return try await repository.fetchTasks(for: userUUID, completed: completed, limit: limit, offset: offset)
+    func execute(completed: Bool? = nil, limit: Int? = nil, offset: Int? = nil) async throws -> [TodoTask] {
+        return try await repository.fetchTasks(completed: completed, limit: limit, offset: offset)
     }
 
     /// Fetches a single task by ID.

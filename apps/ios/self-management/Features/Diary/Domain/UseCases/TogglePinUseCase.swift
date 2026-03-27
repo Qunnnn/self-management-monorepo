@@ -20,9 +20,9 @@ final class TogglePinUseCase {
     /// - Parameter entry: The diary entry to toggle the pinned status for.
     /// - Returns: The updated diary entry.
     @discardableResult
-    func execute(entry: DiaryEntry) async -> DiaryEntry {
+    func execute(entry: DiaryEntry) async throws -> DiaryEntry {
         let updatedEntry = entry.updated(isPinned: !entry.isPinned)
-        await repository.updateEntry(updatedEntry)
+        try await repository.updateEntry(updatedEntry)
         return updatedEntry
     }
 }

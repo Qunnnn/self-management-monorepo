@@ -33,29 +33,29 @@ final class DiaryRepository: DiaryRepositoryProtocol {
 
     // MARK: - Read Operations
 
-    func getAllEntries() async -> [DiaryEntry] {
+    func getAllEntries() async throws -> [DiaryEntry] {
         Array(entries.values)
     }
 
-    func getEntry(by id: UUID) async -> DiaryEntry? {
+    func getEntry(by id: UUID) async throws -> DiaryEntry? {
         entries[id]
     }
 
     // MARK: - Write Operations
 
-    func saveEntry(_ entry: DiaryEntry) async {
+    func saveEntry(_ entry: DiaryEntry) async throws {
         entries[entry.id] = entry
     }
 
-    func updateEntry(_ entry: DiaryEntry) async {
+    func updateEntry(_ entry: DiaryEntry) async throws {
         entries[entry.id] = entry
     }
 
-    func deleteEntry(by id: UUID) async {
+    func deleteEntry(by id: UUID) async throws {
         entries.removeValue(forKey: id)
     }
 
-    func deleteEntries(by ids: [UUID]) async {
+    func deleteEntries(by ids: [UUID]) async throws {
         for id in ids {
             entries.removeValue(forKey: id)
         }

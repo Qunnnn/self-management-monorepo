@@ -15,7 +15,7 @@ type Task struct {
 
 // CreateTaskRequest is used when creating a new task
 type CreateTaskRequest struct {
-	UserID      string  `json:"userId"`
+	UserID      string  `json:"-"`
 	Title       string  `json:"title"`
 	Description *string `json:"description,omitempty"`
 }

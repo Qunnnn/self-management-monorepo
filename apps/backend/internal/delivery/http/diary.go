@@ -9,6 +9,7 @@ import (
 
 	"self-management-monorepo/apps/backend/internal/entity"
 	"self-management-monorepo/apps/backend/internal/service"
+	"self-management-monorepo/apps/backend/pkg/constants"
 	"self-management-monorepo/apps/backend/pkg/utils"
 )
 
@@ -24,9 +25,9 @@ func NewDiaryHandler(svc service.DiaryService) *DiaryHandler {
 
 // GetDiaryEntries returns all active diary entries for a user
 func (h *DiaryHandler) GetDiaryEntries(w http.ResponseWriter, r *http.Request) {
-	userID := r.PathValue("userId")
-	if userID == "" {
-		utils.WriteError(w, "Invalid user ID", http.StatusBadRequest, nil)
+	userID, ok := r.Context().Value(constants.UserIDKey).(string)
+	if !ok {
+		utils.WriteError(w, "Unauthorized", http.StatusUnauthorized, nil)
 		return
 	}
 
@@ -83,16 +84,23 @@ func (h *DiaryHandler) GetDiaryEntry(w http.ResponseWriter, r *http.Request) {
 
 // CreateDiaryEntry creates a new diary entry
 func (h *DiaryHandler) CreateDiaryEntry(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value(constants.UserIDKey).(string)
+	if !ok {
+		utils.WriteError(w, "Unauthorized", http.StatusUnauthorized, nil)
+		return
+	}
+
 	var req entity.CreateDiaryEntryRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
 		return
 	}
+	req.UserID = userID
 
 	e, err := h.svc.CreateDiaryEntry(r.Context(), req)
 	if err != nil {
 		if errors.Is(err, service.ErrInvalidInput) {
-			utils.WriteError(w, "User ID and content are required", http.StatusBadRequest, nil)
+			utils.WriteError(w, "Content is required", http.StatusBadRequest, nil)
 			return
 		}
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)

@@ -38,7 +38,7 @@ type DiaryAttachment struct {
 
 // CreateDiaryEntryRequest is used when creating a new diary entry
 type CreateDiaryEntryRequest struct {
-	UserID    string   `json:"userId"`
+	UserID    string   `json:"-"`
 	Title     string   `json:"title"`
 	Content   string   `json:"content"`
 	Mood      *Mood    `json:"mood,omitempty"`

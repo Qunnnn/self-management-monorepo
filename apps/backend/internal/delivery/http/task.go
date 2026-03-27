@@ -6,10 +6,10 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"self-management-monorepo/apps/backend/internal/entity"
 	"self-management-monorepo/apps/backend/internal/service"
+	"self-management-monorepo/apps/backend/pkg/constants"
 	"self-management-monorepo/apps/backend/pkg/utils"
 )
 
@@ -59,7 +59,13 @@ func (h *TaskHandler) GetTasks(w http.ResponseWriter, r *http.Request) {
 		offset = &o
 	}
 
-	tasks, err := h.svc.GetTasks(r.Context(), completed, limit, offset)
+	userID, ok := r.Context().Value(constants.UserIDKey).(string)
+	if !ok {
+		utils.WriteError(w, "Unauthorized", http.StatusUnauthorized, nil)
+		return
+	}
+
+	tasks, err := h.svc.GetTasksByUserID(r.Context(), userID, completed, limit, offset)
 	if err != nil {
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
 		return
@@ -145,20 +151,23 @@ func (h *TaskHandler) GetTasksByUser(w http.ResponseWriter, r *http.Request) {
 
 // CreateTask creates a new task
 func (h *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value(constants.UserIDKey).(string)
+	if !ok {
+		utils.WriteError(w, "Unauthorized", http.StatusUnauthorized, nil)
+		return
+	}
+
 	var req entity.CreateTaskRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
 		return
 	}
+	req.UserID = userID
 
 	t, err := h.svc.CreateTask(r.Context(), req)
 	if err != nil {
 		if errors.Is(err, service.ErrInvalidInput) {
-			utils.WriteError(w, "Title and user_id are required", http.StatusBadRequest, nil)
-			return
-		}
-		if strings.Contains(err.Error(), "foreign key") {
-			utils.WriteError(w, "User not found", http.StatusBadRequest, nil)
+			utils.WriteError(w, "Title is required", http.StatusBadRequest, nil)
 			return
 		}
 		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)

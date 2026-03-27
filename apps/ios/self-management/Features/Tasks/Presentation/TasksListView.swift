@@ -105,13 +105,11 @@ struct TasksListView: View {
     private func setupViewModel() {
         guard viewModel == nil, let container = container else { return }
         
-        let userId = container.sessionService.currentUser?.id ?? ""
         viewModel = TasksViewModel(
             fetchUseCase: container.fetchTasksUseCase,
             createUseCase: container.createTaskUseCase,
             completeUseCase: container.completeTaskUseCase,
-            deleteUseCase: container.deleteTaskUseCase,
-            userId: userId
+            deleteUseCase: container.deleteTaskUseCase
         )
     }
 }

@@ -18,16 +18,16 @@ final class FetchDiaryEntriesUseCase {
 
     /// Fetches all diary entries sorted by pinned status and update date.
     /// - Returns: Sorted array of diary entries.
-    func execute() async -> [DiaryEntry] {
-        let entries = await repository.getAllEntries()
+    func execute() async throws -> [DiaryEntry] {
+        let entries = try await repository.getAllEntries()
         return sortEntries(entries)
     }
 
     /// Search diary entries by title or content.
     /// - Parameter query: Search query string.
     /// - Returns: Filtered and sorted entries.
-    func search(query: String) async -> [DiaryEntry] {
-        let entries = await repository.getAllEntries()
+    func search(query: String) async throws -> [DiaryEntry] {
+        let entries = try await repository.getAllEntries()
         guard !query.isEmpty else {
             return sortEntries(entries)
         }

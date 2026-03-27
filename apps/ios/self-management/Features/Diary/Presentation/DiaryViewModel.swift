@@ -68,37 +68,61 @@ final class DiaryViewModel {
     func loadEntries() async {
         isLoading = true
         errorMessage = nil
-        entries = await fetchUseCase.execute()
+        do {
+            entries = try await fetchUseCase.execute()
+        } catch {
+            errorMessage = "Failed to load diary entries."
+        }
         isLoading = false
     }
 
     @MainActor
     func createEntry(title: String, content: String = "") async {
-        await createUseCase.execute(title: title, content: content)
-        await loadEntries()
+        do {
+            try await createUseCase.execute(title: title, content: content)
+            await loadEntries()
+        } catch {
+            errorMessage = "Failed to create diary entry."
+        }
     }
 
     @MainActor
     func updateEntry(_ entry: DiaryEntry) async {
-        await updateUseCase.execute(entry: entry)
-        await loadEntries()
+        do {
+            try await updateUseCase.execute(entry: entry)
+            await loadEntries()
+        } catch {
+            errorMessage = "Failed to update diary entry."
+        }
     }
 
     @MainActor
     func togglePin(_ entry: DiaryEntry) async {
-        await togglePinUseCase.execute(entry: entry)
-        await loadEntries()
+        do {
+            try await togglePinUseCase.execute(entry: entry)
+            await loadEntries()
+        } catch {
+            errorMessage = "Failed to pin/unpin entry."
+        }
     }
 
     @MainActor
     func deleteEntry(_ entry: DiaryEntry) async {
-        await deleteUseCase.execute(entry: entry)
-        await loadEntries()
+        do {
+            try await deleteUseCase.execute(entry: entry)
+            await loadEntries()
+        } catch {
+            errorMessage = "Failed to delete diary entry."
+        }
     }
 
     @MainActor
     func deleteEntries(_ entries: [DiaryEntry]) async {
-        await deleteUseCase.execute(entries: entries)
-        await loadEntries()
+        do {
+            try await deleteUseCase.execute(entries: entries)
+            await loadEntries()
+        } catch {
+            errorMessage = "Failed to delete diary entries."
+        }
     }
 }

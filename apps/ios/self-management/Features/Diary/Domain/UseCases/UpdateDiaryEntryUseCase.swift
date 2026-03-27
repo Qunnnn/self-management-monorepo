@@ -18,8 +18,8 @@ final class UpdateDiaryEntryUseCase {
 
     /// Updates an existing diary entry in the repository.
     /// - Parameter entry: The diary entry with updated values.
-    func execute(entry: DiaryEntry) async {
+    func execute(entry: DiaryEntry) async throws {
         let updatedEntry = entry.updated()
-        await repository.updateEntry(updatedEntry)
+        try await repository.updateEntry(updatedEntry)
     }
 }
