@@ -1,18 +1,18 @@
 //
-//  NoteStatus.swift
+//  DiaryStatus.swift
 //  self-management
 //
 //  LEARNING: Domain Value Object
 //
-//  This represents the lifecycle status of a note.
+//  This represents the lifecycle status of a diary entry.
 //  Colors and themes will be derived from this status in the UI layer
 //  via extensions, keeping the entity focused on business state.
 //
 
 import Foundation
 
-/// Represents the current status/state of a note
-public enum NoteStatus: String, CaseIterable, Codable {
+/// Represents the current status/state of a diary entry
+public enum DiaryStatus: String, CaseIterable, Codable {
     case active
     case archived
     case draft

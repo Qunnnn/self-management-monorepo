@@ -1,24 +1,18 @@
 //
-//  NoteDetailView.swift
+//  DiaryDetailView.swift
 //  self-management
 //
 //  LEARNING: Detail/Edit View
 //
-//  This view demonstrates:
-//  - Editing existing data
-//  - State management with @State
-//  - Navigation with @Environment
-//  - Confirmation dialogs
-//
 
 import SwiftUI
 
-struct NoteDetailView: View {
+struct DiaryDetailView: View {
 
     // MARK: - Properties
 
-    let note: Note
-    let viewModel: NotesViewModel
+    let entry: DiaryEntry
+    let viewModel: DiaryViewModel
 
     // MARK: - Environment
 
@@ -28,18 +22,18 @@ struct NoteDetailView: View {
 
     @State private var editedTitle: String
     @State private var editedContent: String
-    @State private var editedStatus: NoteStatus
+    @State private var editedStatus: DiaryStatus
     @State private var showingDeleteConfirmation = false
     @State private var hasChanges = false
 
     // MARK: - Initialization
 
-    init(note: Note, viewModel: NotesViewModel) {
-        self.note = note
+    init(entry: DiaryEntry, viewModel: DiaryViewModel) {
+        self.entry = entry
         self.viewModel = viewModel
-        self._editedTitle = State(initialValue: note.title)
-        self._editedContent = State(initialValue: note.content)
-        self._editedStatus = State(initialValue: note.status)
+        self._editedTitle = State(initialValue: entry.title)
+        self._editedContent = State(initialValue: entry.content)
+        self._editedStatus = State(initialValue: entry.status)
     }
 
     // MARK: - Body
@@ -47,7 +41,7 @@ struct NoteDetailView: View {
     var body: some View {
         Form {
             Section("Title") {
-                TextField("Note title", text: $editedTitle)
+                TextField("Entry title", text: $editedTitle)
                     .onChange(of: editedTitle) { checkForChanges() }
             }
 
@@ -59,7 +53,7 @@ struct NoteDetailView: View {
 
             Section("Status") {
                 Picker("Status", selection: $editedStatus) {
-                    ForEach(NoteStatus.allCases, id: \.self) { status in
+                    ForEach(DiaryStatus.allCases, id: \.self) { status in
                         HStack {
                             Circle()
                                 .fill(status.color)
@@ -74,8 +68,8 @@ struct NoteDetailView: View {
             }
 
             Section("Info") {
-                LabeledContent("Created", value: note.createdAt.formatted())
-                LabeledContent("Modified", value: note.updatedAt.formatted())
+                LabeledContent("Created", value: entry.createdAt.formatted())
+                LabeledContent("Modified", value: entry.updatedAt.formatted())
             }
 
             Section {
@@ -84,13 +78,13 @@ struct NoteDetailView: View {
                 } label: {
                     HStack {
                         Spacer()
-                        Text("Delete Note")
+                        Text("Delete Entry")
                         Spacer()
                     }
                 }
             }
         }
-        .navigationTitle("Edit Note")
+        .navigationTitle("Edit Entry")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -101,12 +95,12 @@ struct NoteDetailView: View {
             }
         }
         .confirmationDialog(
-            "Delete Note?",
+            "Delete Entry?",
             isPresented: $showingDeleteConfirmation,
             titleVisibility: .visible
         ) {
             Button("Delete", role: .destructive) {
-                deleteNote()
+                deleteEntry()
             }
             Button("Cancel", role: .cancel) {}
         } message: {
@@ -117,27 +111,27 @@ struct NoteDetailView: View {
     // MARK: - Helpers
 
     private func checkForChanges() {
-        hasChanges = editedTitle != note.title ||
-                     editedContent != note.content ||
-                     editedStatus != note.status
+        hasChanges = editedTitle != entry.title ||
+                     editedContent != entry.content ||
+                     editedStatus != entry.status
     }
 
     private func saveChanges() {
-        let updatedNote = note.updated(
+        let updatedEntry = entry.updated(
             title: editedTitle,
             content: editedContent,
             status: editedStatus
         )
 
         Task {
-            await viewModel.updateNote(updatedNote)
+            await viewModel.updateEntry(updatedEntry)
             dismiss()
         }
     }
 
-    private func deleteNote() {
+    private func deleteEntry() {
         Task {
-            await viewModel.deleteNote(note)
+            await viewModel.deleteEntry(entry)
             dismiss()
         }
     }
@@ -147,18 +141,23 @@ struct NoteDetailView: View {
 // MARK: - Preview
 
 #Preview {
-    NavigationStack {
-        NoteDetailView(
-            note: Note(
-                title: "Sample Note",
-                content: "This is the content of the sample note.",
+    let repository = DiaryRepository()
+    let viewModel = DiaryViewModel(
+        fetchUseCase: FetchDiaryEntriesUseCase(repository: repository),
+        createUseCase: CreateDiaryEntryUseCase(repository: repository),
+        updateUseCase: UpdateDiaryEntryUseCase(repository: repository),
+        deleteUseCase: DeleteDiaryEntryUseCase(repository: repository),
+        togglePinUseCase: TogglePinUseCase(repository: repository)
+    )
+    
+    return NavigationStack {
+        DiaryDetailView(
+            entry: DiaryEntry(
+                title: "Sample Entry",
+                content: "This is the content of the sample diary entry.",
                 status: .active
             ),
-            viewModel: NotesViewModel(
-                useCase: NotesUseCase(
-                    repository: NotesRepository()
-                )
-            )
+            viewModel: viewModel
         )
     }
 }

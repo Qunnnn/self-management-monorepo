@@ -16,6 +16,7 @@ final class RootViewModel {
     // MARK: - Properties
     
     private let loginUseCase: LoginUseCase
+    private let fetchCurrentUserUseCase: FetchCurrentUserUseCase
     private let sessionService: SessionService
     
     // MARK: - App State
@@ -30,8 +31,9 @@ final class RootViewModel {
     
     // MARK: - Initialization
     
-    init(loginUseCase: LoginUseCase, sessionService: SessionService) {
+    init(loginUseCase: LoginUseCase, fetchCurrentUserUseCase: FetchCurrentUserUseCase, sessionService: SessionService) {
         self.loginUseCase = loginUseCase
+        self.fetchCurrentUserUseCase = fetchCurrentUserUseCase
         self.sessionService = sessionService
     }
     
@@ -47,7 +49,7 @@ final class RootViewModel {
         
         if isAuthenticated, let tokens = sessionService.restoreTokens() {
             // Restore current user profile
-            if let user = await loginUseCase.fetchCurrentUser(accessToken: tokens.accessToken) {
+            if let user = await fetchCurrentUserUseCase.execute(accessToken: tokens.accessToken) {
                 sessionService.updateCurrentUser(user)
             } else {
                 // Token might be invalid or expired

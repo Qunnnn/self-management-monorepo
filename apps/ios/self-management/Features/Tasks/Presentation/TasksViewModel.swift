@@ -10,7 +10,6 @@ import SwiftUI
 import Observation
 
 /// ViewModel for the Tasks list view.
-/// Manages the state of the task list, including loading, adding, completing, and deleting tasks.
 @Observable
 final class TasksViewModel {
     
@@ -26,13 +25,25 @@ final class TasksViewModel {
     
     // MARK: - Dependencies
     
-    private let tasksUseCase: TasksUseCase
+    private let fetchUseCase: FetchTasksUseCase
+    private let createUseCase: CreateTaskUseCase
+    private let completeUseCase: CompleteTaskUseCase
+    private let deleteUseCase: DeleteTaskUseCase
     private let userId: String
     
     // MARK: - Initialization
     
-    init(tasksUseCase: TasksUseCase, userId: String) {
-        self.tasksUseCase = tasksUseCase
+    init(
+        fetchUseCase: FetchTasksUseCase,
+        createUseCase: CreateTaskUseCase,
+        completeUseCase: CompleteTaskUseCase,
+        deleteUseCase: DeleteTaskUseCase,
+        userId: String
+    ) {
+        self.fetchUseCase = fetchUseCase
+        self.createUseCase = createUseCase
+        self.completeUseCase = completeUseCase
+        self.deleteUseCase = deleteUseCase
         self.userId = userId
     }
     
@@ -45,7 +56,7 @@ final class TasksViewModel {
         errorMessage = nil
         
         do {
-            tasks = try await tasksUseCase.getTasks(for: userId)
+            tasks = try await fetchUseCase.execute(for: userId)
             isLoading = false
         } catch {
             errorMessage = "Failed to load tasks: \(error.localizedDescription)"
@@ -59,7 +70,7 @@ final class TasksViewModel {
         guard !newTaskTitle.isEmpty else { return }
         
         do {
-            let task = try await tasksUseCase.addTask(
+            let task = try await createUseCase.execute(
                 title: newTaskTitle,
                 description: newTaskDescription.isEmpty ? nil : newTaskDescription,
                 for: userId
@@ -76,13 +87,12 @@ final class TasksViewModel {
     }
     
     /// Toggles the completion status of a task.
-    /// Note: Currently the backend only has 'CompleteTask' (PATCH /tasks/:id/complete).
     @MainActor
     func completeTask(_ task: TodoTask) async {
         guard !task.isCompleted else { return } // Already completed
         
         do {
-            let updatedTask = try await tasksUseCase.markTaskAsComplete(taskId: task.id)
+            let updatedTask = try await completeUseCase.execute(taskId: task.id)
             if let index = tasks.firstIndex(where: { $0.id == task.id }) {
                 tasks[index] = updatedTask
             }
@@ -97,8 +107,7 @@ final class TasksViewModel {
         for index in offsets {
             let task = tasks[index]
             do {
-                try await tasksUseCase.deleteTask(taskId: task.id)
-                // We handle the UI removal below after the loop or inside if reliable
+                try await deleteUseCase.execute(taskId: task.id)
             } catch {
                 errorMessage = "Failed to delete task: \(error.localizedDescription)"
                 return // Stop on first error

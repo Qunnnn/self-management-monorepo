@@ -1,5 +1,5 @@
 //
-//  Note.swift
+//  DiaryEntry.swift
 //  self-management
 //
 //  LEARNING: Domain Entity
@@ -18,31 +18,31 @@
 
 import Foundation
 
-/// Represents a note in the self-management system
+/// Represents a diary entry in the self-management system
 /// This is a Domain Entity - pure business logic only
-struct Note: Identifiable, Equatable {
+struct DiaryEntry: Identifiable, Equatable {
 
     // MARK: - Properties
 
-    /// Unique identifier for the note
+    /// Unique identifier for the diary entry
     let id: UUID
 
-    /// Title of the note
+    /// Title of the diary entry
     var title: String
 
-    /// Content/body of the note
+    /// Content/body of the diary entry
     var content: String
 
-    /// When the note was created
+    /// When the diary entry was created
     let createdAt: Date
 
-    /// When the note was last modified
+    /// When the diary entry was last modified
     var updatedAt: Date
 
-    /// Lifecycle status of the note
-    var status: NoteStatus
+    /// Lifecycle status of the diary entry
+    var status: DiaryStatus
 
-    /// Whether the note is pinned to top
+    /// Whether the diary entry is pinned to top
     var isPinned: Bool
 
     // MARK: - Initialization
@@ -53,7 +53,7 @@ struct Note: Identifiable, Equatable {
         content: String = "",
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
-        status: NoteStatus = .active,
+        status: DiaryStatus = .active,
         isPinned: Bool = false
     ) {
         self.id = id
@@ -67,7 +67,7 @@ struct Note: Identifiable, Equatable {
 
     // MARK: - Business Logic
 
-    /// Check if the note is empty (no title and no content)
+    /// Check if the diary entry is empty (no title and no content)
     var isEmpty: Bool {
         title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
         content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -83,8 +83,8 @@ struct Note: Identifiable, Equatable {
     }
 
     /// Create an updated copy with new modification date
-    func updated(title: String? = nil, content: String? = nil, status: NoteStatus? = nil, isPinned: Bool? = nil) -> Note {
-        Note(
+    func updated(title: String? = nil, content: String? = nil, status: DiaryStatus? = nil, isPinned: Bool? = nil) -> DiaryEntry {
+        DiaryEntry(
             id: self.id,
             title: title ?? self.title,
             content: content ?? self.content,
@@ -95,4 +95,3 @@ struct Note: Identifiable, Equatable {
         )
     }
 }
-

@@ -23,6 +23,7 @@ struct SelfManagementApp: App {
         WindowGroup {
             RootView(
                 loginUseCase: container.loginUseCase,
+                fetchCurrentUserUseCase: container.fetchCurrentUserUseCase,
                 sessionService: container.sessionService
             )
             .environment(\.dependencyContainer, container)

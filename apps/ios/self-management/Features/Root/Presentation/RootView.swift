@@ -18,20 +18,32 @@ struct RootView: View {
 
     // Store dependencies for creating LoginViewModel
     private let loginUseCase: LoginUseCase
+    private let fetchCurrentUserUseCase: FetchCurrentUserUseCase
     private let sessionService: SessionService
 
     // MARK: - State
 
-    @State private var selectedTab: Tab = .notes
+    @State private var selectedTab: Tab = .diary
 
     // MARK: - Initialization
 
-    init(loginUseCase: @autoclosure @escaping () -> LoginUseCase, sessionService: @autoclosure @escaping () -> SessionService) {
-        let useCase = loginUseCase()
+    init(
+        loginUseCase: @autoclosure @escaping () -> LoginUseCase,
+        fetchCurrentUserUseCase: @autoclosure @escaping () -> FetchCurrentUserUseCase,
+        sessionService: @autoclosure @escaping () -> SessionService
+    ) {
+        let loginUC = loginUseCase()
+        let fetchUC = fetchCurrentUserUseCase()
         let service = sessionService()
-        self.loginUseCase = useCase
+        
+        self.loginUseCase = loginUC
+        self.fetchCurrentUserUseCase = fetchUC
         self.sessionService = service
-        self._viewModel = State(wrappedValue: RootViewModel(loginUseCase: useCase, sessionService: service))
+        self._viewModel = State(wrappedValue: RootViewModel(
+            loginUseCase: loginUC,
+            fetchCurrentUserUseCase: fetchUC,
+            sessionService: service
+        ))
     }
 
     // MARK: - Body
@@ -76,6 +88,8 @@ struct RootView: View {
                     switch tab {
                     case .tasks:
                         TasksListView()
+                    case .diary:
+                        DiaryListView()
                     default:
                         ComingSoonView(feature: tab.title)
                     }
@@ -93,7 +107,7 @@ struct RootView: View {
 // MARK: - Tab Definition
 
 enum Tab: String, CaseIterable, Identifiable {
-    case notes, tasks, finance
+    case diary, tasks, finance
     
     var id: String { rawValue }
     
@@ -103,7 +117,7 @@ enum Tab: String, CaseIterable, Identifiable {
     
     var icon: String {
         switch self {
-        case .notes: return "note.text"
+        case .diary: return "book.fill"
         case .tasks: return "checkmark.circle"
         case .finance: return "dollarsign.circle"
         }
@@ -115,6 +129,7 @@ enum Tab: String, CaseIterable, Identifiable {
 #Preview {
     RootView(
         loginUseCase: LoginUseCase(repository: AuthRepository()),
+        fetchCurrentUserUseCase: FetchCurrentUserUseCase(repository: AuthRepository()),
         sessionService: SessionService()
     )
     .environment(DependencyContainer())

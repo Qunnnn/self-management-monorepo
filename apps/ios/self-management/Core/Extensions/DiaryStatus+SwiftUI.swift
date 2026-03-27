@@ -1,14 +1,14 @@
 //
-//  NoteStatus+SwiftUI.swift
+//  DiaryStatus+SwiftUI.swift
 //  self-management
 //
-//  Extension for mapping NoteStatus to SwiftUI Colors.
+//  Extension for mapping DiaryStatus to SwiftUI Colors.
 //
 
 import SwiftUI
 
-extension NoteStatus {
-    /// Maps NoteStatus to a thematic color for UI indicators.
+extension DiaryStatus {
+    /// Maps DiaryStatus to a thematic color for UI indicators.
     var color: Color {
         switch self {
         case .active:

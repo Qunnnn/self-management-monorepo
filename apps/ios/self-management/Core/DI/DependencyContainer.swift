@@ -4,16 +4,6 @@
 //
 //  LEARNING: Dependency Injection Container
 //
-//  WHY USE THIS?
-//  - Single source of truth for all dependencies
-//  - Easy to swap implementations (e.g., mock for testing)
-//  - Follows Dependency Inversion Principle (SOLID's "D")
-//
-//  HOW IT WORKS:
-//  - Container creates and holds all shared services
-//  - Views receive dependencies via @Environment
-//  - Dependencies are created in the initializer
-//
 
 import SwiftUI
 
@@ -35,8 +25,8 @@ final class DependencyContainer {
 
     // MARK: - Repositories
 
-    /// Notes repository for CRUD operations on notes
-    let notesRepository: NotesRepositoryProtocol
+    /// Diary repository for CRUD operations on diary entries
+    let diaryRepository: DiaryRepositoryProtocol
     
     /// Auth repository for authentication operations
     let authRepository: AuthRepositoryProtocol
@@ -44,16 +34,25 @@ final class DependencyContainer {
     /// Tasks repository for CRUD operations on tasks
     let taskRepository: TaskRepositoryProtocol
 
-    // MARK: - Use Cases
+    // MARK: - Use Cases (Diary)
 
-    /// Use case for managing notes
-    let notesUseCase: NotesUseCase
-    
-    /// Use case for user authentication
+    let fetchDiaryEntriesUseCase: FetchDiaryEntriesUseCase
+    let createDiaryEntryUseCase: CreateDiaryEntryUseCase
+    let updateDiaryEntryUseCase: UpdateDiaryEntryUseCase
+    let deleteDiaryEntryUseCase: DeleteDiaryEntryUseCase
+    let togglePinUseCase: TogglePinUseCase
+
+    // MARK: - Use Cases (Auth)
+
     let loginUseCase: LoginUseCase
+    let fetchCurrentUserUseCase: FetchCurrentUserUseCase
     
-    /// Use case for managing tasks
-    let tasksUseCase: TasksUseCase
+    // MARK: - Use Cases (Tasks)
+
+    let fetchTasksUseCase: FetchTasksUseCase
+    let createTaskUseCase: CreateTaskUseCase
+    let completeTaskUseCase: CompleteTaskUseCase
+    let deleteTaskUseCase: DeleteTaskUseCase
 
     // MARK: - Initialization
 
@@ -69,28 +68,38 @@ final class DependencyContainer {
         self.authenticatedApiClient = APIClient(interceptor: authInterceptor)
         
         // Initialize repositories
-        let notesRepo = NotesRepository()
-        self.notesRepository = notesRepo
+        let diaryRepo = DiaryRepository()
+        self.diaryRepository = diaryRepo
         
-        // Inject the PUBLIC client into AuthRepository (login/register)
         let authRepo = AuthRepository(apiClient: self.publicApiClient)
         self.authRepository = authRepo
         
-        // --- Tasks Setup ---
-        // Inject the AUTHENTICATED client into TaskRepository
         let taskRepo = TaskRepository(apiClient: self.authenticatedApiClient)
         self.taskRepository = taskRepo
 
-        // Then initialize use cases with their dependencies
-        self.notesUseCase = NotesUseCase(repository: notesRepo)
+        // --- Use Cases Setup ---
+        
+        // Diary
+        self.fetchDiaryEntriesUseCase = FetchDiaryEntriesUseCase(repository: diaryRepo)
+        self.createDiaryEntryUseCase = CreateDiaryEntryUseCase(repository: diaryRepo)
+        self.updateDiaryEntryUseCase = UpdateDiaryEntryUseCase(repository: diaryRepo)
+        self.deleteDiaryEntryUseCase = DeleteDiaryEntryUseCase(repository: diaryRepo)
+        self.togglePinUseCase = TogglePinUseCase(repository: diaryRepo)
+        
+        // Auth
         self.loginUseCase = LoginUseCase(repository: authRepo)
-        self.tasksUseCase = TasksUseCase(repository: taskRepo)
+        self.fetchCurrentUserUseCase = FetchCurrentUserUseCase(repository: authRepo)
+        
+        // Tasks
+        self.fetchTasksUseCase = FetchTasksUseCase(repository: taskRepo)
+        self.createTaskUseCase = CreateTaskUseCase(repository: taskRepo)
+        self.completeTaskUseCase = CompleteTaskUseCase(repository: taskRepo)
+        self.deleteTaskUseCase = DeleteTaskUseCase(repository: taskRepo)
     }
 }
 
 // MARK: - Environment Key
 
-/// Custom environment key for accessing the container
 private struct DependencyContainerKey: EnvironmentKey {
     static let defaultValue: DependencyContainer? = nil
 }
@@ -105,7 +114,6 @@ extension EnvironmentValues {
 // MARK: - View Extension
 
 extension View {
-    /// Inject the dependency container into the environment
     func environment(container: DependencyContainer) -> some View {
         self.environment(\.dependencyContainer, container)
     }
