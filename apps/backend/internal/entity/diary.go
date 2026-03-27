@@ -2,13 +2,23 @@ package entity
 
 import "time"
 
+// Mood represents the emotional state associated with a diary entry
+type Mood string
+
+const (
+	MoodHappy      Mood = "happy"
+	MoodProductive Mood = "productive"
+	MoodTired      Mood = "tired"
+	MoodNeutral    Mood = "neutral"
+)
+
 // DiaryEntry represents a diary entry in the database
 type DiaryEntry struct {
 	ID        string     `json:"id"`
 	UserID    string     `json:"userId"`
 	Title     string     `json:"title"`
 	Content   string     `json:"content"`
-	Mood      *string    `json:"mood,omitempty"`
+	Mood      *Mood      `json:"mood,omitempty"`
 	Latitude  *float64   `json:"latitude,omitempty"`
 	Longitude *float64   `json:"longitude,omitempty"`
 	IsPinned  bool       `json:"isPinned"`
@@ -31,7 +41,7 @@ type CreateDiaryEntryRequest struct {
 	UserID    string   `json:"userId"`
 	Title     string   `json:"title"`
 	Content   string   `json:"content"`
-	Mood      *string  `json:"mood,omitempty"`
+	Mood      *Mood    `json:"mood,omitempty"`
 	Latitude  *float64 `json:"latitude,omitempty"`
 	Longitude *float64 `json:"longitude,omitempty"`
 	IsPinned  bool     `json:"isPinned"`
@@ -41,7 +51,7 @@ type CreateDiaryEntryRequest struct {
 type UpdateDiaryEntryRequest struct {
 	Title     *string  `json:"title,omitempty"`
 	Content   *string  `json:"content,omitempty"`
-	Mood      *string  `json:"mood,omitempty"`
+	Mood      *Mood    `json:"mood,omitempty"`
 	Latitude  *float64 `json:"latitude,omitempty"`
 	Longitude *float64 `json:"longitude,omitempty"`
 	IsPinned  *bool    `json:"isPinned,omitempty"`

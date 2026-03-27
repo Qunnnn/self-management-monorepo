@@ -22,7 +22,7 @@ struct DiaryDetailView: View {
 
     @State private var editedTitle: String
     @State private var editedContent: String
-    @State private var editedMood: String
+    @State private var editedMood: DiaryMood?
     @State private var showingDeleteConfirmation = false
     @State private var hasChanges = false
 
@@ -33,7 +33,7 @@ struct DiaryDetailView: View {
         self.viewModel = viewModel
         self._editedTitle = State(initialValue: entry.title)
         self._editedContent = State(initialValue: entry.content)
-        self._editedMood = State(initialValue: entry.mood ?? "")
+        self._editedMood = State(initialValue: entry.mood)
     }
 
     // MARK: - Body
@@ -52,8 +52,17 @@ struct DiaryDetailView: View {
             }
 
             Section("Mood") {
-                TextField("How are you feeling?", text: $editedMood)
-                    .onChange(of: editedMood) { checkForChanges() }
+                Picker("How are you feeling?", selection: $editedMood) {
+                    Text("None").tag(nil as DiaryMood?)
+                    ForEach(DiaryMood.allCases, id: \.self) { mood in
+                        HStack {
+                            Text(mood.emoji)
+                            Text(mood.displayName)
+                        }
+                        .tag(mood as DiaryMood?)
+                    }
+                }
+                .onChange(of: editedMood) { checkForChanges() }
             }
 
             Section("Info") {
@@ -105,14 +114,14 @@ struct DiaryDetailView: View {
     private func checkForChanges() {
         hasChanges = editedTitle != entry.title ||
                      editedContent != entry.content ||
-                     editedMood != (entry.mood ?? "")
+                     editedMood != entry.mood
     }
 
     private func saveChanges() {
         let updatedEntry = entry.updated(
             title: editedTitle,
             content: editedContent,
-            mood: editedMood.isEmpty ? nil : editedMood
+            mood: editedMood
         )
 
         Task {

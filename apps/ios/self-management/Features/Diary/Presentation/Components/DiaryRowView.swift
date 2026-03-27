@@ -31,8 +31,8 @@ struct DiaryRowView: View {
                 // Preview
                 if !entry.preview.isEmpty {
                     VStack(alignment: .leading, spacing: 4) {
-                        if let mood = entry.mood, !mood.isEmpty {
-                            Text(mood.capitalized)
+                        if let mood = entry.mood {
+                            Text("\(mood.emoji) \(mood.displayName)")
                                 .font(.caption2)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)

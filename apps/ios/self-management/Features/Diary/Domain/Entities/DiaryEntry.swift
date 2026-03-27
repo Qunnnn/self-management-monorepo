@@ -43,7 +43,7 @@ struct DiaryEntry: Identifiable, Equatable {
     var isPinned: Bool
 
     /// Mood of the entry (e.g., "productive", "tired", "happy")
-    var mood: String?
+    var mood: DiaryMood?
 
     /// Latitude of where the entry was created
     var latitude: Double?
@@ -63,7 +63,7 @@ struct DiaryEntry: Identifiable, Equatable {
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
         isPinned: Bool = false,
-        mood: String? = nil,
+        mood: DiaryMood? = nil,
         latitude: Double? = nil,
         longitude: Double? = nil,
         attachments: [DiaryAttachment] = []
@@ -102,7 +102,7 @@ struct DiaryEntry: Identifiable, Equatable {
         title: String? = nil,
         content: String? = nil,
         isPinned: Bool? = nil,
-        mood: String? = nil,
+        mood: DiaryMood? = nil,
         latitude: Double? = nil,
         longitude: Double? = nil,
         attachments: [DiaryAttachment]? = nil
