@@ -34,7 +34,7 @@ func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler, diaryH *Dia
 	mux.Handle("PATCH /tasks/{id}/complete", middleware.AuthMiddleware(http.HandlerFunc(taskH.CompleteTask)))
 
 	// Diary routes
-	mux.Handle("GET /users/{userId}/diary", middleware.AuthMiddleware(http.HandlerFunc(diaryH.GetDiaryEntries)))
+	mux.Handle("GET /diary", middleware.AuthMiddleware(http.HandlerFunc(diaryH.GetDiaryEntries)))
 	mux.Handle("POST /diary", middleware.AuthMiddleware(http.HandlerFunc(diaryH.CreateDiaryEntry)))
 	mux.Handle("GET /diary/{id}", middleware.AuthMiddleware(http.HandlerFunc(diaryH.GetDiaryEntry)))
 	mux.Handle("PUT /diary/{id}", middleware.AuthMiddleware(http.HandlerFunc(diaryH.UpdateDiaryEntry)))
