@@ -22,7 +22,7 @@ struct DiaryDetailView: View {
 
     @State private var editedTitle: String
     @State private var editedContent: String
-    @State private var editedStatus: DiaryStatus
+    @State private var editedMood: String
     @State private var showingDeleteConfirmation = false
     @State private var hasChanges = false
 
@@ -33,7 +33,7 @@ struct DiaryDetailView: View {
         self.viewModel = viewModel
         self._editedTitle = State(initialValue: entry.title)
         self._editedContent = State(initialValue: entry.content)
-        self._editedStatus = State(initialValue: entry.status)
+        self._editedMood = State(initialValue: entry.mood ?? "")
     }
 
     // MARK: - Body
@@ -47,29 +47,21 @@ struct DiaryDetailView: View {
 
             Section("Content") {
                 TextEditor(text: $editedContent)
-                    .frame(minHeight: 200)
+                    .frame(minHeight: 150)
                     .onChange(of: editedContent) { checkForChanges() }
             }
 
-            Section("Status") {
-                Picker("Status", selection: $editedStatus) {
-                    ForEach(DiaryStatus.allCases, id: \.self) { status in
-                        HStack {
-                            Circle()
-                                .fill(status.color)
-                                .frame(width: 8, height: 8)
-                            Text(status.displayName)
-                        }
-                        .tag(status)
-                    }
-                }
-                .font(AppDesignSystem.typography.body)
-                .onChange(of: editedStatus) { checkForChanges() }
+            Section("Mood") {
+                TextField("How are you feeling?", text: $editedMood)
+                    .onChange(of: editedMood) { checkForChanges() }
             }
 
             Section("Info") {
                 LabeledContent("Created", value: entry.createdAt.formatted())
                 LabeledContent("Modified", value: entry.updatedAt.formatted())
+                if let lat = entry.latitude, let lon = entry.longitude {
+                    LabeledContent("Location", value: String(format: "%.4f, %.4f", lat, lon))
+                }
             }
 
             Section {
@@ -113,14 +105,14 @@ struct DiaryDetailView: View {
     private func checkForChanges() {
         hasChanges = editedTitle != entry.title ||
                      editedContent != entry.content ||
-                     editedStatus != entry.status
+                     editedMood != (entry.mood ?? "")
     }
 
     private func saveChanges() {
         let updatedEntry = entry.updated(
             title: editedTitle,
             content: editedContent,
-            status: editedStatus
+            mood: editedMood.isEmpty ? nil : editedMood
         )
 
         Task {
@@ -154,8 +146,7 @@ struct DiaryDetailView: View {
         DiaryDetailView(
             entry: DiaryEntry(
                 title: "Sample Entry",
-                content: "This is the content of the sample diary entry.",
-                status: .active
+                content: "This is the content of the sample diary entry."
             ),
             viewModel: viewModel
         )

@@ -68,18 +68,15 @@ final class DiaryRepository: DiaryRepositoryProtocol {
             DiaryEntry(
                 title: "Welcome to your Diary!",
                 content: "This is your first diary entry. You can create, edit, and delete entries to organize your thoughts.\n\nTry creating a new entry using the + button!",
-                status: .active,
                 isPinned: true
             ),
             DiaryEntry(
                 title: "Learning Clean Architecture",
-                content: "Today I'm learning about:\n\n- Domain Layer: Pure business logic\n- Data Layer: Persistence & APIs\n- Presentation Layer: UI & ViewModels\n\nThe key principle: dependencies point inward!",
-                status: .active
+                content: "Today I'm learning about:\n\n- Domain Layer: Pure business logic\n- Data Layer: Persistence & APIs\n- Presentation Layer: UI & ViewModels\n\nThe key principle: dependencies point inward!"
             ),
             DiaryEntry(
                 title: "Morning Routine",
-                content: "- Meditation\n- Exercise\n- Healthy Breakfast\n- Planning the day",
-                status: .active
+                content: "- Meditation\n- Exercise\n- Healthy Breakfast\n- Planning the day"
             )
         ]
 

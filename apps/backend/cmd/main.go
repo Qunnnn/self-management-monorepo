@@ -60,19 +60,22 @@ func main() {
 	// Initialize repositories
 	userRepo := postgres.NewUserRepository(postgres.DB)
 	taskRepo := postgres.NewTaskRepository(postgres.DB)
+	diaryRepo := postgres.NewDiaryRepository(postgres.DB)
 
 	// Initialize services
 	userSvc := service.NewUserService(userRepo)
 	taskSvc := service.NewTaskService(taskRepo)
 	authSvc := service.NewAuthService(userRepo)
+	diarySvc := service.NewDiaryService(diaryRepo)
 
 	// Initialize handlers
 	userHandler := httpHandlers.NewUserHandler(userSvc)
 	taskHandler := httpHandlers.NewTaskHandler(taskSvc)
 	authHandler := httpHandlers.NewAuthHandler(authSvc)
+	diaryHandler := httpHandlers.NewDiaryHandler(diarySvc)
 
 	// Create router
-	mux := httpHandlers.New(authHandler, userHandler, taskHandler)
+	mux := httpHandlers.New(authHandler, userHandler, taskHandler, diaryHandler)
 
 	// Wrap router with logging middleware
 	h := middleware.LoggingMiddleware(mux)

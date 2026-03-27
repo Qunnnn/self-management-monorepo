@@ -13,13 +13,6 @@ struct DiaryRowView: View {
 
     var body: some View {
         HStack(spacing: AppDesignSystem.spacing.md) {
-            // Status Indicator Circle
-            Circle()
-                .fill(entry.status.color)
-                .frame(width: 8, height: 8)
-                .padding(.top, 6)
-                .frame(maxHeight: .infinity, alignment: .top)
-
             VStack(alignment: .leading, spacing: AppDesignSystem.spacing.xxs) {
                 // Title
                 HStack {
@@ -37,10 +30,21 @@ struct DiaryRowView: View {
 
                 // Preview
                 if !entry.preview.isEmpty {
-                    Text(entry.preview)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
+                    VStack(alignment: .leading, spacing: 4) {
+                        if let mood = entry.mood, !mood.isEmpty {
+                            Text(mood.capitalized)
+                                .font(.caption2)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Capsule().fill(.secondary.opacity(0.1)))
+                                .foregroundStyle(.secondary)
+                        }
+                        
+                        Text(entry.preview)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(2)
+                    }
                 }
 
                 // Date
@@ -63,14 +67,12 @@ struct DiaryRowView: View {
         DiaryRowView(entry: DiaryEntry(
             title: "Sample Entry",
             content: "This is a sample diary entry with some content that might be quite long and need truncation.",
-            status: .active,
             isPinned: true
         ))
 
         DiaryRowView(entry: DiaryEntry(
             title: "Another Entry",
             content: "Short content",
-            status: .active,
             isPinned: false
         ))
     }

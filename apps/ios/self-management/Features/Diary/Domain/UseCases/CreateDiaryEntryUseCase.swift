@@ -20,18 +20,15 @@ final class CreateDiaryEntryUseCase {
     /// - Parameters:
     ///   - title: Title of the diary entry.
     ///   - content: Content of the diary entry.
-    ///   - status: Status of the diary entry.
-    /// - Returns: The created diary entry.
     @discardableResult
-    func execute(title: String, content: String = "", status: DiaryStatus = .active) async -> DiaryEntry {
+    func execute(title: String, content: String = "") async -> DiaryEntry {
         // Business Rule: A diary entry with an empty title can be named "Untitled" if needed 
         // (already handled in view model, but good to have here too)
         let entryTitle = title.trimmingCharacters(in: .whitespaces).isEmpty ? "Untitled" : title
 
         let entry = DiaryEntry(
             title: entryTitle,
-            content: content,
-            status: status
+            content: content
         )
         await repository.saveEntry(entry)
         return entry

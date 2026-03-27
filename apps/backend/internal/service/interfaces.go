@@ -26,3 +26,16 @@ type TaskRepository interface {
 	MarkCompleted(ctx context.Context, id string) (*entity.Task, error)
 	Delete(ctx context.Context, id string) error
 }
+
+// DiaryRepository defines the operations for diary data access
+type DiaryRepository interface {
+	GetAll(ctx context.Context, userID string, limit, offset *int) ([]entity.DiaryEntry, error)
+	GetByID(ctx context.Context, id string) (*entity.DiaryEntry, error)
+	Create(ctx context.Context, req entity.CreateDiaryEntryRequest) (*entity.DiaryEntry, error)
+	Update(ctx context.Context, id string, req entity.UpdateDiaryEntryRequest) (*entity.DiaryEntry, error)
+	Delete(ctx context.Context, id string) error
+	
+	// Attachments
+	AddAttachment(ctx context.Context, entryID string, fileURL string, fileType *string) (*entity.DiaryAttachment, error)
+	GetAttachments(ctx context.Context, entryID string) ([]entity.DiaryAttachment, error)
+}

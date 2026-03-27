@@ -7,7 +7,7 @@ import (
 )
 
 // New initializes and returns a new HTTP multiplexer with all application routes registered.
-func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler) *http.ServeMux {
+func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler, diaryH *DiaryHandler) *http.ServeMux {
 	mux := http.NewServeMux()
 
 	// Public routes
@@ -32,6 +32,15 @@ func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler) *http.Serve
 	mux.Handle("DELETE /tasks/{id}", middleware.AuthMiddleware(http.HandlerFunc(taskH.DeleteTask)))
 	mux.Handle("POST /tasks/{id}/complete", middleware.AuthMiddleware(http.HandlerFunc(taskH.CompleteTask)))
 	mux.Handle("PATCH /tasks/{id}/complete", middleware.AuthMiddleware(http.HandlerFunc(taskH.CompleteTask)))
+
+	// Diary routes
+	mux.Handle("GET /users/{userId}/diary", middleware.AuthMiddleware(http.HandlerFunc(diaryH.GetDiaryEntries)))
+	mux.Handle("POST /diary", middleware.AuthMiddleware(http.HandlerFunc(diaryH.CreateDiaryEntry)))
+	mux.Handle("GET /diary/{id}", middleware.AuthMiddleware(http.HandlerFunc(diaryH.GetDiaryEntry)))
+	mux.Handle("PUT /diary/{id}", middleware.AuthMiddleware(http.HandlerFunc(diaryH.UpdateDiaryEntry)))
+	mux.Handle("DELETE /diary/{id}", middleware.AuthMiddleware(http.HandlerFunc(diaryH.DeleteDiaryEntry)))
+	mux.Handle("GET /diary/{id}/attachments", middleware.AuthMiddleware(http.HandlerFunc(diaryH.GetAttachments)))
+	mux.Handle("POST /diary/{id}/attachments", middleware.AuthMiddleware(http.HandlerFunc(diaryH.AddAttachment)))
 
 	return mux
 }

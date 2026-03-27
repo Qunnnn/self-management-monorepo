@@ -39,11 +39,20 @@ struct DiaryEntry: Identifiable, Equatable {
     /// When the diary entry was last modified
     var updatedAt: Date
 
-    /// Lifecycle status of the diary entry
-    var status: DiaryStatus
-
     /// Whether the diary entry is pinned to top
     var isPinned: Bool
+
+    /// Mood of the entry (e.g., "productive", "tired", "happy")
+    var mood: String?
+
+    /// Latitude of where the entry was created
+    var latitude: Double?
+
+    /// Longitude of where the entry was created
+    var longitude: Double?
+
+    /// Attachments associated with the entry
+    var attachments: [DiaryAttachment]
 
     // MARK: - Initialization
 
@@ -53,16 +62,22 @@ struct DiaryEntry: Identifiable, Equatable {
         content: String = "",
         createdAt: Date = Date(),
         updatedAt: Date = Date(),
-        status: DiaryStatus = .active,
-        isPinned: Bool = false
+        isPinned: Bool = false,
+        mood: String? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil,
+        attachments: [DiaryAttachment] = []
     ) {
         self.id = id
         self.title = title
         self.content = content
         self.createdAt = createdAt
         self.updatedAt = updatedAt
-        self.status = status
         self.isPinned = isPinned
+        self.mood = mood
+        self.latitude = latitude
+        self.longitude = longitude
+        self.attachments = attachments
     }
 
     // MARK: - Business Logic
@@ -83,15 +98,26 @@ struct DiaryEntry: Identifiable, Equatable {
     }
 
     /// Create an updated copy with new modification date
-    func updated(title: String? = nil, content: String? = nil, status: DiaryStatus? = nil, isPinned: Bool? = nil) -> DiaryEntry {
+    func updated(
+        title: String? = nil,
+        content: String? = nil,
+        isPinned: Bool? = nil,
+        mood: String? = nil,
+        latitude: Double? = nil,
+        longitude: Double? = nil,
+        attachments: [DiaryAttachment]? = nil
+    ) -> DiaryEntry {
         DiaryEntry(
             id: self.id,
             title: title ?? self.title,
             content: content ?? self.content,
             createdAt: self.createdAt,
             updatedAt: Date(),
-            status: status ?? self.status,
-            isPinned: isPinned ?? self.isPinned
+            isPinned: isPinned ?? self.isPinned,
+            mood: mood ?? self.mood,
+            latitude: latitude ?? self.latitude,
+            longitude: longitude ?? self.longitude,
+            attachments: attachments ?? self.attachments
         )
     }
 }
