@@ -8,7 +8,7 @@
 import Foundation
 
 /// Use case for user authentication
-/// Contains all business logic related to logging in
+/// Contains only the business logic related to logging in
 final class LoginUseCase {
     
     // MARK: - Dependencies
@@ -49,13 +49,6 @@ final class LoginUseCase {
         }
         
         return (partialUser, tokens)
-    }
-    
-    /// Fetch the current user profile using a stored access token
-    /// - Parameter accessToken: A valid access token
-    /// - Returns: Current user if the token is valid
-    func fetchCurrentUser(accessToken: String) async -> User? {
-        return await repository.fetchCurrentUser(accessToken: accessToken)
     }
 }
 
