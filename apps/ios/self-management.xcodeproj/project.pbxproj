@@ -13,6 +13,8 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A64F20612F3ED439003B9A45 /* self-management */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "self-management";
 			sourceTree = "<group>";
 		};
@@ -252,6 +254,8 @@
 				DEVELOPMENT_TEAM = TRVT44H269;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBonjourServices = _http._tcp;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app requires access to the local network to connect to the backend server during development.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -284,6 +288,8 @@
 				DEVELOPMENT_TEAM = TRVT44H269;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSBonjourServices = _http._tcp;
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app requires access to the local network to connect to the backend server during development.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

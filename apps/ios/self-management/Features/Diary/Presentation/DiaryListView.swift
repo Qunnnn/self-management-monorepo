@@ -62,21 +62,32 @@ struct DiaryListView: View {
         }
     }
 
+    struct SectionData: Identifiable {
+        let id: String
+        let entries: [DiaryEntry]
+    }
+    
+    private func getSectionData(viewModel: DiaryViewModel) -> [SectionData] {
+        return [
+            SectionData(id: "Pinned", entries: viewModel.pinnedEntries),
+            SectionData(
+                id: viewModel.pinnedEntries.isEmpty ? "Entries" : "Others",
+                entries: viewModel.unpinnedEntries
+            )
+        ]
+    }
+
     private func diaryList(viewModel: DiaryViewModel) -> some View {
         List {
-            // Pinned Section
-            if !viewModel.pinnedEntries.isEmpty {
-                Section("Pinned") {
-                    ForEach(viewModel.pinnedEntries) { entry in
+            ForEach(getSectionData(viewModel: viewModel)) { section in
+                Section {
+                    ForEach(section.entries) { entry in
                         entryRow(entry: entry, viewModel: viewModel)
                     }
-                }
-            }
-
-            // All Entries Section
-            Section(viewModel.pinnedEntries.isEmpty ? "Entries" : "Others") {
-                ForEach(viewModel.unpinnedEntries) { entry in
-                    entryRow(entry: entry, viewModel: viewModel)
+                } header: {
+                    if !section.entries.isEmpty {
+                        Text(section.id)
+                    }
                 }
             }
         }

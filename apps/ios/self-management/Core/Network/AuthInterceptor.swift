@@ -15,7 +15,7 @@ final class AuthInterceptor: RequestInterceptor {
     /// Use a separate URLSession for refresh to avoid interceptor loops
     private let refreshSession: URLSession = .shared
     
-    init(tokenStorage: TokenStorage = TokenStorage(), baseURL: URL = URL(string: "http://192.168.100.199:8080")!) {
+    init(tokenStorage: TokenStorage = TokenStorage(), baseURL: URL = NetworkConfig.baseURL) {
         self.tokenStorage = tokenStorage
         self.baseURL = baseURL
     }

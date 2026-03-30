@@ -86,7 +86,7 @@ final class APIClient: APIClientProtocol {
     
     // Static base URL for convenient initialization
     private static var defaultBaseURL: URL {
-        URL(string: "http://192.168.100.199:8080")!
+        NetworkConfig.baseURL
     }
     
     // Convenience init for easier adoption
