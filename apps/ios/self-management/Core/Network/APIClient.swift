@@ -148,6 +148,7 @@ final class APIClient: APIClientProtocol {
         }
         
         do {
+            try Task.checkCancellation()
             let (data, response) = try await session.data(for: adaptedRequest)
             try validateResponse(response)
             
@@ -179,6 +180,7 @@ final class APIClient: APIClientProtocol {
         }
         
         do {
+            try Task.checkCancellation()
             let (_, response) = try await session.data(for: adaptedRequest)
             try validateResponse(response)
         } catch let apiError as APIError {

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 /// Main UI for the tasks feature, displaying a list of user tasks with support for creating, completing and deleting tasks.
 struct TasksListView: View {

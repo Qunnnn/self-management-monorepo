@@ -7,13 +7,16 @@ import Foundation
 
 /// Interceptor that handles adding Authorization headers and automatic token refreshing.
 /// Similar to Flutter's Dio Interceptor.
-final class AuthInterceptor: RequestInterceptor {
+actor AuthInterceptor: RequestInterceptor {
     
     private let tokenStorage: TokenStorage
     private let baseURL: URL
     
     /// Use a separate URLSession for refresh to avoid interceptor loops
     private let refreshSession: URLSession = .shared
+    
+    /// Track an ongoing refresh task to handle concurrent retries
+    private var refreshTask: Task<AuthTokens, Error>?
     
     init(tokenStorage: TokenStorage = TokenStorage(), baseURL: URL = NetworkConfig.baseURL) {
         self.tokenStorage = tokenStorage
@@ -47,15 +50,27 @@ final class AuthInterceptor: RequestInterceptor {
             return false
         }
         
+        // Use an existing refresh task if one is already running
+        if let existingTask = refreshTask {
+            _ = try await existingTask.value
+            return true
+        }
+        
+        // Start a new refresh task
+        let newTask = Task<AuthTokens, Error> {
+            try await self.refreshTokens()
+        }
+        
+        refreshTask = newTask
+        
         do {
-            // Attempt to refresh tokens
-            let newTokens = try await refreshTokens()
+            let newTokens = try await newTask.value
             tokenStorage.saveTokens(newTokens)
+            refreshTask = nil // Clear the task after success
             return true
         } catch {
-            // Refresh failed (refresh token expired) -> Force logout
+            refreshTask = nil // Clear the task on failure
             tokenStorage.clearTokens()
-            // In a real app, you might want to notify SessionService to redirect to login
             return false
         }
     }

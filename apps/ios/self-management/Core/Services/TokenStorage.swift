@@ -10,7 +10,8 @@ import Foundation
 /// Service responsible for persisting authentication tokens locally.
 /// Uses UserDefaults for simplicity in a learning project.
 /// NOTE: For production apps, use Keychain for secure token storage.
-final class TokenStorage: @unchecked Sendable {
+nonisolated
+final class TokenStorage: Sendable {
     
     // MARK: - Constants
     
