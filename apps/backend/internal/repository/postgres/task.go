@@ -49,7 +49,7 @@ func (r *postgresTaskRepository) GetAll(ctx context.Context, completed *bool, li
 	}
 	defer rows.Close()
 
-	var tasks []entity.Task
+	tasks := make([]entity.Task, 0)
 	for rows.Next() {
 		var t entity.Task
 		if err := rows.Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt); err != nil {
@@ -108,7 +108,7 @@ func (r *postgresTaskRepository) GetByUserID(ctx context.Context, userID string,
 	}
 	defer rows.Close()
 
-	var tasks []entity.Task
+	tasks := make([]entity.Task, 0)
 	for rows.Next() {
 		var t entity.Task
 		if err := rows.Scan(&t.ID, &t.UserID, &t.Title, &t.Description, &t.IsCompleted, &t.CreatedAt, &t.DeletedAt); err != nil {
