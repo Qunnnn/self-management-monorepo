@@ -2,9 +2,13 @@ package postgres
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log/slog"
 
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
@@ -47,6 +51,34 @@ func Connect(cfg Config) error {
 	}
 
 	slog.Info("Connected to PostgreSQL successfully!")
+
+	// Automatically run migrations
+	if err := RunMigrations(); err != nil {
+		return fmt.Errorf("failed to run migrations: %w", err)
+	}
+
+	return nil
+}
+
+// RunMigrations executes all pending migrations
+func RunMigrations() error {
+	driver, err := postgres.WithInstance(DB, &postgres.Config{})
+	if err != nil {
+		return fmt.Errorf("failed to create migration driver: %w", err)
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://migrations",
+		"postgres", driver)
+	if err != nil {
+		return fmt.Errorf("failed to initialize migration: %w", err)
+	}
+
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+		return fmt.Errorf("failed to run up migrations: %w", err)
+	}
+
+	slog.Info("Database migrations completed successfully!")
 	return nil
 }
 

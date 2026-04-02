@@ -63,9 +63,9 @@ You have a working REST API with:
 ### Level 7: Production Ready
 **Goals:** Deploy and monitor.
 
-- [ ] **Docker:** Create a `Dockerfile` and `docker-compose.yml` for your API and DB.
-- [ ] **Migrations:** Use `golang-migrate` to version-control your database schema.
-- [ ] **Deployment:** Deploy the containerized app to Railway, Fly.io, or Render.
+- [x] **Docker:** Create a `Dockerfile` and `docker-compose.yml` for your API and DB.
+- [x] **Migrations:** Use `golang-migrate` to version-control your database schema.
+- [x] **Deployment:** Deploy the containerized app to Railway, Fly.io, or Render.
 
 ---
 

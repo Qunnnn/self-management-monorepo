@@ -1,0 +1,17 @@
+# Ignore binary files
+pg-api
+main
+
+# Ignore local environment files
+.env
+
+# Ignore node_modules if any
+node_modules
+
+# Ignore git
+.git
+.gitignore
+
+# Ignore docker files
+Dockerfile
+docker-compose.yml
