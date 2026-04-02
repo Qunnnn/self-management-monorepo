@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS diary_attachments CASCADE;
+DROP TABLE IF EXISTS diary_entries CASCADE;
