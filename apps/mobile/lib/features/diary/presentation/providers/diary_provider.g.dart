@@ -138,7 +138,7 @@ final togglePinUseCaseProvider = AutoDisposeProvider<TogglePinUseCase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TogglePinUseCaseRef = AutoDisposeProviderRef<TogglePinUseCase>;
-String _$diaryNotifierHash() => r'a42219958587231184424cadf8384a91825f5724';
+String _$diaryNotifierHash() => r'3549910a845a3d2b089f00ab1bfe9c1373d3813a';
 
 /// See also [DiaryNotifier].
 @ProviderFor(DiaryNotifier)

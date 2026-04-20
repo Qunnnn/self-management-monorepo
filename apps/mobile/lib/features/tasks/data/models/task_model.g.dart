@@ -8,22 +8,22 @@ part of 'task_model.dart';
 
 TaskModel _$TaskModelFromJson(Map<String, dynamic> json) => TaskModel(
   id: json['id'] as String,
-  userId: json['userId'] as String,
+  userId: json['user_id'] as String,
   title: json['title'] as String,
   description: json['description'] as String?,
-  isCompleted: json['isCompleted'] as bool,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-  deletedAt: json['deletedAt'] == null
+  isCompleted: json['is_completed'] as bool,
+  createdAt: DateTime.parse(json['created_at'] as String),
+  deletedAt: json['deleted_at'] == null
       ? null
-      : DateTime.parse(json['deletedAt'] as String),
+      : DateTime.parse(json['deleted_at'] as String),
 );
 
 Map<String, dynamic> _$TaskModelToJson(TaskModel instance) => <String, dynamic>{
   'id': instance.id,
-  'userId': instance.userId,
+  'user_id': instance.userId,
   'title': instance.title,
   'description': instance.description,
-  'isCompleted': instance.isCompleted,
-  'createdAt': instance.createdAt.toIso8601String(),
-  'deletedAt': instance.deletedAt?.toIso8601String(),
+  'is_completed': instance.isCompleted,
+  'created_at': instance.createdAt.toIso8601String(),
+  'deleted_at': instance.deletedAt?.toIso8601String(),
 };

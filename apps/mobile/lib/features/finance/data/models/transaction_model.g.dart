@@ -9,7 +9,7 @@ part of 'transaction_model.dart';
 TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
     TransactionModel(
       id: json['id'] as String,
-      userId: json['userId'] as String,
+      userId: json['user_id'] as String,
       title: json['title'] as String,
       amount: (json['amount'] as num).toDouble(),
       type: $enumDecode(_$TransactionTypeEnumMap, json['type']),
@@ -20,7 +20,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'userId': instance.userId,
+      'user_id': instance.userId,
       'title': instance.title,
       'amount': instance.amount,
       'type': _$TransactionTypeEnumMap[instance.type]!,

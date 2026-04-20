@@ -10,16 +10,16 @@ DiaryAttachmentModel _$DiaryAttachmentModelFromJson(
   Map<String, dynamic> json,
 ) => DiaryAttachmentModel(
   id: json['id'] as String,
-  fileUrl: json['fileUrl'] as String,
-  fileType: json['fileType'] as String?,
-  createdAt: DateTime.parse(json['createdAt'] as String),
+  fileUrl: json['file_url'] as String,
+  fileType: json['file_type'] as String?,
+  createdAt: DateTime.parse(json['created_at'] as String),
 );
 
 Map<String, dynamic> _$DiaryAttachmentModelToJson(
   DiaryAttachmentModel instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'fileUrl': instance.fileUrl,
-  'fileType': instance.fileType,
-  'createdAt': instance.createdAt.toIso8601String(),
+  'file_url': instance.fileUrl,
+  'file_type': instance.fileType,
+  'created_at': instance.createdAt.toIso8601String(),
 };

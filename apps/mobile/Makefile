@@ -1,4 +1,6 @@
-.PHONY: get clean build-runner watch format analyze test run build-apk build-ios build-bundle upgrade help clean-get clean-build-get
+FLUTTER = fvm flutter
+
+.PHONY: get clean build watch format analyze test run build-apk build-ios build-bundle upgrade help clean-get clean-build-get
 
 help:
 	@echo "Usage: make [target]"
@@ -8,7 +10,7 @@ help:
 	@echo "  clean            Clean build artifacts"
 	@echo "  clean-get        Clean and install dependencies"
 	@echo "  clean-build-get  Clean, install dependencies, and run build-runner"
-	@echo "  build-runner     Run code generation once"
+	@echo "  build            Run code generation once"
 	@echo "  watch            Run code generation in watch mode"
 	@echo "  format           Format code"
 	@echo "  analyze          Analyze code for issues"
@@ -20,41 +22,44 @@ help:
 	@echo "  upgrade          Upgrade dependencies"
 
 get:
-	fvm flutter pub get
+	$(FLUTTER) pub get
 
 clean:
-	fvm flutter clean
+	$(FLUTTER) clean
 
 clean-get: clean get
 
-clean-build-get: clean get build-runner
+clean-build-get: clean get build
 
-build-runner:
-	fvm flutter pub run build_runner build --delete-conflicting-outputs
+build:
+	@echo "Building..."
+	@$(FLUTTER) pub run build_runner clean
+	@$(FLUTTER) pub run build_runner build --delete-conflicting-outputs --enable-experiment=dot-shorthands
+	@echo "Build completed."
 
 watch:
-	fvm flutter pub run build_runner watch --delete-conflicting-outputs
+	$(FLUTTER) pub run build_runner watch --delete-conflicting-outputs
 
 format:
-	fvm flutter format .
+	$(FLUTTER) format .
 
 analyze:
-	fvm flutter analyze
+	$(FLUTTER) analyze
 
 test:
-	fvm flutter test
+	$(FLUTTER) test
 
 run:
-	fvm flutter run
+	$(FLUTTER) run
 
 build-apk:
-	fvm flutter build apk
+	$(FLUTTER) build apk
 
 build-ios:
-	fvm flutter build ios
+	$(FLUTTER) build ios
 
 build-bundle:
-	fvm flutter build appbundle
+	$(FLUTTER) build appbundle
 
 upgrade:
-	fvm flutter pub upgrade
+	$(FLUTTER) pub upgrade

@@ -10,18 +10,17 @@ targets:
             - lib/**/index.dart
             - test/**
 
-      # JsonSerializable: ONLY in models
       json_serializable|json_serializable:
         generate_for:
           include:
             - lib/**/models/**.dart
+            - lib/auth/domain/entities/**.dart
           exclude:
             - lib/**/index.dart
             - test/**
 
-      # Explicitly disable riverpod_generator and any other builders if needed
       riverpod_generator|riverpod_generator:
-        enabled: false
+        enabled: true
 
 global_options:
   freezed:
