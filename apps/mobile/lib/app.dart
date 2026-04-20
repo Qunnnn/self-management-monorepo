@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'core/theme/app_theme.dart';
+import 'core/widgets/main_shell.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 import 'features/tasks/presentation/pages/tasks_page.dart';
+import 'features/finance/presentation/pages/finance_page.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -17,13 +19,22 @@ class App extends ConsumerWidget {
           path: '/login',
           builder: (context, state) => const LoginPage(),
         ),
-        GoRoute(
-          path: '/tasks',
-          builder: (context, state) => const TasksPage(),
+        ShellRoute(
+          builder: (context, state, child) => MainShell(child: child),
+          routes: [
+            GoRoute(
+              path: '/tasks',
+              builder: (context, state) => const TasksPage(),
+            ),
+            GoRoute(
+              path: '/finance',
+              builder: (context, state) => const FinancePage(),
+            ),
+          ],
         ),
         GoRoute(
           path: '/home',
-          builder: (context, state) => const TasksPage(), // Default to tasks for now
+          redirect: (context, state) => '/tasks',
         ),
       ],
     );

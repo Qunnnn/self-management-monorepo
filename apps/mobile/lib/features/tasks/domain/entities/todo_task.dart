@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'todo_task.freezed.dart';
-part 'todo_task.g.dart';
 
 @freezed
 class TodoTask with _$TodoTask {
@@ -14,6 +13,4 @@ class TodoTask with _$TodoTask {
     required DateTime createdAt,
     DateTime? deletedAt,
   }) = _TodoTask;
-
-  factory TodoTask.fromJson(Map<String, dynamic> json) => _$TodoTaskFromJson(json);
 }

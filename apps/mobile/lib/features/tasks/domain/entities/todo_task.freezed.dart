@@ -15,10 +15,6 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-TodoTask _$TodoTaskFromJson(Map<String, dynamic> json) {
-  return _TodoTask.fromJson(json);
-}
-
 /// @nodoc
 mixin _$TodoTask {
   String get id => throw _privateConstructorUsedError;
@@ -28,9 +24,6 @@ mixin _$TodoTask {
   bool get isCompleted => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get deletedAt => throw _privateConstructorUsedError;
-
-  /// Serializes this TodoTask to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of TodoTask
   /// with the given fields replaced by the non-null parameter values.
@@ -192,7 +185,7 @@ class __$$TodoTaskImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$TodoTaskImpl implements _TodoTask {
   const _$TodoTaskImpl({
     required this.id,
@@ -203,9 +196,6 @@ class _$TodoTaskImpl implements _TodoTask {
     required this.createdAt,
     this.deletedAt,
   });
-
-  factory _$TodoTaskImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TodoTaskImplFromJson(json);
 
   @override
   final String id;
@@ -246,7 +236,6 @@ class _$TodoTaskImpl implements _TodoTask {
                 other.deletedAt == deletedAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
     runtimeType,
@@ -266,11 +255,6 @@ class _$TodoTaskImpl implements _TodoTask {
   @pragma('vm:prefer-inline')
   _$$TodoTaskImplCopyWith<_$TodoTaskImpl> get copyWith =>
       __$$TodoTaskImplCopyWithImpl<_$TodoTaskImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$TodoTaskImplToJson(this);
-  }
 }
 
 abstract class _TodoTask implements TodoTask {
@@ -283,9 +267,6 @@ abstract class _TodoTask implements TodoTask {
     required final DateTime createdAt,
     final DateTime? deletedAt,
   }) = _$TodoTaskImpl;
-
-  factory _TodoTask.fromJson(Map<String, dynamic> json) =
-      _$TodoTaskImpl.fromJson;
 
   @override
   String get id;

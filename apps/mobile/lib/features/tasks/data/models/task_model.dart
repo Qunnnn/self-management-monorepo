@@ -1,24 +1,30 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 import '../../domain/entities/todo_task.dart';
 
-part 'task_model.freezed.dart';
 part 'task_model.g.dart';
 
-@freezed
-class TaskModel with _$TaskModel {
-  const TaskModel._(); // Added private constructor to allow methods
+@JsonSerializable()
+class TaskModel {
+  final String id;
+  final String userId;
+  final String title;
+  final String? description;
+  final bool isCompleted;
+  final DateTime createdAt;
+  final DateTime? deletedAt;
 
-  const factory TaskModel({
-    required String id,
-    required String userId,
-    required String title,
-    String? description,
-    required bool isCompleted,
-    required DateTime createdAt,
-    DateTime? deletedAt,
-  }) = _TaskModel;
+  const TaskModel({
+    required this.id,
+    required this.userId,
+    required this.title,
+    this.description,
+    required this.isCompleted,
+    required this.createdAt,
+    this.deletedAt,
+  });
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => _$TaskModelFromJson(json);
+  Map<String, dynamic> toJson() => _$TaskModelToJson(this);
 
   factory TaskModel.fromEntity(TodoTask entity) => TaskModel(
         id: entity.id,
