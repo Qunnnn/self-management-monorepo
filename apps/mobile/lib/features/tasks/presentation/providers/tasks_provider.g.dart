@@ -113,7 +113,7 @@ final deleteTaskUseCaseProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef DeleteTaskUseCaseRef = AutoDisposeProviderRef<DeleteTaskUseCase>;
-String _$tasksNotifierHash() => r'a53099e5cbe775cc3de200e6716e2a2acb70c483';
+String _$tasksNotifierHash() => r'6c96a8a5d95c70e69be54d812a7ffef556a35d73';
 
 /// See also [TasksNotifier].
 @ProviderFor(TasksNotifier)

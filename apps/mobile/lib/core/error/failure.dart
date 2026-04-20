@@ -16,6 +16,10 @@ class DecodingFailure extends Failure {
   const DecodingFailure(Object error) : super('Failed to decode response: $error');
 }
 
+class ValidationFailure extends Failure {
+  const ValidationFailure(super.message);
+}
+
 class UnknownFailure extends Failure {
-  const UnknownFailure(String message) : super(message);
+  const UnknownFailure(super.message);
 }

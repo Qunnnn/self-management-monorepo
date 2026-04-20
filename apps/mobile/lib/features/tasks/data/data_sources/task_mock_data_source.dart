@@ -1,3 +1,5 @@
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/network/index.dart';
 import '../models/task_model.dart';
 
 class TaskMockDataSource {
@@ -36,7 +38,7 @@ class TaskMockDataSource {
     ),
   ];
 
-  Future<List<TaskModel>> getTasks({
+  Future<Either<Failure, List<TaskModel>>> getTasks({
     bool? completed,
     int? limit,
     int? offset,
@@ -46,31 +48,37 @@ class TaskMockDataSource {
     if (completed != null) {
       filtered = filtered.where((t) => t.isCompleted == completed).toList();
     }
-    return filtered;
+    return Right(filtered);
   }
 
-  Future<TaskModel?> getTaskById(String id) async {
+  Future<Either<Failure, TaskModel?>> getTaskById(String id) async {
     await Future.delayed(const Duration(milliseconds: 300));
-    return _tasks.firstWhere((t) => t.id == id);
+    try {
+      final task = _tasks.firstWhere((t) => t.id == id);
+      return Right(task);
+    } catch (_) {
+      return const Right(null);
+    }
   }
 
-  Future<TaskModel> createTask(TaskModel task) async {
+  Future<Either<Failure, TaskModel>> createTask(TaskModel task) async {
     await Future.delayed(const Duration(milliseconds: 500));
     _tasks.add(task);
-    return task;
+    return Right(task);
   }
 
-  Future<TaskModel> updateTask(TaskModel task) async {
+  Future<Either<Failure, TaskModel>> updateTask(TaskModel task) async {
     await Future.delayed(const Duration(milliseconds: 500));
     final index = _tasks.indexWhere((t) => t.id == task.id);
     if (index != -1) {
       _tasks[index] = task;
     }
-    return task;
+    return Right(task);
   }
 
-  Future<void> deleteTask(String id) async {
+  Future<Either<Failure, void>> deleteTask(String id) async {
     await Future.delayed(const Duration(milliseconds: 500));
     _tasks.removeWhere((t) => t.id == id);
+    return const Right(null);
   }
 }

@@ -20,8 +20,8 @@ dependencies:
   cupertino_icons: 1.0.8
   reactive_forms: 17.0.0
   collection: 1.19.1
-  fpdart: ^1.1.0
-  retrofit: ^4.1.0
+  fpdart: 1.1.0
+  retrofit: 4.6.0
 
 dev_dependencies:
   flutter_test:
@@ -30,7 +30,7 @@ dev_dependencies:
   riverpod_generator: 2.6.4
   freezed: 2.5.8
   json_serializable: 6.9.5
-  retrofit_generator: ^8.1.0
+  retrofit_generator: 9.7.0
   flutter_lints: 5.0.0
 
 flutter:

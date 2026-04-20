@@ -1,20 +1,22 @@
 import '../entities/todo_task.dart';
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/network/index.dart';
 
 abstract class TaskRepository {
-  Future<List<TodoTask>> getTasks({
+  Future<Either<Failure, List<TodoTask>>> getTasks({
     bool? completed,
     int? limit,
     int? offset,
   });
 
-  Future<TodoTask?> getTaskById(String id);
+  Future<Either<Failure, TodoTask?>> getTaskById(String id);
 
-  Future<TodoTask> createTask({
+  Future<Either<Failure, TodoTask>> createTask({
     required String title,
     String? description,
   });
 
-  Future<TodoTask> updateTask(TodoTask task);
+  Future<Either<Failure, TodoTask>> updateTask(TodoTask task);
 
-  Future<void> deleteTask(String id);
+  Future<Either<Failure, void>> deleteTask(String id);
 }

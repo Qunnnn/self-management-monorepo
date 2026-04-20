@@ -6,7 +6,24 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authDataSourceHash() => r'1044d142535fe51858979342bef625c195e4723d';
+String _$authApiHash() => r'21a98a9394a519395097033df49d21b29c9cf01f';
+
+/// See also [authApi].
+@ProviderFor(authApi)
+final authApiProvider = AutoDisposeProvider<AuthApi>.internal(
+  authApi,
+  name: r'authApiProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$authApiHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AuthApiRef = AutoDisposeProviderRef<AuthApi>;
+String _$authDataSourceHash() => r'577a280d5eec1e4959d9d2ea4d1ac9113dae2098';
 
 /// See also [authDataSource].
 @ProviderFor(authDataSource)
@@ -58,7 +75,7 @@ final loginUseCaseProvider = AutoDisposeProvider<LoginUseCase>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef LoginUseCaseRef = AutoDisposeProviderRef<LoginUseCase>;
-String _$authNotifierHash() => r'57c8d164e80c080ed533432d0b9ee1a8b0dc9587';
+String _$authNotifierHash() => r'52c47a9abf74d4a97a8dae6b762fd28a4edd3dff';
 
 /// See also [AuthNotifier].
 @ProviderFor(AuthNotifier)

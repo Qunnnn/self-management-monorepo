@@ -2,6 +2,8 @@ import '../../domain/entities/todo_task.dart';
 import '../../domain/repositories/task_repository.dart';
 import '../data_sources/task_mock_data_source.dart';
 import '../models/task_model.dart';
+import 'package:fpdart/fpdart.dart';
+import '../../../../core/network/index.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
   final TaskMockDataSource _dataSource;
@@ -9,27 +11,27 @@ class TaskRepositoryImpl implements TaskRepository {
   TaskRepositoryImpl(this._dataSource);
 
   @override
-  Future<List<TodoTask>> getTasks({
+  Future<Either<Failure, List<TodoTask>>> getTasks({
     bool? completed,
     int? limit,
     int? offset,
   }) async {
-    final models = await _dataSource.getTasks(
+    final result = await _dataSource.getTasks(
       completed: completed,
       limit: limit,
       offset: offset,
     );
-    return models.map((m) => m.toEntity()).toList();
+    return result.map((models) => models.map((m) => m.toEntity()).toList());
   }
 
   @override
-  Future<TodoTask?> getTaskById(String id) async {
-    final model = await _dataSource.getTaskById(id);
-    return model?.toEntity();
+  Future<Either<Failure, TodoTask?>> getTaskById(String id) async {
+    final result = await _dataSource.getTaskById(id);
+    return result.map((model) => model?.toEntity());
   }
 
   @override
-  Future<TodoTask> createTask({
+  Future<Either<Failure, TodoTask>> createTask({
     required String title,
     String? description,
   }) async {
@@ -42,18 +44,18 @@ class TaskRepositoryImpl implements TaskRepository {
       createdAt: DateTime.now(),
     );
     final result = await _dataSource.createTask(newTask);
-    return result.toEntity();
+    return result.map((m) => m.toEntity());
   }
 
   @override
-  Future<TodoTask> updateTask(TodoTask task) async {
+  Future<Either<Failure, TodoTask>> updateTask(TodoTask task) async {
     final model = TaskModel.fromEntity(task);
     final result = await _dataSource.updateTask(model);
-    return result.toEntity();
+    return result.map((m) => m.toEntity());
   }
 
   @override
-  Future<void> deleteTask(String id) async {
-    await _dataSource.deleteTask(id);
+  Future<Either<Failure, void>> deleteTask(String id) async {
+    return _dataSource.deleteTask(id);
   }
 }

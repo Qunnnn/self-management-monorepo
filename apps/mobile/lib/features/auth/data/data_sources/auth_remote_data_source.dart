@@ -1,32 +1,32 @@
-import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
 import '../models/user_model.dart';
 import '../models/auth_tokens_model.dart';
 import '../../../../core/network/index.dart';
+import 'auth_api.dart';
 
 class AuthRemoteDataSource {
-  AuthRemoteDataSource(this._dio);
-  final Dio _dio;
+  AuthRemoteDataSource(this._dioClient, this._api);
+  final DioClient _dioClient;
+  final AuthApi _api;
 
-  Future<(UserModel, AuthTokensModel)> login({
+  Future<Either<Failure, (UserModel, AuthTokensModel)>> login({
     required String email,
     required String password,
   }) async {
-    final response = await _dio.post(
-      APIEndpoint.login.path,
-      data: {
+    return _dioClient.request(() async {
+      final response = await _api.login({
         'email': email,
         'password': password,
-      },
-    );
+      });
 
-    final user = UserModel.fromJson(response.data['user'] as Map<String, dynamic>);
-    final tokens = AuthTokensModel.fromJson(response.data['tokens'] as Map<String, dynamic>);
-    return (user, tokens);
+      return (response.user, response.tokens);
+    });
   }
 
-  Future<UserModel?> fetchCurrentUser() async {
-    final response = await _dio.get(APIEndpoint.profile.path);
-    if (response.data == null) return null;
-    return UserModel.fromJson(response.data as Map<String, dynamic>);
+  Future<Either<Failure, UserModel?>> fetchCurrentUser() async {
+    return _dioClient.request(() async {
+      final user = await _api.fetchCurrentUser();
+      return user;
+    });
   }
 }

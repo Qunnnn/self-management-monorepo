@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/network/index.dart';
+import '../../data/data_sources/auth_api.dart';
 import '../../data/data_sources/auth_remote_data_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/user.dart';
@@ -10,8 +11,17 @@ import '../../domain/use_cases/login_use_case.dart';
 part 'auth_provider.g.dart';
 
 @riverpod
+AuthApi authApi(Ref ref) {
+  final dio = ref.watch(dioClientProvider).publicDio;
+  return AuthApi(dio);
+}
+
+@riverpod
 AuthRemoteDataSource authDataSource(Ref ref) {
-  return AuthRemoteDataSource(ref.watch(dioClientProvider).publicDio);
+  return AuthRemoteDataSource(
+    ref.watch(dioClientProvider),
+    ref.watch(authApiProvider),
+  );
 }
 
 @riverpod
@@ -36,20 +46,27 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> login(String email, String password) async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final (user, _) = await ref.read(loginUseCaseProvider).execute(
-            email: email,
-            password: password,
-          );
-      return user;
-    });
+    final result = await ref.read(loginUseCaseProvider).execute(
+          email: email,
+          password: password,
+        );
+
+    state = result.match(
+      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (data) {
+        final (user, _) = data;
+        return AsyncValue.data(user);
+      },
+    );
   }
 
   Future<void> logout() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      await ref.read(authRepositoryProvider).logout();
-      return null;
-    });
+    final result = await ref.read(authRepositoryProvider).logout();
+    
+    state = result.match(
+      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (_) => const AsyncValue.data(null),
+    );
   }
 }

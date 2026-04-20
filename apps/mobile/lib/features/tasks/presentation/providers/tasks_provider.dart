@@ -49,7 +49,11 @@ class TasksNotifier extends _$TasksNotifier {
   }
 
   Future<List<TodoTask>> _fetchTasks() async {
-    return await ref.read(fetchTasksUseCaseProvider).execute();
+    final result = await ref.read(fetchTasksUseCaseProvider).execute();
+    return result.match(
+      (failure) => throw Exception(failure.message),
+      (tasks) => tasks,
+    );
   }
 
   Future<void> refresh() async {
@@ -58,34 +62,49 @@ class TasksNotifier extends _$TasksNotifier {
   }
 
   Future<void> addTask(String title, String? description) async {
-    final newTask = await ref.read(createTaskUseCaseProvider).execute(
+    final result = await ref.read(createTaskUseCaseProvider).execute(
           title: title,
           description: description,
         );
     
-    state.whenData((tasks) {
-      state = AsyncValue.data([...tasks, newTask]);
-    });
+    result.match(
+      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+      (newTask) {
+        state.whenData((tasks) {
+          state = AsyncValue.data([...tasks, newTask]);
+        });
+      },
+    );
   }
 
   Future<void> toggleTaskCompletion(TodoTask task) async {
     final updatedTask = task.copyWith(isCompleted: !task.isCompleted);
-    await ref.read(updateTasksUseCaseProvider).execute(updatedTask);
+    final result = await ref.read(updateTasksUseCaseProvider).execute(updatedTask);
     
-    state.whenData((tasks) {
-      state = AsyncValue.data(
-        tasks.map((t) => t.id == task.id ? updatedTask : t).toList(),
-      );
-    });
+    result.match(
+      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+      (_) {
+        state.whenData((tasks) {
+          state = AsyncValue.data(
+            tasks.map((t) => t.id == task.id ? updatedTask : t).toList(),
+          );
+        });
+      },
+    );
   }
 
   Future<void> deleteTask(String id) async {
-    await ref.read(deleteTaskUseCaseProvider).execute(id);
+    final result = await ref.read(deleteTaskUseCaseProvider).execute(id);
     
-    state.whenData((tasks) {
-      state = AsyncValue.data(
-        tasks.where((t) => t.id != id).toList(),
-      );
-    });
+    result.match(
+      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+      (_) {
+        state.whenData((tasks) {
+          state = AsyncValue.data(
+            tasks.where((t) => t.id != id).toList(),
+          );
+        });
+      },
+    );
   }
 }
