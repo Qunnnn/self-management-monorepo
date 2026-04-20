@@ -14,7 +14,7 @@ targets:
         generate_for:
           include:
             - lib/**/models/**.dart
-            - lib/auth/domain/entities/**.dart
+            - lib/features/auth/domain/entities/auth_tokens.dart
           exclude:
             - lib/**/index.dart
             - test/**

@@ -1,15 +1,14 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/network/index.dart';
 import '../../domain/entities/auth_tokens.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../data_sources/auth_mock_data_source.dart';
+import '../data_sources/auth_remote_data_source.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  AuthRepositoryImpl(this._dataSource);
+  AuthRepositoryImpl(this._dataSource, this._tokenStorage);
 
-  final AuthMockDataSource _dataSource;
-  static const _accessTokenKey = 'access_token';
-  static const _refreshTokenKey = 'refresh_token';
+  final AuthRemoteDataSource _dataSource;
+  final TokenStorage _tokenStorage;
 
   @override
   Future<(User, AuthTokens)> login({
@@ -21,11 +20,12 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_accessTokenKey, tokensModel.accessToken);
-    await prefs.setString(_refreshTokenKey, tokensModel.refreshToken);
+    final user = userModel.toEntity();
+    final tokens = tokensModel.toEntity();
 
-    return (userModel.toEntity(), tokensModel.toEntity());
+    await _tokenStorage.saveTokens(tokens);
+
+    return (user, tokens);
   }
 
   @override
@@ -36,8 +36,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_accessTokenKey);
-    await prefs.remove(_refreshTokenKey);
+    await _tokenStorage.clearTokens();
   }
 }

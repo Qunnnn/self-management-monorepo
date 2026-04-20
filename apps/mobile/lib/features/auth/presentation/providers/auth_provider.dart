@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../data/data_sources/auth_mock_data_source.dart';
+import '../../../../core/network/index.dart';
+import '../../data/data_sources/auth_remote_data_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -9,13 +10,16 @@ import '../../domain/use_cases/login_use_case.dart';
 part 'auth_provider.g.dart';
 
 @riverpod
-AuthMockDataSource authDataSource(Ref ref) {
-  return AuthMockDataSource();
+AuthRemoteDataSource authDataSource(Ref ref) {
+  return AuthRemoteDataSource(ref.watch(dioClientProvider).publicDio);
 }
 
 @riverpod
 AuthRepository authRepository(Ref ref) {
-  return AuthRepositoryImpl(ref.watch(authDataSourceProvider));
+  return AuthRepositoryImpl(
+    ref.watch(authDataSourceProvider),
+    ref.watch(tokenStorageProvider),
+  );
 }
 
 @riverpod

@@ -6,24 +6,25 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authDataSourceHash() => r'8661fdfb3d28c4bdd59242314d14460e94fbee39';
+String _$authDataSourceHash() => r'1044d142535fe51858979342bef625c195e4723d';
 
 /// See also [authDataSource].
 @ProviderFor(authDataSource)
-final authDataSourceProvider = AutoDisposeProvider<AuthMockDataSource>.internal(
-  authDataSource,
-  name: r'authDataSourceProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$authDataSourceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final authDataSourceProvider =
+    AutoDisposeProvider<AuthRemoteDataSource>.internal(
+      authDataSource,
+      name: r'authDataSourceProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$authDataSourceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef AuthDataSourceRef = AutoDisposeProviderRef<AuthMockDataSource>;
-String _$authRepositoryHash() => r'2a2c0c999566e4f7454b33e2eaa789e64ed36eaf';
+typedef AuthDataSourceRef = AutoDisposeProviderRef<AuthRemoteDataSource>;
+String _$authRepositoryHash() => r'0513b164327bd9237901da861e3e428886752f13';
 
 /// See also [authRepository].
 @ProviderFor(authRepository)
