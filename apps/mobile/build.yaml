@@ -1,0 +1,34 @@
+targets:
+  $default:
+    builders:
+      # Freezed: ONLY in entities
+      freezed|freezed:
+        generate_for:
+          include:
+            - lib/**/entities/**.dart
+          exclude:
+            - lib/**/index.dart
+            - test/**
+
+      # JsonSerializable: ONLY in models
+      json_serializable|json_serializable:
+        generate_for:
+          include:
+            - lib/**/models/**.dart
+          exclude:
+            - lib/**/index.dart
+            - test/**
+
+      # Explicitly disable riverpod_generator and any other builders if needed
+      riverpod_generator|riverpod_generator:
+        enabled: false
+
+global_options:
+  freezed:
+    options:
+      union_value_case: snake
+  
+  json_serializable:
+    options:
+      field_rename: snake
+      explicit_to_json: true
