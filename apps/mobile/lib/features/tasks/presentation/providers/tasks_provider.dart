@@ -51,7 +51,7 @@ class TasksNotifier extends _$TasksNotifier {
   Future<List<TodoTask>> _fetchTasks() async {
     final result = await ref.read(fetchTasksUseCaseProvider).execute();
     return result.match(
-      (failure) => throw Exception(failure.message),
+      (failure) => throw failure,
       (tasks) => tasks,
     );
   }
@@ -68,7 +68,7 @@ class TasksNotifier extends _$TasksNotifier {
         );
     
     result.match(
-      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+      (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (newTask) {
         state.whenData((tasks) {
           state = AsyncValue.data([...tasks, newTask]);
@@ -82,7 +82,7 @@ class TasksNotifier extends _$TasksNotifier {
     final result = await ref.read(updateTasksUseCaseProvider).execute(updatedTask);
     
     result.match(
-      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+      (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (_) {
         state.whenData((tasks) {
           state = AsyncValue.data(
@@ -97,7 +97,7 @@ class TasksNotifier extends _$TasksNotifier {
     final result = await ref.read(deleteTaskUseCaseProvider).execute(id);
     
     result.match(
-      (failure) => state = AsyncValue.error(failure.message, StackTrace.current),
+      (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (_) {
         state.whenData((tasks) {
           state = AsyncValue.data(

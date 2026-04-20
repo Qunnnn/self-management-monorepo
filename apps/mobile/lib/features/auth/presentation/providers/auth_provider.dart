@@ -52,7 +52,7 @@ class AuthNotifier extends _$AuthNotifier {
         );
 
     state = result.match(
-      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (failure) => AsyncValue.error(failure, StackTrace.current),
       (data) {
         final (user, _) = data;
         return AsyncValue.data(user);
@@ -65,7 +65,7 @@ class AuthNotifier extends _$AuthNotifier {
     final result = await ref.read(authRepositoryProvider).logout();
     
     state = result.match(
-      (failure) => AsyncValue.error(failure.message, StackTrace.current),
+      (failure) => AsyncValue.error(failure, StackTrace.current),
       (_) => const AsyncValue.data(null),
     );
   }
