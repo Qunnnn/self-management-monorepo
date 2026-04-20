@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/index.dart';
 import '../../domain/entities/transaction.dart';
 import '../providers/finance_provider.dart';
 import '../../../../core/utils/index.dart';
@@ -15,36 +15,40 @@ class AddTransactionSheet extends ConsumerStatefulWidget {
 }
 
 class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
-  final _titleController = TextEditingController();
-  final _amountController = TextEditingController();
-  final _categoryController = TextEditingController();
-  TransactionType _type = TransactionType.expense;
+  late FormGroup form;
   bool _isLoading = false;
 
   @override
-  void dispose() {
-    _titleController.dispose();
-    _amountController.dispose();
-    _categoryController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    form = fb.group({
+      'type': [TransactionType.expense, Validators.required],
+      'title': ['', Validators.required],
+      'amount': [
+        null as double?,
+        Validators.required,
+        Validators.min(0.01),
+      ],
+      'category': ['', Validators.required],
+    });
   }
 
   Future<void> _submit() async {
-    final title = _titleController.text.trim();
-    final amount = double.tryParse(_amountController.text) ?? 0;
-    final category = _categoryController.text.trim();
-
-    if (title.isEmpty || amount <= 0 || category.isEmpty) return;
+    if (form.invalid) {
+      form.markAllAsTouched();
+      return;
+    }
 
     setState(() => _isLoading = true);
     try {
+      final values = form.value;
       final transaction = Transaction(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         userId: 'user-1',
-        title: title,
-        amount: amount,
-        type: _type,
-        category: category,
+        title: values['title'] as String,
+        amount: values['amount'] as double,
+        type: values['type'] as TransactionType,
+        category: values['category'] as String,
         date: DateTime.now(),
       );
 
@@ -63,76 +67,104 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        left: 24,
-        right: 24,
-        top: 24,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-      ),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            'Add Transaction',
-            style: context.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          24.h,
-          Row(
-            children: [
-              _TypeButton(
-                label: 'Expense',
-                isSelected: _type == TransactionType.expense,
-                onTap: () => setState(() => _type = TransactionType.expense),
-                color: AppColors.orange,
-              ).expanded(),
-              12.w,
-              _TypeButton(
-                label: 'Income',
-                isSelected: _type == TransactionType.income,
-                onTap: () => setState(() => _type = TransactionType.income),
-                color: AppColors.teal,
-              ).expanded(),
-            ],
-          ),
-          24.h,
-          AppTextField(
-            controller: _titleController,
-            label: 'Title',
-            hintText: 'What was it for?',
-            autofocus: true,
-          ),
-          16.h,
-          Row(
-            children: [
-              AppTextField(
-                controller: _amountController,
-                label: 'Amount',
-                hintText: '0.00',
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              ).expanded(2),
-              16.w,
-              AppTextField(
-                controller: _categoryController,
-                label: 'Category',
-                hintText: 'e.g. Food, Work',
-              ).expanded(3),
-            ],
-          ),
-          32.h,
-          AppButton(
-            text: 'Save Transaction',
-            isLoading: _isLoading,
-            onPressed: _submit,
-          ),
-        ],
+    return ReactiveForm(
+      formGroup: form,
+      child: Container(
+        padding: EdgeInsets.only(
+          left: 24,
+          right: 24,
+          top: 24,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 24,
+        ),
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Add Transaction',
+              style: context.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            24.h,
+            ReactiveValueListenableBuilder<TransactionType>(
+              formControlName: 'type',
+              builder: (context, control, child) {
+                final type = control.value;
+                return Row(
+                  children: [
+                    _TypeButton(
+                      label: 'Expense',
+                      isSelected: type == TransactionType.expense,
+                      onTap: () => control.value = TransactionType.expense,
+                      color: AppColors.orange,
+                    ).expanded(),
+                    12.w,
+                    _TypeButton(
+                      label: 'Income',
+                      isSelected: type == TransactionType.income,
+                      onTap: () => control.value = TransactionType.income,
+                      color: AppColors.teal,
+                    ).expanded(),
+                  ],
+                );
+              },
+            ),
+            24.h,
+            ReactiveAppTextField<String>(
+              formControlName: 'title',
+              label: 'Title',
+              hintText: 'What was it for?',
+              autofocus: true,
+              textInputAction: TextInputAction.next,
+              validationMessages: {
+                ValidationMessage.required: (_) => 'Title is required',
+              },
+            ),
+            16.h,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ReactiveAppTextField<double>(
+                  formControlName: 'amount',
+                  label: 'Amount',
+                  hintText: '0.00',
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  textInputAction: TextInputAction.next,
+                  validationMessages: {
+                    ValidationMessage.required: (_) => 'Required',
+                    ValidationMessage.min: (_) => 'Must be > 0',
+                  },
+                ).expanded(2),
+                16.w,
+                ReactiveAppTextField<String>(
+                  formControlName: 'category',
+                  label: 'Category',
+                  hintText: 'e.g. Food, Work',
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _submit(),
+                  validationMessages: {
+                    ValidationMessage.required: (_) => 'Required',
+                  },
+                ).expanded(3),
+              ],
+            ),
+            32.h,
+            ReactiveFormConsumer(
+              builder: (context, form, child) {
+                return AppButton(
+                  text: 'Save Transaction',
+                  isLoading: _isLoading,
+                  onPressed: form.valid ? _submit : null,
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
