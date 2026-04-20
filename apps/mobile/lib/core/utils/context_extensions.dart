@@ -38,6 +38,10 @@ extension WidgetX on Widget {
   Widget flexible([int flex = 1, FlexFit fit = FlexFit.loose]) => Flexible(flex: flex, fit: fit, child: this);
   Widget center() => Center(child: this);
   
+  // Sizing shorthand
+  Widget h(double value) => SizedBox(height: value, child: this);
+  Widget w(double value) => SizedBox(width: value, child: this);
+  
   // Visibility shorthand
   Widget visible(bool condition) => condition ? this : const SizedBox.shrink();
 }
