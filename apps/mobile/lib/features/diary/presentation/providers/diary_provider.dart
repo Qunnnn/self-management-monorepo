@@ -73,21 +73,36 @@ class DiaryNotifier extends _$DiaryNotifier {
 
   Future<void> createEntry(DiaryEntry entry) async {
     await ref.read(createDiaryEntryUseCaseProvider).execute(entry);
-    await refresh();
+    state.whenData((entries) {
+      state = AsyncValue.data([entry, ...entries]);
+    });
   }
 
   Future<void> updateEntry(DiaryEntry entry) async {
     await ref.read(updateDiaryEntryUseCaseProvider).execute(entry);
-    await refresh();
+    state.whenData((entries) {
+      state = AsyncValue.data(
+        entries.map((e) => e.id == entry.id ? entry : e).toList(),
+      );
+    });
   }
 
   Future<void> deleteEntry(String id) async {
     await ref.read(deleteDiaryEntryUseCaseProvider).execute(id);
-    await refresh();
+    state.whenData((entries) {
+      state = AsyncValue.data(
+        entries.where((e) => e.id != id).toList(),
+      );
+    });
   }
 
   Future<void> togglePin(DiaryEntry entry) async {
-    await ref.read(togglePinUseCaseProvider).execute(entry);
-    await refresh();
+    final updated = entry.copyWith(isPinned: !entry.isPinned);
+    await ref.read(togglePinUseCaseProvider).execute(updated);
+    state.whenData((entries) {
+      state = AsyncValue.data(
+        entries.map((e) => e.id == entry.id ? updated : e).toList(),
+      );
+    });
   }
 }

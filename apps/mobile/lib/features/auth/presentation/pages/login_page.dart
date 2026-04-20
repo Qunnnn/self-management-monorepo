@@ -22,8 +22,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authNotifierProvider);
-
     ref.listen(authNotifierProvider, (previous, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -85,10 +83,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               24.h,
               ReactiveFormConsumer(
                 builder: (context, form, child) {
-                  return AppButton(
-                    text: 'Log In',
-                    isLoading: authState.isLoading,
-                    onPressed: form.valid ? _onSubmit : null,
+                  return Consumer(
+                    builder: (context, ref, child) {
+                      final isLoading = ref.watch(
+                        authNotifierProvider.select((s) => s.isLoading),
+                      );
+                      return AppButton(
+                        text: 'Log In',
+                        isLoading: isLoading,
+                        onPressed: form.valid ? _onSubmit : null,
+                      );
+                    },
                   );
                 },
               ),

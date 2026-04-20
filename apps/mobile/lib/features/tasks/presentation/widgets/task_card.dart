@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:collection/collection.dart';
 import '../../../../core/theme/index.dart';
 import '../../tasks.dart';
 import '../../../../core/utils/index.dart';
+import '../providers/tasks_provider.dart';
 
-class TaskCard extends StatelessWidget {
-  final TodoTask task;
+class TaskCard extends ConsumerWidget {
+  final String taskId;
   final VoidCallback onToggle;
   final VoidCallback? onDelete;
 
   const TaskCard({
     super.key,
-    required this.task,
+    required this.taskId,
     required this.onToggle,
     this.onDelete,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final task = ref.watch(
+      tasksNotifierProvider.select(
+        (s) => s.value?.firstWhereOrNull((t) => t.id == taskId),
+      ),
+    );
+    if (task == null) return const SizedBox.shrink();
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(

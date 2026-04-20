@@ -10,8 +10,6 @@ class DiaryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entriesAsync = ref.watch(diaryNotifierProvider);
-
     return Scaffold(
       backgroundColor: AppColors.warmWhite,
       appBar: AppBar(
@@ -47,28 +45,33 @@ class DiaryPage extends ConsumerWidget {
                 ),
               ),
             ).px(24).py(8),
-            entriesAsync.when(
-              data: (entries) {
-                if (entries.isEmpty) {
-                  return const Text('No entries found').center();
-                }
-                return ListView.builder(
-                  padding: const EdgeInsets.all(24),
-                  itemCount: entries.length,
-                  itemBuilder: (context, index) {
-                    final entry = entries[index];
-                    return DiaryCard(
-                      entry: entry,
-                      onTap: () => context.push('/diary/edit/${entry.id}'),
-                      onTogglePin: () => ref
-                          .read(diaryNotifierProvider.notifier)
-                          .togglePin(entry),
+            Consumer(
+              builder: (context, ref, child) {
+                final entriesAsync = ref.watch(diaryNotifierProvider);
+                return entriesAsync.when(
+                  data: (entries) {
+                    if (entries.isEmpty) {
+                      return const Text('No entries found').center();
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(24),
+                      itemCount: entries.length,
+                      itemBuilder: (context, index) {
+                        final entry = entries[index];
+                        return DiaryCard(
+                          entryId: entry.id,
+                          onTap: () => context.push('/diary/edit/${entry.id}'),
+                          onTogglePin: () => ref
+                              .read(diaryNotifierProvider.notifier)
+                              .togglePin(entry),
+                        );
+                      },
                     );
                   },
+                  loading: () => const CircularProgressIndicator().center(),
+                  error: (err, _) => Text('Error: $err').center(),
                 );
               },
-              loading: () => const CircularProgressIndicator().center(),
-              error: (err, _) => Text('Error: $err').center(),
             ).expanded(),
           ],
         ),

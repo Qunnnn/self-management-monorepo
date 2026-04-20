@@ -9,8 +9,6 @@ class TasksPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tasksAsync = ref.watch(tasksNotifierProvider);
-
     return Scaffold(
       backgroundColor: AppColors.warmWhite,
       appBar: AppBar(
@@ -30,51 +28,56 @@ class TasksPage extends ConsumerWidget {
           12.w,
         ],
       ),
-      body: tasksAsync.when(
-        data: (tasks) {
-          if (tasks.isEmpty) {
-            return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.checklist, size: 64, color: AppColors.warmGray300),
-                  16.h,
-                  Text(
-                    'No tasks yet',
-                    style: context.textTheme.titleMedium?.copyWith(
-                          color: AppColors.warmGray500,
-                        ),
-                  ),
-                  8.h,
-                  TextButton(
-                    onPressed: () => _showAddTask(context),
-                    child: const Text('Add your first task'),
-                  ),
-                ],
-              ).center();
-          }
+      body: Consumer(
+        builder: (context, ref, child) {
+          final tasksAsync = ref.watch(tasksNotifierProvider);
+          return tasksAsync.when(
+            data: (tasks) {
+              if (tasks.isEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.checklist, size: 64, color: AppColors.warmGray300),
+                    16.h,
+                    Text(
+                      'No tasks yet',
+                      style: context.textTheme.titleMedium?.copyWith(
+                            color: AppColors.warmGray500,
+                          ),
+                    ),
+                    8.h,
+                    TextButton(
+                      onPressed: () => _showAddTask(context),
+                      child: const Text('Add your first task'),
+                    ),
+                  ],
+                ).center();
+              }
 
-          return RefreshIndicator(
-            onRefresh: () => ref.read(tasksNotifierProvider.notifier).refresh(),
-            child: ListView.builder(
-              padding: const EdgeInsets.all(24),
-              itemCount: tasks.length,
-              itemBuilder: (context, index) {
-                final task = tasks[index];
-                return TaskCard(
-                  task: task,
-                  onToggle: () => ref
-                      .read(tasksNotifierProvider.notifier)
-                      .toggleTaskCompletion(task),
-                  onDelete: () => ref
-                      .read(tasksNotifierProvider.notifier)
-                      .deleteTask(task.id),
-                );
-              },
-            ),
+              return RefreshIndicator(
+                onRefresh: () => ref.read(tasksNotifierProvider.notifier).refresh(),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(24),
+                  itemCount: tasks.length,
+                  itemBuilder: (context, index) {
+                    final task = tasks[index];
+                    return TaskCard(
+                      taskId: task.id,
+                      onToggle: () => ref
+                          .read(tasksNotifierProvider.notifier)
+                          .toggleTaskCompletion(task),
+                      onDelete: () => ref
+                          .read(tasksNotifierProvider.notifier)
+                          .deleteTask(task.id),
+                    );
+                  },
+                ),
+              );
+            },
+            loading: () => const CircularProgressIndicator().center(),
+            error: (err, stack) => Text('Error: $err').center(),
           );
         },
-        loading: () => const CircularProgressIndicator().center(),
-        error: (err, stack) => Text('Error: $err').center(),
       ),
     );
   }
