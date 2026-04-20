@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 import 'app_text_theme.dart';
+import 'app_button_theme.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
@@ -34,11 +35,11 @@ class AppTheme {
         fillColor: AppColors.white,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
-          borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
+          borderSide: const BorderSide(color: AppColors.whisperBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
-          borderSide: const BorderSide(color: Color(0xFFDDDDDD)),
+          borderSide: const BorderSide(color: AppColors.whisperBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
@@ -47,6 +48,9 @@ class AppTheme {
         contentPadding: const EdgeInsets.all(6),
         hintStyle: AppTextTheme.textTheme.bodyMedium?.copyWith(color: AppColors.warmGray300),
       ),
+      extensions: [
+        AppButtonTheme.light,
+      ],
     );
   }
 }

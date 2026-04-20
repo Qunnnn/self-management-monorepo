@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/context_extensions.dart';
 import '../theme/app_colors.dart';
 
 enum AppButtonStyle { primary, secondary, pill }
@@ -32,18 +33,7 @@ class AppButton extends StatelessWidget {
   Widget _buildPrimary(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.blue,
-        foregroundColor: AppColors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        elevation: 0,
-      ).copyWith(
-        backgroundColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.pressed)) return AppColors.activeBlue;
-          return AppColors.blue;
-        }),
-      ),
+      style: context.buttonTheme.primaryStyle,
       child: _buildContent(context, AppColors.white),
     );
   }
@@ -51,41 +41,28 @@ class AppButton extends StatelessWidget {
   Widget _buildSecondary(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0x0D000000), // rgba(0,0,0,0.05)
-        foregroundColor: AppColors.nearBlack,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        elevation: 0,
-      ),
+      style: context.buttonTheme.secondaryStyle,
       child: _buildContent(context, AppColors.nearBlack),
     );
   }
 
   Widget _buildPill(BuildContext context) {
-    return InkWell(
-      onTap: isLoading ? null : onPressed,
-      borderRadius: BorderRadius.circular(9999),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: AppColors.badgeBlueBg,
-          borderRadius: BorderRadius.circular(9999),
-        ),
-        child: isLoading
-            ? const SizedBox(
-                height: 16,
-                width: 16,
-                child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.badgeBlueText),
-              )
-            : Text(
-                text,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AppColors.badgeBlueText,
-                      fontWeight: FontWeight.w600,
-                    ),
+    return ElevatedButton(
+      onPressed: isLoading ? null : onPressed,
+      style: context.buttonTheme.pillStyle,
+      child: isLoading
+          ? const SizedBox(
+              height: 16,
+              width: 16,
+              child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.badgeBlueText),
+            )
+          : Text(
+              text,
+              style: context.textTheme.labelSmall?.copyWith(
+                color: AppColors.badgeBlueText,
+                fontWeight: FontWeight.w600,
               ),
-      ),
+            ),
     );
   }
 

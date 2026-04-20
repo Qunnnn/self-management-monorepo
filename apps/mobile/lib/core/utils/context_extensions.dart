@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_button_theme.dart';
 
 /// Shorthand extensions for [BuildContext] to access theme and layout tokens.
 extension BuildContextX on BuildContext {
@@ -6,6 +7,7 @@ extension BuildContextX on BuildContext {
   ThemeData get theme => Theme.of(this);
   TextTheme get textTheme => theme.textTheme;
   ColorScheme get colorScheme => theme.colorScheme;
+  AppButtonTheme get buttonTheme => theme.extension<AppButtonTheme>()!;
 
   // Spacing (Notion-inspired 8px base unit)
   double get spacingXXS => 4.0;
