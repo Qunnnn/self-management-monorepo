@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../domain/entities/diary_entry.dart';
 import '../../../../core/utils/index.dart';
+import '../providers/diary_provider.dart';
 
-class DiaryCard extends StatelessWidget {
-  final DiaryEntry entry;
+class DiaryCard extends ConsumerWidget {
+  final String entryId;
   final VoidCallback onTap;
   final VoidCallback onTogglePin;
 
   const DiaryCard({
     super.key,
-    required this.entry,
+    required this.entryId,
     required this.onTap,
     required this.onTogglePin,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final entry = ref.watch(
+      diaryNotifierProvider.select(
+        (s) => s.value?.firstWhereOrNull((e) => e.id == entryId),
+      ),
+    );
+    if (entry == null) return const SizedBox.shrink();
+
     final dateFormatter = DateFormat('EEEE, MMM d');
 
     return Container(
