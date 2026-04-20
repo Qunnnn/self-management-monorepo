@@ -1,4 +1,4 @@
-# mobile
+# Self Management
 
 A new Flutter project.
 
