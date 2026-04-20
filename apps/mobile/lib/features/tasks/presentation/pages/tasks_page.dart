@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../providers/tasks_provider.dart';
-import '../widgets/task_card.dart';
-import '../widgets/add_task_sheet.dart';
+import '../../../../core/theme/index.dart';
+import '../../tasks.dart';
 import '../../../../core/utils/index.dart';
 
 class TasksPage extends ConsumerWidget {
@@ -35,8 +33,7 @@ class TasksPage extends ConsumerWidget {
       body: tasksAsync.when(
         data: (tasks) {
           if (tasks.isEmpty) {
-            return Center(
-              child: Column(
+            return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.checklist, size: 64, color: AppColors.warmGray300),
@@ -53,7 +50,7 @@ class TasksPage extends ConsumerWidget {
                     child: const Text('Add your first task'),
                   ),
                 ],
-              ).center(),
+              ).center();
           }
 
           return RefreshIndicator(

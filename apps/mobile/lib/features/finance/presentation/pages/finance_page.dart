@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../providers/finance_provider.dart';
-import '../widgets/balance_card.dart';
-import '../widgets/transaction_tile.dart';
-import '../widgets/add_transaction_sheet.dart';
+import '../../../../core/theme/index.dart';
+import '../../finance.dart';
 import '../../../../core/utils/index.dart';
 
 class FinancePage extends ConsumerWidget {

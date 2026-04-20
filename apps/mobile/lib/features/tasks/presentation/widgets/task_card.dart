@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../domain/entities/todo_task.dart';
+import '../../../../core/theme/index.dart';
+import '../../tasks.dart';
 import '../../../../core/utils/index.dart';
 
 class TaskCard extends StatelessWidget {
@@ -98,7 +98,6 @@ class TaskCard extends StatelessWidget {
                 ],
               ).p(16),
             ),
-          ),
         ),
       ),
     );
