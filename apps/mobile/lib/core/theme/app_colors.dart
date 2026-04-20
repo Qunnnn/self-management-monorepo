@@ -10,6 +10,7 @@ class AppColors {
   // Warm Neutral Scale
   static const Color warmWhite = Color(0xFFF6F5F4);
   static const Color warmDark = Color(0xFF31302E);
+  static const Color warmGray600 = Color(0xFF4A4642);
   static const Color warmGray500 = Color(0xFF615D59);
   static const Color warmGray300 = Color(0xFFA39E98);
 
