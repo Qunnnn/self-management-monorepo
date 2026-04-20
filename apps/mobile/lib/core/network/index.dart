@@ -1,5 +1,5 @@
 export 'api_endpoint.dart';
-export 'api_error.dart';
+export '../error/failure.dart';
 export 'auth_interceptor.dart';
 export 'dio_client.dart';
 export 'network_config.dart';
