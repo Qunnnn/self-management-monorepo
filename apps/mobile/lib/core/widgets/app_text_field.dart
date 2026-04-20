@@ -9,6 +9,8 @@ class AppTextField extends StatelessWidget {
     this.obscureText = false,
     this.keyboardType,
     this.errorText,
+    this.autofocus = false,
+    this.maxLines = 1,
     super.key,
   });
 
@@ -18,6 +20,8 @@ class AppTextField extends StatelessWidget {
   final bool obscureText;
   final TextInputType? keyboardType;
   final String? errorText;
+  final bool autofocus;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,8 @@ class AppTextField extends StatelessWidget {
           controller: controller,
           obscureText: obscureText,
           keyboardType: keyboardType,
+          autofocus: autofocus,
+          maxLines: maxLines,
           style: Theme.of(context).textTheme.bodyMedium,
           decoration: InputDecoration(
             hintText: hintText,
