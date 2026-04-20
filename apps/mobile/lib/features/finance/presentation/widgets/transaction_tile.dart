@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/transaction.dart';
+import '../../../../core/utils/index.dart';
 
 class TransactionTile extends StatelessWidget {
   final Transaction transaction;
@@ -19,7 +20,6 @@ class TransactionTile extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(8),
@@ -28,7 +28,6 @@ class TransactionTile extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: isIncome
                   ? AppColors.teal.withAlpha(20)
@@ -39,38 +38,36 @@ class TransactionTile extends StatelessWidget {
               isIncome ? Icons.south_west : Icons.north_east,
               color: isIncome ? AppColors.teal : AppColors.orange,
               size: 20,
-            ),
+            ).p(8),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  transaction.title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.nearBlack,
-                      ),
-                ),
-                Text(
-                  '${transaction.category} • ${dateFormatter.format(transaction.date)}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.warmGray500,
-                      ),
-                ),
-              ],
-            ),
-          ),
+          16.w,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                transaction.title,
+                style: context.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.nearBlack,
+                    ),
+              ),
+              Text(
+                '${transaction.category} • ${dateFormatter.format(transaction.date)}',
+                style: context.textTheme.bodySmall?.copyWith(
+                      color: AppColors.warmGray500,
+                    ),
+              ),
+            ],
+          ).expanded(),
           Text(
             '${isIncome ? '+' : '-'}${currencyFormatter.format(transaction.amount)}',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: isIncome ? AppColors.teal : AppColors.orange,
                 ),
           ),
         ],
-      ),
+      ).px(16).py(12),
     );
   }
 }

@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../providers/tasks_provider.dart';
+import '../../../../core/utils/index.dart';
 
 class AddTaskSheet extends ConsumerStatefulWidget {
   const AddTaskSheet({super.key});
@@ -67,7 +68,7 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
             children: [
               Text(
                 'New Task',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                style: context.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -78,21 +79,21 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          24.h,
           AppTextField(
             controller: _titleController,
             label: 'Title',
             hintText: 'What needs to be done?',
             autofocus: true,
           ),
-          const SizedBox(height: 16),
+          16.h,
           AppTextField(
             controller: _descriptionController,
             label: 'Description',
             hintText: 'Optional details',
             maxLines: 3,
           ),
-          const SizedBox(height: 32),
+          32.h,
           AppButton(
             text: 'Create Task',
             isLoading: _isLoading,

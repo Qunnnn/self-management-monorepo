@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../providers/auth_provider.dart';
+import '../../../../core/utils/index.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -39,61 +40,58 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     });
 
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Welcome Back',
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Log in to your account',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.warmGray500,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 48),
-              AppTextField(
-                controller: _emailController,
-                label: 'Email',
-                hintText: 'Enter your email',
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              AppTextField(
-                controller: _passwordController,
-                label: 'Password',
-                hintText: 'Enter your password',
-                obscureText: true,
-              ),
-              const SizedBox(height: 24),
-              AppButton(
-                text: 'Log In',
-                isLoading: authState.isLoading,
-                onPressed: () {
-                  ref.read(authNotifierProvider.notifier).login(
-                        _emailController.text,
-                        _passwordController.text,
-                      );
-                },
-              ),
-              const SizedBox(height: 16),
-              AppButton(
-                text: 'Forgot password?',
-                style: AppButtonStyle.secondary,
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Welcome Back',
+              style: context.textTheme.displaySmall,
+              textAlign: TextAlign.center,
+            ),
+            8.h,
+            Text(
+              'Log in to your account',
+              style: context.textTheme.bodyLarge?.copyWith(
+                    color: AppColors.warmGray500,
+                  ),
+              textAlign: TextAlign.center,
+            ),
+            48.h,
+            AppTextField(
+              controller: _emailController,
+              label: 'Email',
+              hintText: 'Enter your email',
+              keyboardType: TextInputType.emailAddress,
+            ),
+            16.h,
+            AppTextField(
+              controller: _passwordController,
+              label: 'Password',
+              hintText: 'Enter your password',
+              obscureText: true,
+            ),
+            24.h,
+            AppButton(
+              text: 'Log In',
+              isLoading: authState.isLoading,
+              onPressed: () {
+                ref.read(authNotifierProvider.notifier).login(
+                      _emailController.text,
+                      _passwordController.text,
+                    );
+              },
+            ),
+            16.h,
+            AppButton(
+              text: 'Forgot password?',
+              style: AppButtonStyle.secondary,
+              onPressed: () {},
+            ),
+          ],
+        ).p(24),
+      ).center(),
     );
   }
 }

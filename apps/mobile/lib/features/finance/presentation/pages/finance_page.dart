@@ -5,6 +5,7 @@ import '../providers/finance_provider.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/transaction_tile.dart';
 import '../widgets/add_transaction_sheet.dart';
+import '../../../../core/utils/index.dart';
 
 class FinancePage extends ConsumerWidget {
   const FinancePage({super.key});
@@ -21,7 +22,7 @@ class FinancePage extends ConsumerWidget {
         backgroundColor: AppColors.warmWhite,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(
+        titleTextStyle: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.nearBlack,
             ),
@@ -34,15 +35,15 @@ class FinancePage extends ConsumerWidget {
             balanceAsync.when(
               data: (balance) => BalanceCard(balance: balance),
               loading: () => const BalanceCard(balance: 0, isLoading: true),
-              error: (err, _) => Center(child: Text('Error loading balance: $err')),
+              error: (err, _) => Text('Error loading balance: $err').center(),
             ),
-            const SizedBox(height: 32),
+            32.h,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'RECENT TRANSACTIONS',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  style: context.textTheme.labelSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1.2,
                         color: AppColors.warmGray500,
@@ -55,16 +56,13 @@ class FinancePage extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            12.h,
             transactionsAsync.when(
               data: (transactions) {
                 if (transactions.isEmpty) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 40),
-                      child: Text('No transactions yet'),
-                    ),
-                  );
+                  return const Text('No transactions yet')
+                      .center()
+                      .py(40);
                 }
                 return Column(
                   children: transactions
@@ -72,13 +70,10 @@ class FinancePage extends ConsumerWidget {
                       .toList(),
                 );
               },
-              loading: () => const Center(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 40),
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              error: (err, _) => Center(child: Text('Error: $err')),
+              loading: () => const CircularProgressIndicator()
+                  .center()
+                  .py(40),
+              error: (err, _) => Text('Error: $err').center(),
             ),
           ],
         ),

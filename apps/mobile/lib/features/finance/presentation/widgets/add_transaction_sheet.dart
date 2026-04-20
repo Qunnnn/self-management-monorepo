@@ -5,6 +5,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../../domain/entities/transaction.dart';
 import '../providers/finance_provider.dart';
+import '../../../../core/utils/index.dart';
 
 class AddTransactionSheet extends ConsumerStatefulWidget {
   const AddTransactionSheet({super.key});
@@ -79,63 +80,53 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
         children: [
           Text(
             'Add Transaction',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            style: context.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
-          const SizedBox(height: 24),
+          24.h,
           Row(
             children: [
-              Expanded(
-                child: _TypeButton(
-                  label: 'Expense',
-                  isSelected: _type == TransactionType.expense,
-                  onTap: () => setState(() => _type = TransactionType.expense),
-                  color: AppColors.orange,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _TypeButton(
-                  label: 'Income',
-                  isSelected: _type == TransactionType.income,
-                  onTap: () => setState(() => _type = TransactionType.income),
-                  color: AppColors.teal,
-                ),
-              ),
+              _TypeButton(
+                label: 'Expense',
+                isSelected: _type == TransactionType.expense,
+                onTap: () => setState(() => _type = TransactionType.expense),
+                color: AppColors.orange,
+              ).expanded(),
+              12.w,
+              _TypeButton(
+                label: 'Income',
+                isSelected: _type == TransactionType.income,
+                onTap: () => setState(() => _type = TransactionType.income),
+                color: AppColors.teal,
+              ).expanded(),
             ],
           ),
-          const SizedBox(height: 24),
+          24.h,
           AppTextField(
             controller: _titleController,
             label: 'Title',
             hintText: 'What was it for?',
             autofocus: true,
           ),
-          const SizedBox(height: 16),
+          16.h,
           Row(
             children: [
-              Expanded(
-                flex: 2,
-                child: AppTextField(
-                  controller: _amountController,
-                  label: 'Amount',
-                  hintText: '0.00',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                flex: 3,
-                child: AppTextField(
-                  controller: _categoryController,
-                  label: 'Category',
-                  hintText: 'e.g. Food, Work',
-                ),
-              ),
+              AppTextField(
+                controller: _amountController,
+                label: 'Amount',
+                hintText: '0.00',
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              ).expanded(2),
+              16.w,
+              AppTextField(
+                controller: _categoryController,
+                label: 'Category',
+                hintText: 'e.g. Food, Work',
+              ).expanded(3),
             ],
           ),
-          const SizedBox(height: 32),
+          32.h,
           AppButton(
             text: 'Save Transaction',
             isLoading: _isLoading,
@@ -176,7 +167,7 @@ class _TypeButton extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           label,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: isSelected ? AppColors.white : AppColors.warmGray500,
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/index.dart';
 
 class BalanceCard extends StatelessWidget {
   final double balance;
@@ -35,34 +36,29 @@ class BalanceCard extends StatelessWidget {
         children: [
           Text(
             'TOTAL BALANCE',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            style: context.textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
                   color: AppColors.warmGray500,
                 ),
           ),
-          const SizedBox(height: 8),
+          8.h,
           if (isLoading)
-            const SizedBox(
-              height: 48,
-              child: Center(
-                child: LinearProgressIndicator(
-                  backgroundColor: AppColors.warmWhite,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
-                ),
-              ),
-            )
+            const LinearProgressIndicator(
+              backgroundColor: AppColors.warmWhite,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.blue),
+            ).center().h(48)
           else
             Text(
               currencyFormatter.format(balance),
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              style: context.textTheme.displaySmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: AppColors.nearBlack,
                     letterSpacing: -1.0,
                   ),
             ),
         ],
-      ),
+      ).p(24),
     );
   }
 }

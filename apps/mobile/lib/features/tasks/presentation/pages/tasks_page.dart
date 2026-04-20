@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../providers/tasks_provider.dart';
 import '../widgets/task_card.dart';
 import '../widgets/add_task_sheet.dart';
+import '../../../../core/utils/index.dart';
 
 class TasksPage extends ConsumerWidget {
   const TasksPage({super.key});
@@ -19,7 +20,7 @@ class TasksPage extends ConsumerWidget {
         backgroundColor: AppColors.warmWhite,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall?.copyWith(
+        titleTextStyle: context.textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: AppColors.nearBlack,
             ),
@@ -28,7 +29,7 @@ class TasksPage extends ConsumerWidget {
             onPressed: () => _showAddTask(context),
             icon: const Icon(Icons.add_circle, color: AppColors.blue, size: 28),
           ),
-          const SizedBox(width: 12),
+          12.w,
         ],
       ),
       body: tasksAsync.when(
@@ -39,21 +40,20 @@ class TasksPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.checklist, size: 64, color: AppColors.warmGray300),
-                  const SizedBox(height: 16),
+                  16.h,
                   Text(
                     'No tasks yet',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: context.textTheme.titleMedium?.copyWith(
                           color: AppColors.warmGray500,
                         ),
                   ),
-                  const SizedBox(height: 8),
+                  8.h,
                   TextButton(
                     onPressed: () => _showAddTask(context),
                     child: const Text('Add your first task'),
                   ),
                 ],
-              ),
-            );
+              ).center(),
           }
 
           return RefreshIndicator(
@@ -76,10 +76,8 @@ class TasksPage extends ConsumerWidget {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(
-          child: Text('Error: $err'),
-        ),
+        loading: () => const CircularProgressIndicator().center(),
+        error: (err, stack) => Text('Error: $err').center(),
       ),
     );
   }

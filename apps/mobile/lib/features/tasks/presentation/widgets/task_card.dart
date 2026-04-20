@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/todo_task.dart';
+import '../../../../core/utils/index.dart';
 
 class TaskCard extends StatelessWidget {
   final TodoTask task;
@@ -38,16 +39,13 @@ class TaskCard extends StatelessWidget {
           onDismissed: (_) => onDelete?.call(),
           background: Container(
             alignment: Alignment.centerRight,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
             color: Colors.red.shade400,
             child: const Icon(Icons.delete_outline, color: AppColors.white),
-          ),
+          ).px(20),
           child: InkWell(
             onTap: onToggle,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
+            child: Row(
+              children: [
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     child: Icon(
@@ -61,14 +59,13 @@ class TaskCard extends StatelessWidget {
                       size: 26,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                  16.w,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                         Text(
                           task.title,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          style: context.textTheme.titleMedium?.copyWith(
                                 decoration: task.isCompleted
                                     ? TextDecoration.lineThrough
                                     : null,
@@ -80,10 +77,10 @@ class TaskCard extends StatelessWidget {
                         ),
                         if (task.description != null &&
                             task.description!.isNotEmpty) ...[
-                          const SizedBox(height: 4),
+                          4.h,
                           Text(
                             task.description!,
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: context.textTheme.bodySmall?.copyWith(
                                   color: AppColors.warmGray500,
                                 ),
                             maxLines: 2,
@@ -91,8 +88,7 @@ class TaskCard extends StatelessWidget {
                           ),
                         ],
                       ],
-                    ),
-                  ),
+                    ).expanded(),
                   if (task.isCompleted)
                     const Icon(
                       Icons.auto_awesome,
@@ -100,7 +96,7 @@ class TaskCard extends StatelessWidget {
                       size: 16,
                     ),
                 ],
-              ),
+              ).p(16),
             ),
           ),
         ),

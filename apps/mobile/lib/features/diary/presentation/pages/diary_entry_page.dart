@@ -6,6 +6,7 @@ import '../../../../core/widgets/app_text_field.dart';
 import '../../domain/entities/diary_entry.dart';
 import '../../domain/entities/diary_mood.dart';
 import '../providers/diary_provider.dart';
+import '../../../../core/utils/index.dart';
 
 class DiaryEntryPage extends ConsumerStatefulWidget {
   final String? entryId;
@@ -108,7 +109,6 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -118,16 +118,16 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
               hintText: 'What happened today?',
               autofocus: widget.entryId == null,
             ),
-            const SizedBox(height: 24),
+            24.h,
             Text(
               'HOW ARE YOU FEELING?',
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1.1,
                     color: AppColors.warmGray500,
                   ),
             ),
-            const SizedBox(height: 12),
+            12.h,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: DiaryMood.values.map((mood) {
@@ -135,7 +135,6 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
                 return GestureDetector(
                   onTap: () => setState(() => _selectedMood = mood),
                   child: Container(
-                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected ? AppColors.blue.withAlpha(20) : AppColors.warmWhite,
                       borderRadius: BorderRadius.circular(12),
@@ -146,35 +145,35 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
                     child: Column(
                       children: [
                         Text(mood.emoji, style: const TextStyle(fontSize: 24)),
-                        const SizedBox(height: 4),
+                        4.h,
                         Text(
                           mood.displayName,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: context.textTheme.bodySmall?.copyWith(
                                 color: isSelected ? AppColors.blue : AppColors.warmGray500,
                                 fontWeight: isSelected ? FontWeight.bold : null,
                               ),
                         ),
                       ],
-                    ),
+                    ).p(12),
                   ),
                 );
               }).toList(),
             ),
-            const SizedBox(height: 24),
+            24.h,
             AppTextField(
               controller: _contentController,
               label: 'Notes',
               hintText: 'Write down your thoughts...',
               maxLines: 10,
             ),
-            const SizedBox(height: 40),
+            40.h,
             AppButton(
               text: 'Save Entry',
               isLoading: _isLoading,
               onPressed: _save,
             ),
           ],
-        ),
+        ).p(24),
       ),
     );
   }
