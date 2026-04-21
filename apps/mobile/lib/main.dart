@@ -9,7 +9,7 @@ void main() {
   runApp(
     ProviderScope(
       observers: [
-        AppRiverpodObserver(),
+        AppRiverPodObserver(),
       ],
       child: const App(),
     ),
