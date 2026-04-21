@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'network_config.dart';
 import 'auth_interceptor.dart';
 import 'token_storage.dart';
@@ -13,7 +14,15 @@ class DioClient {
       receiveTimeout: const Duration(seconds: 10),
       contentType: 'application/json',
     ));
-    _publicDio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    _publicDio.interceptors.add(PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseBody: true,
+      responseHeader: false,
+      error: true,
+      compact: true,
+      maxWidth: 90,
+    ));
 
     _dio = Dio(BaseOptions(
       baseUrl: NetworkConfig.baseURL,
@@ -23,7 +32,15 @@ class DioClient {
     ));
 
     _dio.interceptors.add(AuthInterceptor(tokenStorage));
-    _dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    _dio.interceptors.add(PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseBody: true,
+      responseHeader: false,
+      error: true,
+      compact: true,
+      maxWidth: 90,
+    ));
   }
 
   late final Dio _dio;
