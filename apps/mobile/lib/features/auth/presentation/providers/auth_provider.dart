@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../core/network/index.dart';
 import '../../data/data_sources/auth_api.dart';
@@ -51,6 +50,7 @@ class AuthNotifier extends _$AuthNotifier {
           password: password,
         );
 
+    if (!ref.mounted) return;
     state = result.match(
       (failure) => AsyncValue.error(failure, StackTrace.current),
       (data) {
@@ -64,6 +64,7 @@ class AuthNotifier extends _$AuthNotifier {
     state = const AsyncValue.loading();
     final result = await ref.read(authRepositoryProvider).logout();
     
+    if (!ref.mounted) return;
     state = result.match(
       (failure) => AsyncValue.error(failure, StackTrace.current),
       (_) => const AsyncValue.data(null),

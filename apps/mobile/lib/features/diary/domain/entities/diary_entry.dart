@@ -5,7 +5,7 @@ import 'diary_attachment.dart';
 part 'diary_entry.freezed.dart';
 
 @freezed
-class DiaryEntry with _$DiaryEntry {
+abstract class DiaryEntry with _$DiaryEntry {
   const factory DiaryEntry({
     required String id,
     required String title,

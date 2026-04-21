@@ -8,7 +8,7 @@ enum TransactionType {
 }
 
 @freezed
-class Transaction with _$Transaction {
+abstract class Transaction with _$Transaction {
   const factory Transaction({
     required String id,
     required String userId,

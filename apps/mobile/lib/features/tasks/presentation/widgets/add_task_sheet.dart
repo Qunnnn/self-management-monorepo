@@ -29,7 +29,7 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
     setState(() => _isLoading = true);
     try {
       final values = form.value;
-      await ref.read(tasksNotifierProvider.notifier).addTask(
+      await ref.read(tasksProvider.notifier).addTask(
             values['title'] as String,
             (values['description'] as String?)?.isEmpty ?? true
                 ? null

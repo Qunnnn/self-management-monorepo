@@ -17,9 +17,9 @@ class TasksPage extends ConsumerWidget {
         elevation: 0,
         centerTitle: false,
         titleTextStyle: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.nearBlack,
-            ),
+          fontWeight: FontWeight.bold,
+          color: AppColors.nearBlack,
+        ),
         actions: [
           IconButton(
             onPressed: () => _showAddTask(context),
@@ -30,53 +30,55 @@ class TasksPage extends ConsumerWidget {
       ),
       body: Consumer(
         builder: (context, ref, child) {
-          final tasksAsync = ref.watch(tasksNotifierProvider);
-          return tasksAsync.when(
-            data: (tasks) {
-              if (tasks.isEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.checklist, size: 64, color: AppColors.warmGray300),
-                    16.h,
-                    Text(
-                      'No tasks yet',
-                      style: context.textTheme.titleMedium?.copyWith(
+          final tasksAsync = ref.watch(tasksProvider);
+          return switch (tasksAsync) {
+            AsyncData(:final value) =>
+              value.isEmpty
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.checklist,
+                          size: 64,
+                          color: AppColors.warmGray300,
+                        ),
+                        16.h,
+                        Text(
+                          'No tasks yet',
+                          style: context.textTheme.titleMedium?.copyWith(
                             color: AppColors.warmGray500,
                           ),
+                        ),
+                        8.h,
+                        TextButton(
+                          onPressed: () => _showAddTask(context),
+                          child: const Text('Add your first task'),
+                        ),
+                      ],
+                    ).center()
+                  : RefreshIndicator(
+                      onRefresh: () =>
+                          ref.read(tasksProvider.notifier).refresh(),
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(24),
+                        itemCount: value.length,
+                        itemBuilder: (context, index) {
+                          final task = value[index];
+                          return TaskCard(
+                            taskId: task.id,
+                            onToggle: () => ref
+                                .read(tasksProvider.notifier)
+                                .toggleTaskCompletion(task),
+                            onDelete: () => ref
+                                .read(tasksProvider.notifier)
+                                .deleteTask(task.id),
+                          );
+                        },
+                      ),
                     ),
-                    8.h,
-                    TextButton(
-                      onPressed: () => _showAddTask(context),
-                      child: const Text('Add your first task'),
-                    ),
-                  ],
-                ).center();
-              }
-
-              return RefreshIndicator(
-                onRefresh: () => ref.read(tasksNotifierProvider.notifier).refresh(),
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(24),
-                  itemCount: tasks.length,
-                  itemBuilder: (context, index) {
-                    final task = tasks[index];
-                    return TaskCard(
-                      taskId: task.id,
-                      onToggle: () => ref
-                          .read(tasksNotifierProvider.notifier)
-                          .toggleTaskCompletion(task),
-                      onDelete: () => ref
-                          .read(tasksNotifierProvider.notifier)
-                          .deleteTask(task.id),
-                    );
-                  },
-                ),
-              );
-            },
-            loading: () => const CircularProgressIndicator().center(),
-            error: (err, stack) => Text('Error: $err').center(),
-          );
+            AsyncError(:final error) => Text('Error: $error').center(),
+            AsyncLoading() => const CircularProgressIndicator().center(),
+          };
         },
       ),
     );

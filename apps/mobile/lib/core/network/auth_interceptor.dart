@@ -3,10 +3,9 @@ import 'token_storage.dart';
 import 'api_endpoint.dart';
 
 class AuthInterceptor extends Interceptor {
-  AuthInterceptor(this._tokenStorage, this._refreshDio);
+  AuthInterceptor(this._tokenStorage);
 
   final TokenStorage _tokenStorage;
-  final Dio _refreshDio;
 
   @override
   void onRequest(

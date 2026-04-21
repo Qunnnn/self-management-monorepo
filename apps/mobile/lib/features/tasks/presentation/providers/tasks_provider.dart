@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/data_sources/task_mock_data_source.dart';
 import '../../data/repositories/task_repository_impl.dart';
 import '../../domain/entities/todo_task.dart';
@@ -67,6 +66,7 @@ class TasksNotifier extends _$TasksNotifier {
           description: description,
         );
     
+    if (!ref.mounted) return;
     result.match(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (newTask) {
@@ -81,6 +81,7 @@ class TasksNotifier extends _$TasksNotifier {
     final updatedTask = task.copyWith(isCompleted: !task.isCompleted);
     final result = await ref.read(updateTasksUseCaseProvider).execute(updatedTask);
     
+    if (!ref.mounted) return;
     result.match(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (_) {
@@ -96,6 +97,7 @@ class TasksNotifier extends _$TasksNotifier {
   Future<void> deleteTask(String id) async {
     final result = await ref.read(deleteTaskUseCaseProvider).execute(id);
     
+    if (!ref.mounted) return;
     result.match(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (_) {

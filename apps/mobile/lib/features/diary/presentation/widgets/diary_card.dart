@@ -21,7 +21,7 @@ class DiaryCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final entry = ref.watch(
-      diaryNotifierProvider.select(
+      diaryProvider.select(
         (s) => s.value?.firstWhereOrNull((e) => e.id == entryId),
       ),
     );

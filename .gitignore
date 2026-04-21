@@ -47,3 +47,7 @@ Pods/
 # Docs
 docs/ideas.md
 .mcp.json
+
+# Generated files
+*.g.dart
+*.freezed.dart

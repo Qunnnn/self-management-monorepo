@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/data_sources/finance_mock_data_source.dart';
 import '../../data/repositories/finance_repository_impl.dart';
 import '../../domain/entities/transaction.dart';
@@ -54,6 +53,7 @@ class FinanceNotifier extends _$FinanceNotifier {
     final newTransaction =
         await ref.read(addTransactionUseCaseProvider).execute(transaction);
 
+    if (!ref.mounted) return;
     state.whenData((transactions) {
       state = AsyncValue.data([newTransaction, ...transactions]);
     });

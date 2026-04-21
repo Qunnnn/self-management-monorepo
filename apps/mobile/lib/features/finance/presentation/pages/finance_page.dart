@@ -22,18 +22,18 @@ class FinancePage extends ConsumerWidget {
             ),
       ),
       body: RefreshIndicator(
-        onRefresh: () => ref.read(financeNotifierProvider.notifier).refresh(),
+        onRefresh: () => ref.read(financeProvider.notifier).refresh(),
         child: ListView(
           padding: const EdgeInsets.all(24),
           children: [
             Consumer(
               builder: (context, ref, child) {
                 final balanceAsync = ref.watch(balanceProvider);
-                return balanceAsync.when(
-                  data: (balance) => BalanceCard(balance: balance),
-                  loading: () => const BalanceCard(balance: 0, isLoading: true),
-                  error: (err, _) => Text('Error loading balance: $err').center(),
-                );
+                return switch (balanceAsync) {
+                  AsyncData(:final value) => BalanceCard(balance: value),
+                  AsyncLoading() => const BalanceCard(balance: 0, isLoading: true),
+                  AsyncError(:final error) => Text('Error loading balance: $error').center(),
+                };
               },
             ),
             32.h,
@@ -58,25 +58,22 @@ class FinancePage extends ConsumerWidget {
             12.h,
             Consumer(
               builder: (context, ref, child) {
-                final transactionsAsync = ref.watch(financeNotifierProvider);
-                return transactionsAsync.when(
-                  data: (transactions) {
-                    if (transactions.isEmpty) {
-                      return const Text('No transactions yet')
+                final transactionsAsync = ref.watch(financeProvider);
+                return switch (transactionsAsync) {
+                  AsyncData(:final value) => value.isEmpty
+                      ? const Text('No transactions yet')
                           .center()
-                          .py(40);
-                    }
-                    return Column(
-                      children: transactions
-                          .map((t) => TransactionTile(transaction: t))
-                          .toList(),
-                    );
-                  },
-                  loading: () => const CircularProgressIndicator()
+                          .py(40)
+                      : Column(
+                          children: value
+                              .map((t) => TransactionTile(transaction: t))
+                              .toList(),
+                        ),
+                  AsyncError(:final error) => Text('Error: $error').center(),
+                  AsyncLoading() => const CircularProgressIndicator()
                       .center()
                       .py(40),
-                  error: (err, _) => Text('Error: $err').center(),
-                );
+                };
               },
             ),
           ],

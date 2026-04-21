@@ -52,7 +52,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
         date: DateTime.now(),
       );
 
-      await ref.read(financeNotifierProvider.notifier).addTransaction(transaction);
+      await ref.read(financeProvider.notifier).addTransaction(transaction);
       if (mounted) Navigator.pop(context);
     } catch (e) {
       if (mounted) {

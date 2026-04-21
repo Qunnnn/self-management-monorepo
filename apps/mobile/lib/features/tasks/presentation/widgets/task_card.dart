@@ -21,7 +21,7 @@ class TaskCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final task = ref.watch(
-      tasksNotifierProvider.select(
+      tasksProvider.select(
         (s) => s.value?.firstWhereOrNull((t) => t.id == taskId),
       ),
     );

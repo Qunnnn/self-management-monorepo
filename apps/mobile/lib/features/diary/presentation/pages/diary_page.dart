@@ -23,12 +23,12 @@ class DiaryPage extends ConsumerWidget {
             ),
       ),
       body: RefreshIndicator(
-        onRefresh: () => ref.read(diaryNotifierProvider.notifier).refresh(),
+        onRefresh: () => ref.read(diaryProvider.notifier).refresh(),
         child: Column(
           children: [
             TextField(
               onChanged: (value) =>
-                  ref.read(diaryNotifierProvider.notifier).search(value),
+                  ref.read(diaryProvider.notifier).search(value),
               decoration: InputDecoration(
                 hintText: 'Search entries...',
                 prefixIcon: const Icon(Icons.search, size: 20),
@@ -47,30 +47,27 @@ class DiaryPage extends ConsumerWidget {
             ).px(24).py(8),
             Consumer(
               builder: (context, ref, child) {
-                final entriesAsync = ref.watch(diaryNotifierProvider);
-                return entriesAsync.when(
-                  data: (entries) {
-                    if (entries.isEmpty) {
-                      return const Text('No entries found').center();
-                    }
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(24),
-                      itemCount: entries.length,
-                      itemBuilder: (context, index) {
-                        final entry = entries[index];
-                        return DiaryCard(
-                          entryId: entry.id,
-                          onTap: () => context.push('/diary/edit/${entry.id}'),
-                          onTogglePin: () => ref
-                              .read(diaryNotifierProvider.notifier)
-                              .togglePin(entry),
-                        );
-                      },
-                    );
-                  },
-                  loading: () => const CircularProgressIndicator().center(),
-                  error: (err, _) => Text('Error: $err').center(),
-                );
+                final entriesAsync = ref.watch(diaryProvider);
+                return switch (entriesAsync) {
+                  AsyncData(:final value) => value.isEmpty
+                      ? const Text('No entries found').center()
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(24),
+                          itemCount: value.length,
+                          itemBuilder: (context, index) {
+                            final entry = value[index];
+                            return DiaryCard(
+                              entryId: entry.id,
+                              onTap: () => context.push('/diary/edit/${entry.id}'),
+                              onTogglePin: () => ref
+                                  .read(diaryProvider.notifier)
+                                  .togglePin(entry),
+                            );
+                          },
+                        ),
+                  AsyncError(:final error) => Text('Error: $error').center(),
+                  AsyncLoading() => const CircularProgressIndicator().center(),
+                };
               },
             ).expanded(),
           ],

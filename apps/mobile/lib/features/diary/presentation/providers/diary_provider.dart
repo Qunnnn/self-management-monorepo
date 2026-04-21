@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/data_sources/diary_mock_data_source.dart';
 import '../../data/repositories/diary_repository_impl.dart';
 import '../../domain/entities/diary_entry.dart';
@@ -73,6 +72,7 @@ class DiaryNotifier extends _$DiaryNotifier {
 
   Future<void> createEntry(DiaryEntry entry) async {
     await ref.read(createDiaryEntryUseCaseProvider).execute(entry);
+    if (!ref.mounted) return;
     state.whenData((entries) {
       state = AsyncValue.data([entry, ...entries]);
     });
@@ -80,6 +80,7 @@ class DiaryNotifier extends _$DiaryNotifier {
 
   Future<void> updateEntry(DiaryEntry entry) async {
     await ref.read(updateDiaryEntryUseCaseProvider).execute(entry);
+    if (!ref.mounted) return;
     state.whenData((entries) {
       state = AsyncValue.data(
         entries.map((e) => e.id == entry.id ? entry : e).toList(),
@@ -89,6 +90,7 @@ class DiaryNotifier extends _$DiaryNotifier {
 
   Future<void> deleteEntry(String id) async {
     await ref.read(deleteDiaryEntryUseCaseProvider).execute(id);
+    if (!ref.mounted) return;
     state.whenData((entries) {
       state = AsyncValue.data(
         entries.where((e) => e.id != id).toList(),
@@ -99,6 +101,7 @@ class DiaryNotifier extends _$DiaryNotifier {
   Future<void> togglePin(DiaryEntry entry) async {
     final updated = entry.copyWith(isPinned: !entry.isPinned);
     await ref.read(togglePinUseCaseProvider).execute(updated);
+    if (!ref.mounted) return;
     state.whenData((entries) {
       state = AsyncValue.data(
         entries.map((e) => e.id == entry.id ? updated : e).toList(),

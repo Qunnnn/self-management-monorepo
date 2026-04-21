@@ -33,7 +33,7 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
   }
 
   Future<void> _loadExistingEntry() async {
-    final entries = await ref.read(diaryNotifierProvider.future);
+    final entries = await ref.read(diaryProvider.future);
     _existingEntry = entries.firstWhere((e) => e.id == widget.entryId);
     if (_existingEntry != null) {
       _titleController.text = _existingEntry!.title;
@@ -66,7 +66,7 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
           mood: _selectedMood,
           updatedAt: DateTime.now(),
         );
-        await ref.read(diaryNotifierProvider.notifier).updateEntry(updated);
+        await ref.read(diaryProvider.notifier).updateEntry(updated);
       } else {
         final entry = DiaryEntry(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -76,7 +76,7 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
-        await ref.read(diaryNotifierProvider.notifier).createEntry(entry);
+        await ref.read(diaryProvider.notifier).createEntry(entry);
       }
       navigator.pop();
     } catch (e) {
@@ -102,7 +102,7 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
               icon: const Icon(Icons.delete_outline, color: AppColors.orange),
               onPressed: () async {
                 final navigator = Navigator.of(context);
-                await ref.read(diaryNotifierProvider.notifier).deleteEntry(widget.entryId!);
+                await ref.read(diaryProvider.notifier).deleteEntry(widget.entryId!);
                 navigator.pop();
               },
             ),

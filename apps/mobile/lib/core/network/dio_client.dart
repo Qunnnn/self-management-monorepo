@@ -22,7 +22,7 @@ class DioClient {
       contentType: 'application/json',
     ));
 
-    _dio.interceptors.add(AuthInterceptor(tokenStorage, _publicDio));
+    _dio.interceptors.add(AuthInterceptor(tokenStorage));
     _dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
   }
 
