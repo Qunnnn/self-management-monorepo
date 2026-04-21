@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../utils/logger.dart';
 
 class AppRiverpodObserver extends ProviderObserver {
   @override
@@ -9,7 +8,7 @@ class AppRiverpodObserver extends ProviderObserver {
     Object? value,
     ProviderContainer container,
   ) {
-    log('Provider ${provider.name ?? provider.runtimeType} was initialized with $value');
+    logger.d('Provider ${provider.name ?? provider.runtimeType} initialized: $value');
   }
 
   @override
@@ -17,7 +16,7 @@ class AppRiverpodObserver extends ProviderObserver {
     ProviderBase<Object?> provider,
     ProviderContainer container,
   ) {
-    log('Provider ${provider.name ?? provider.runtimeType} was disposed');
+    logger.d('Provider ${provider.name ?? provider.runtimeType} disposed');
   }
 
   @override
@@ -27,7 +26,7 @@ class AppRiverpodObserver extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    log('Provider ${provider.name ?? provider.runtimeType} updated from $previousValue to $newValue');
+    logger.d('Provider ${provider.name ?? provider.runtimeType} updated: $previousValue -> $newValue');
   }
 
   @override
@@ -37,8 +36,8 @@ class AppRiverpodObserver extends ProviderObserver {
     StackTrace stackTrace,
     ProviderContainer container,
   ) {
-    log(
-      'Provider ${provider.name ?? provider.runtimeType} threw an error',
+    logger.e(
+      'Provider ${provider.name ?? provider.runtimeType} failed',
       error: error,
       stackTrace: stackTrace,
     );
