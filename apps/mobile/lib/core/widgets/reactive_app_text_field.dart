@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import '../theme/app_colors.dart';
+import '../theme/index.dart';
+import '../utils/context_extensions.dart';
 
 class ReactiveAppTextField<T> extends StatelessWidget {
   const ReactiveAppTextField({
@@ -14,6 +15,8 @@ class ReactiveAppTextField<T> extends StatelessWidget {
     this.maxLines = 1,
     this.textInputAction,
     this.onSubmitted,
+    this.enabled,
+    this.theme,
     super.key,
   });
 
@@ -27,20 +30,22 @@ class ReactiveAppTextField<T> extends StatelessWidget {
   final int maxLines;
   final TextInputAction? textInputAction;
   final ReactiveFormFieldCallback<T>? onSubmitted;
+  final bool? enabled;
+  final AppInputTheme? theme;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveTheme = context.inputTheme.merge(theme);
+    final isEnabled = enabled ?? true;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: AppColors.nearBlack,
-              ),
+          style: isEnabled ? effectiveTheme.labelStyle : effectiveTheme.disabledLabelStyle,
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: AppSpacing.xs),
         ReactiveTextField<T>(
           formControlName: formControlName,
           obscureText: obscureText,
@@ -49,10 +54,16 @@ class ReactiveAppTextField<T> extends StatelessWidget {
           maxLines: maxLines,
           textInputAction: textInputAction,
           onSubmitted: onSubmitted,
-          style: Theme.of(context).textTheme.bodyMedium,
-          decoration: InputDecoration(
-            hintText: hintText,
-          ),
+          style: isEnabled
+              ? context.textTheme.bodyMedium
+              : context.textTheme.bodyMedium?.copyWith(
+                    color: context.theme.disabledColor,
+                  ),
+          decoration: effectiveTheme.inputDecoration
+              .applyDefaults(context.theme.inputDecorationTheme)
+              .copyWith(
+                hintText: hintText,
+              ),
           validationMessages: validationMessages,
         ),
       ],

@@ -10,6 +10,8 @@ class App extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Self Management',
       theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

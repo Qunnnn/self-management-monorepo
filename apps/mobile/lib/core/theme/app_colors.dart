@@ -29,6 +29,14 @@ class AppColors {
   static const Color badgeBlueBg = Color(0xFFF2F9FF);
   static const Color badgeBlueText = Color(0xFF097FE8);
 
-  // Borders
+  // Borders & Dividers
   static const Color whisperBorder = Color(0x1A000000); // rgba(0,0,0,0.1)
+  static const Color whisperBorderDark = Color(0x1AFFFFFF); // rgba(255,255,255,0.1)
+  static const Color inputBorder = Color(0xFFDDDDDD);
+  static const Color inputBorderDark = Color(0xFF4A4A4A);
+
+  // Dark Mode Specific
+  static const Color darkSurface = Color(0xFF2C2C2C);
+  static const Color darkBackground = Color(0xFF191919);
+  static const Color darkText = Color(0xFFF6F5F4); // Warm White
 }

@@ -42,7 +42,7 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: context.buttonTheme.secondaryStyle,
-      child: _buildContent(context, AppColors.nearBlack),
+      child: _buildContent(context, context.colorScheme.onSurface),
     );
   }
 
@@ -76,7 +76,7 @@ class AppButton extends StatelessWidget {
     }
     return Text(
       text,
-      style: Theme.of(context).textTheme.labelLarge?.copyWith(color: textColor),
+      style: context.textTheme.labelLarge?.copyWith(color: textColor),
     );
   }
 }

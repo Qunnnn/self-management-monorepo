@@ -10,15 +10,19 @@ class DiaryEntryPage extends ConsumerStatefulWidget {
 }
 
 class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
-  final _titleController = TextEditingController();
-  final _contentController = TextEditingController();
-  DiaryMood? _selectedMood;
+  late FormGroup form;
   bool _isLoading = false;
   DiaryEntry? _existingEntry;
 
   @override
   void initState() {
     super.initState();
+    form = fb.group({
+      'title': ['', Validators.required],
+      'content': [''],
+      'mood': [null as DiaryMood?],
+    });
+
     if (widget.entryId != null) {
       _loadExistingEntry();
     }
@@ -28,34 +32,32 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
     final entries = await ref.read(diaryProvider.future);
     _existingEntry = entries.firstWhere((e) => e.id == widget.entryId);
     if (_existingEntry != null) {
-      _titleController.text = _existingEntry!.title;
-      _contentController.text = _existingEntry!.content;
-      setState(() {
-        _selectedMood = _existingEntry!.mood;
+      form.patchValue({
+        'title': _existingEntry!.title,
+        'content': _existingEntry!.content,
+        'mood': _existingEntry!.mood,
       });
     }
   }
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
-    super.dispose();
-  }
-
   Future<void> _save() async {
-    final title = _titleController.text.trim();
-    if (title.isEmpty) return;
+    if (form.invalid) {
+      form.markAllAsTouched();
+      return;
+    }
 
     setState(() => _isLoading = true);
     final navigator = Navigator.of(context);
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
+      final values = form.value;
+      final title = values['title'] as String;
+
       if (_existingEntry != null) {
         final updated = _existingEntry!.copyWith(
           title: title,
-          content: _contentController.text.trim(),
-          mood: _selectedMood,
+          content: values['content'] as String,
+          mood: values['mood'] as DiaryMood?,
           updatedAt: DateTime.now(),
         );
         await ref.read(diaryProvider.notifier).updateEntry(updated);
@@ -63,8 +65,8 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
         final entry = DiaryEntry(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           title: title,
-          content: _contentController.text.trim(),
-          mood: _selectedMood,
+          content: values['content'] as String,
+          mood: values['mood'] as DiaryMood?,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
@@ -100,72 +102,84 @@ class _DiaryEntryPageState extends ConsumerState<DiaryEntryPage> {
             ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AppTextField(
-              controller: _titleController,
-              label: 'Title',
-              hintText: 'What happened today?',
-              autofocus: widget.entryId == null,
-            ),
-            24.h,
-            Text(
-              'HOW ARE YOU FEELING?',
-              style: context.textTheme.labelSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.1,
-                    color: AppColors.warmGray500,
-                  ),
-            ),
-            12.h,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: DiaryMood.values.map((mood) {
-                final isSelected = _selectedMood == mood;
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedMood = mood),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppColors.blue.withAlpha(20) : AppColors.warmWhite,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected ? AppColors.blue : AppColors.whisperBorder,
-                      ),
+      body: ReactiveForm(
+        formGroup: form,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ReactiveAppTextField<String>(
+                formControlName: 'title',
+                label: 'Title',
+                hintText: 'What happened today?',
+                autofocus: widget.entryId == null,
+                validationMessages: {
+                  ValidationMessage.required: (_) => 'Title is required',
+                },
+              ),
+              24.h,
+              Text(
+                'HOW ARE YOU FEELING?',
+                style: context.textTheme.labelSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.1,
+                      color: AppColors.warmGray500,
                     ),
-                    child: Column(
-                      children: [
-                        Text(mood.emoji, style: const TextStyle(fontSize: 24)),
-                        4.h,
-                        Text(
-                          mood.displayName,
-                          style: context.textTheme.bodySmall?.copyWith(
-                                color: isSelected ? AppColors.blue : AppColors.warmGray500,
-                                fontWeight: isSelected ? FontWeight.bold : null,
+              ),
+              12.h,
+              ReactiveValueListenableBuilder<DiaryMood>(
+                formControlName: 'mood',
+                builder: (context, control, child) {
+                  final selectedMood = control.value;
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: DiaryMood.values.map((mood) {
+                      final isSelected = selectedMood == mood;
+                      return GestureDetector(
+                        onTap: () => control.value = mood,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: isSelected ? AppColors.blue.withAlpha(20) : AppColors.warmWhite,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isSelected ? AppColors.blue : AppColors.whisperBorder,
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Text(mood.emoji, style: const TextStyle(fontSize: 24)),
+                              4.h,
+                              Text(
+                                mood.displayName,
+                                style: context.textTheme.bodySmall?.copyWith(
+                                      color: isSelected ? AppColors.blue : AppColors.warmGray500,
+                                      fontWeight: isSelected ? FontWeight.bold : null,
+                                    ),
                               ),
+                            ],
+                          ).p(12),
                         ),
-                      ],
-                    ).p(12),
-                  ),
-                );
-              }).toList(),
-            ),
-            24.h,
-            AppTextField(
-              controller: _contentController,
-              label: 'Notes',
-              hintText: 'Write down your thoughts...',
-              maxLines: 10,
-            ),
-            40.h,
-            AppButton(
-              text: 'Save Entry',
-              isLoading: _isLoading,
-              onPressed: _save,
-            ),
-          ],
-        ).p(24),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+              24.h,
+              ReactiveAppTextField<String>(
+                formControlName: 'content',
+                label: 'Notes',
+                hintText: 'Write down your thoughts...',
+                maxLines: 10,
+              ),
+              40.h,
+              AppButton(
+                text: 'Save Entry',
+                isLoading: _isLoading,
+                onPressed: _save,
+              ),
+            ],
+          ).p(24),
+        ),
       ),
     );
   }
