@@ -331,7 +331,11 @@ components:
     AuthResponse:
       type: object
       properties:
-        token:
+        userId:
+          type: string
+        accessToken:
+          type: string
+        refreshToken:
           type: string
 
     UserStats:

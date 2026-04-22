@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"log/slog"
 
 	"self-management-monorepo/apps/backend/internal/entity"
 	"self-management-monorepo/apps/backend/pkg/utils"
@@ -65,12 +66,13 @@ func (s *authService) Register(ctx context.Context, req entity.CreateUserRequest
 func (s *authService) Login(ctx context.Context, req entity.LoginRequest) (*entity.AuthResponse, error) {
 	user, err := s.repo.GetByEmail(ctx, req.Email)
 	if err != nil {
-		// To avoid timing attacks or exposing if an email exists, return a generic error
+		slog.Warn("Login failed: user not found", "email", req.Email, "error", err)
 		return nil, errors.New("invalid email or password")
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
+		slog.Warn("Login failed: password mismatch", "email", req.Email)
 		return nil, errors.New("invalid email or password")
 	}
 
