@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import '../models/user_model.dart';
 import '../models/login_response_model.dart';
 
 part 'auth_api.g.dart';
@@ -12,6 +11,4 @@ abstract class AuthApi {
   @POST('/auth/login')
   Future<LoginResponseModel> login(@Body() Map<String, dynamic> body);
 
-  @GET('/auth/me')
-  Future<UserModel> fetchCurrentUser();
 }

@@ -3,9 +3,10 @@ import '../../../../core/network/index.dart';
 import '../../data/data_sources/auth_api.dart';
 import '../../data/data_sources/auth_remote_data_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/use_cases/login_use_case.dart';
+import '../../../users/domain/entities/user.dart';
+import '../../../users/presentation/providers/user_provider.dart';
 
 part 'auth_provider.g.dart';
 
@@ -28,6 +29,7 @@ AuthRepository authRepository(Ref ref) {
   return AuthRepositoryImpl(
     ref.watch(authDataSourceProvider),
     ref.watch(tokenStorageProvider),
+    ref.watch(userRepositoryProvider),
   );
 }
 
@@ -45,10 +47,9 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> login(String email, String password) async {
     state = const AsyncValue.loading();
-    final result = await ref.read(loginUseCaseProvider).execute(
-          email: email,
-          password: password,
-        );
+    final result = await ref
+        .read(loginUseCaseProvider)
+        .execute(email: email, password: password);
 
     if (!ref.mounted) return;
     state = result.match(
@@ -63,7 +64,7 @@ class AuthNotifier extends _$AuthNotifier {
   Future<void> logout() async {
     state = const AsyncValue.loading();
     final result = await ref.read(authRepositoryProvider).logout();
-    
+
     if (!ref.mounted) return;
     state = result.match(
       (failure) => AsyncValue.error(failure, StackTrace.current),
