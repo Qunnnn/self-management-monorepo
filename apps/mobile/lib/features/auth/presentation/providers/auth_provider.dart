@@ -1,12 +1,4 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/network/index.dart';
-import '../../data/data_sources/auth_api.dart';
-import '../../data/data_sources/auth_remote_data_source.dart';
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/use_cases/login_use_case.dart';
-import '../../../users/domain/entities/user.dart';
-import '../../../users/presentation/providers/user_provider.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
 part 'auth_provider.g.dart';
 

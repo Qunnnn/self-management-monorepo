@@ -1,8 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/index.dart';
-import '../../finance.dart';
-import '../../../../core/utils/index.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
 class FinancePage extends ConsumerWidget {
   const FinancePage({super.key});

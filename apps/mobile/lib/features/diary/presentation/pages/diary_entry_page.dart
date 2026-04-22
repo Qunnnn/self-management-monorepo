@@ -1,12 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/app_text_field.dart';
-import '../../domain/entities/diary_entry.dart';
-import '../../domain/entities/diary_mood.dart';
-import '../providers/diary_provider.dart';
-import '../../../../core/utils/index.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
 class DiaryEntryPage extends ConsumerStatefulWidget {
   final String? entryId;

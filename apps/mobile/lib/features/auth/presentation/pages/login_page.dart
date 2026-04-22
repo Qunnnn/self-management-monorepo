@@ -1,11 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/index.dart';
-import '../providers/auth_provider.dart';
-import '../../../../core/utils/index.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});

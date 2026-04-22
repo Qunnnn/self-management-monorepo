@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobile/core/import/app_imports.dart';
 import 'app.dart';
-import 'core/observers/app_riverpod_observer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
