@@ -17,14 +17,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     ref.listen(loginProvider, (previous, next) {
       if (next.hasError) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error.toString())),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
       }
     });
 
     ref.listen(authProvider, (previous, next) {
-      if (next.hasValue && next.value != null) {
+      final status = next.value?.status;
+      if (status == AuthStatus.authenticated) {
         context.go('/tasks');
       }
     });
@@ -46,8 +47,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               Text(
                 'Log in to your account',
                 style: context.textTheme.bodyLarge?.copyWith(
-                      color: AppColors.warmGray500,
-                    ),
+                  color: AppColors.warmGray500,
+                ),
                 textAlign: TextAlign.center,
               ),
               48.h,
@@ -107,7 +108,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void _onSubmit() {
     if (form.valid) {
-      ref.read(loginProvider.notifier).login(
+      ref
+          .read(loginProvider.notifier)
+          .login(
             form.control('email').value as String,
             form.control('password').value as String,
           );

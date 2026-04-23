@@ -1,19 +1,33 @@
-import 'package:go_router/go_router.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-
-import '../widgets/main_shell.dart';
-import '../../features/auth/presentation/pages/login_page.dart';
-import '../../features/tasks/presentation/pages/tasks_page.dart';
-import '../../features/diary/presentation/pages/diary_page.dart';
-import '../../features/diary/presentation/pages/diary_entry_page.dart';
-import '../../features/finance/presentation/pages/finance_page.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
 part 'app_router.g.dart';
 
 @riverpod
 GoRouter router(Ref ref) {
+  final authState = ref.watch(authProvider);
+
   return GoRouter(
     initialLocation: '/login',
+    redirect: (context, state) {
+      final status = authState.value?.status ?? AuthStatus.initial;
+
+      // If still loading or initial, don't redirect yet
+      if (status == AuthStatus.initial) return null;
+
+      final loggingIn = state.uri.path == '/login';
+
+      if (status == AuthStatus.unAuthenticated) {
+        // If not authenticated, force them to login unless they are already there
+        return loggingIn ? null : '/login';
+      }
+
+      if (status == AuthStatus.authenticated) {
+        // If authenticated, don't allow them to stay on the login page
+        return loggingIn ? '/tasks' : null;
+      }
+
+      return null;
+    },
     routes: [
       GoRoute(
         path: '/login',
