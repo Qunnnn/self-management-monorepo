@@ -26,8 +26,8 @@ FutureOr<User?> currentUser(Ref ref) async {
   final authState = ref.watch(authProvider);
 
   return authState.when(
-    data: (tokens) async {
-      if (tokens == null) return null;
+    data: (state) async {
+      if (state.tokens == null) return null;
       final result = await ref.read(userRepositoryProvider).fetchCurrentUser();
       return result.match(
         (failure) => null,

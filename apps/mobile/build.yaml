@@ -6,6 +6,7 @@ targets:
         generate_for:
           include:
             - lib/**/entities/**.dart
+            - lib/**/providers/**.dart
           exclude:
             - lib/**/index.dart
             - test/**
