@@ -1,5 +1,3 @@
-import '../../../users/domain/entities/user.dart';
-import '../../../users/domain/repositories/user_repository.dart';
 import '../../domain/entities/auth_tokens.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../data_sources/auth_remote_data_source.dart';
@@ -9,12 +7,11 @@ import 'package:fpdart/fpdart.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _dataSource;
   final TokenStorage _tokenStorage;
-  final UserRepository _userRepository;
 
-  AuthRepositoryImpl(this._dataSource, this._tokenStorage, this._userRepository);
+  AuthRepositoryImpl(this._dataSource, this._tokenStorage);
 
   @override
-  Future<Either<Failure, (User, AuthTokens)>> login({
+  Future<Either<Failure, AuthTokens>> login({
     required String email,
     required String password,
   }) async {
@@ -28,15 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
       (tokensModel) async {
         final tokens = tokensModel.toEntity();
         await _tokenStorage.saveTokens(tokens);
-
-        // Fetch user profile after saving tokens using the dedicated UserRepository
-        final userResult = await _userRepository.fetchCurrentUser();
-        return userResult.match(
-          (failure) => Left(failure),
-          (user) {
-            return Right((user, tokens));
-          },
-        );
+        return Right(tokens);
       },
     );
   }
