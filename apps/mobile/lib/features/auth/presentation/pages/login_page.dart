@@ -15,12 +15,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(authProvider, (previous, next) {
+    ref.listen(loginProvider, (previous, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(next.error.toString())),
         );
-      } else if (next.hasValue && next.value != null) {
+      }
+    });
+
+    ref.listen(authProvider, (previous, next) {
+      if (next.hasValue && next.value != null) {
         context.go('/tasks');
       }
     });
@@ -78,9 +82,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 builder: (context, form, child) {
                   return Consumer(
                     builder: (context, ref, child) {
-                      final isLoading = ref.watch(
-                        authProvider.select((s) => s.isLoading),
-                      );
+                      final isLoading = ref.watch(loginProvider).isLoading;
                       return AppButton(
                         text: 'Log In',
                         isLoading: isLoading,
@@ -105,7 +107,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   void _onSubmit() {
     if (form.valid) {
-      ref.read(authProvider.notifier).login(
+      ref.read(loginProvider.notifier).login(
             form.control('email').value as String,
             form.control('password').value as String,
           );

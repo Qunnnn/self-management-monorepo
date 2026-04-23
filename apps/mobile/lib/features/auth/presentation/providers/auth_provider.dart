@@ -36,27 +36,9 @@ class AuthNotifier extends _$AuthNotifier {
     return ref.read(tokenStorageProvider).loadTokens();
   }
 
-  Future<void> login(String email, String password) async {
-    state = const AsyncValue.loading();
-    final result = await ref
-        .read(loginUseCaseProvider)
-        .execute(email: email, password: password);
-
-    if (!ref.mounted) return;
-    state = result.match(
-      (failure) => AsyncValue.error(failure, StackTrace.current),
-      (tokens) => AsyncValue.data(tokens),
-    );
-  }
-
-  Future<void> logout() async {
-    state = const AsyncValue.loading();
-    final result = await ref.read(authRepositoryProvider).logout();
-
-    if (!ref.mounted) return;
-    state = result.match(
-      (failure) => AsyncValue.error(failure, StackTrace.current),
-      (_) => const AsyncValue.data(null),
-    );
+  /// Manually update the authentication state.
+  /// This is called by specialized providers like loginProvider or logoutProvider.
+  void updateState(AuthTokens? tokens) {
+    state = AsyncValue.data(tokens);
   }
 }
