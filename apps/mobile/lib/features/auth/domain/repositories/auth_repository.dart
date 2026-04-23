@@ -4,7 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import '../../../../core/network/index.dart';
 
 abstract class AuthRepository {
-  Future<Either<Failure, (User, AuthTokens)>> login({
+  Future<Either<Failure, AuthTokens>> login({
     required String email,
     required String password,
   });

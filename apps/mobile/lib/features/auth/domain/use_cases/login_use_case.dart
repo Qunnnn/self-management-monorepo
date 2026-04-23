@@ -9,7 +9,7 @@ class LoginUseCase {
 
   final AuthRepository _repository;
 
-  Future<Either<Failure, (User, AuthTokens)>> execute({
+  Future<Either<Failure, AuthTokens>> execute({
     required String email,
     required String password,
   }) async {
