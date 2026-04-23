@@ -8,13 +8,10 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
-  final form = fb.group({
-    'email': ['', Validators.required, Validators.email],
-    'password': ['', Validators.required, Validators.minLength(6)],
-  });
-
   @override
   Widget build(BuildContext context) {
+    final loginNotifier = ref.watch(loginProvider.notifier);
+    final form = loginNotifier.form;
     ref.listen(loginProvider, (previous, next) {
       if (next.hasError) {
         ScaffoldMessenger.of(
@@ -107,15 +104,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void _onSubmit() {
-    if (form.valid) {
-      ref
-          .read(loginProvider.notifier)
-          .login(
-            form.control('email').value as String,
-            form.control('password').value as String,
-          );
-    } else {
-      form.markAllAsTouched();
-    }
+    ref.read(loginProvider.notifier).login();
   }
 }

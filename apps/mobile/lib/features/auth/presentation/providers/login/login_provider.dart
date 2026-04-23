@@ -4,17 +4,32 @@ part 'login_provider.g.dart';
 
 @riverpod
 class LoginNotifier extends _$LoginNotifier {
-  @override
-  FutureOr<void> build() {}
+  late final FormGroup form;
 
-  Future<void> login(String email, String password) async {
+  @override
+  FutureOr<void> build() {
+    form = fb.group({
+      'email': ['', Validators.required, Validators.email],
+      'password': ['', Validators.required, Validators.minLength(6)],
+    });
+
+    ref.onDispose(form.dispose);
+  }
+
+  Future<void> login() async {
+    if (form.invalid) {
+      form.markAllAsTouched();
+      return;
+    }
+
     state = const AsyncValue.loading();
-    final result = await ref
-        .read(loginUseCaseProvider)
-        .execute(email: email, password: password);
+    final result = await ref.read(loginUseCaseProvider).execute(
+      email: form.control('email').value as String,
+      password: form.control('password').value as String,
+    );
 
     if (!ref.mounted) return;
-    
+
     state = result.match(
       (failure) => AsyncValue.error(failure, StackTrace.current),
       (tokens) {
