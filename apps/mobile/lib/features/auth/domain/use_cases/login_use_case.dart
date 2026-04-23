@@ -1,4 +1,3 @@
-import '../../../users/domain/entities/user.dart';
 import '../entities/auth_tokens.dart';
 import '../repositories/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';

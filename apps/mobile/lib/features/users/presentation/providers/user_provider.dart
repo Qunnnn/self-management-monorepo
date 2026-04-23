@@ -1,10 +1,4 @@
 import 'package:mobile/core/import/app_imports.dart';
-import 'package:mobile/features/users/domain/entities/user.dart';
-import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
-import 'package:mobile/features/users/data/data_sources/user_api.dart';
-import 'package:mobile/features/users/data/data_sources/user_remote_data_source.dart';
-import 'package:mobile/features/users/data/repositories/user_repository_impl.dart';
-import 'package:mobile/features/users/domain/repositories/user_repository.dart';
 
 part 'user_provider.g.dart';
 
