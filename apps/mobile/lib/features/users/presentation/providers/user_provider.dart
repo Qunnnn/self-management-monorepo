@@ -1,5 +1,6 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:mobile/core/network/index.dart';
+import 'package:mobile/core/import/app_imports.dart';
+import 'package:mobile/features/users/domain/entities/user.dart';
+import 'package:mobile/features/auth/presentation/providers/auth_provider.dart';
 import 'package:mobile/features/users/data/data_sources/user_api.dart';
 import 'package:mobile/features/users/data/data_sources/user_remote_data_source.dart';
 import 'package:mobile/features/users/data/repositories/user_repository_impl.dart';
@@ -24,4 +25,22 @@ UserRemoteDataSource userRemoteDataSource(Ref ref) {
 @riverpod
 UserRepository userRepository(Ref ref) {
   return UserRepositoryImpl(ref.watch(userRemoteDataSourceProvider));
+}
+
+@riverpod
+FutureOr<User?> currentUser(Ref ref) async {
+  final authState = ref.watch(authProvider);
+
+  return authState.when(
+    data: (tokens) async {
+      if (tokens == null) return null;
+      final result = await ref.read(userRepositoryProvider).fetchCurrentUser();
+      return result.match(
+        (failure) => null,
+        (user) => user,
+      );
+    },
+    loading: () => null,
+    error: (_, __) => null,
+  );
 }
