@@ -21,7 +21,6 @@ AuthRepository authRepository(Ref ref) {
   return AuthRepositoryImpl(
     ref.watch(authDataSourceProvider),
     ref.watch(tokenStorageProvider),
-    ref.watch(userRepositoryProvider),
   );
 }
 
@@ -33,8 +32,8 @@ LoginUseCase loginUseCase(Ref ref) {
 @riverpod
 class AuthNotifier extends _$AuthNotifier {
   @override
-  AsyncValue<User?> build() {
-    return const AsyncValue.data(null);
+  FutureOr<AuthTokens?> build() async {
+    return ref.read(tokenStorageProvider).loadTokens();
   }
 
   Future<void> login(String email, String password) async {
@@ -46,10 +45,7 @@ class AuthNotifier extends _$AuthNotifier {
     if (!ref.mounted) return;
     state = result.match(
       (failure) => AsyncValue.error(failure, StackTrace.current),
-      (data) {
-        final (user, _) = data;
-        return AsyncValue.data(user);
-      },
+      (tokens) => AsyncValue.data(tokens),
     );
   }
 
