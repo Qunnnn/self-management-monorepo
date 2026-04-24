@@ -3,25 +3,17 @@ import 'package:go_router/go_router.dart';
 import '../theme/app_colors.dart';
 
 class MainShell extends StatelessWidget {
-  final Widget child;
+  final StatefulNavigationShell navigationShell;
 
   const MainShell({
     super.key,
-    required this.child,
+    required this.navigationShell,
   });
 
   @override
   Widget build(BuildContext context) {
-    final location = GoRouterState.of(context).uri.path;
-    int selectedIndex = 0;
-    if (location.startsWith('/tasks')) {
-      selectedIndex = 1;
-    } else if (location.startsWith('/finance')) {
-      selectedIndex = 2;
-    }
-
     return Scaffold(
-      body: child,
+      body: navigationShell,
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(
@@ -29,19 +21,12 @@ class MainShell extends StatelessWidget {
           ),
         ),
         child: BottomNavigationBar(
-          currentIndex: selectedIndex,
+          currentIndex: navigationShell.currentIndex,
           onTap: (index) {
-            switch (index) {
-              case 0:
-                context.go('/diary');
-                break;
-              case 1:
-                context.go('/tasks');
-                break;
-              case 2:
-                context.go('/finance');
-                break;
-            }
+            navigationShell.goBranch(
+              index,
+              initialLocation: index == navigationShell.currentIndex,
+            );
           },
           selectedItemColor: AppColors.blue,
           unselectedItemColor: AppColors.warmGray300,

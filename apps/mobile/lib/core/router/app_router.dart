@@ -37,32 +37,44 @@ GoRouter router(Ref ref) {
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordPage(),
       ),
-      ShellRoute(
-        builder: (context, state, child) => MainShell(child: child),
-        routes: [
-          GoRoute(
-            path: '/diary',
-            builder: (context, state) => const DiaryPage(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => MainShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
             routes: [
               GoRoute(
-                path: 'create',
-                builder: (context, state) => const DiaryEntryPage(),
-              ),
-              GoRoute(
-                path: 'edit/:id',
-                builder: (context, state) => DiaryEntryPage(
-                  entryId: state.pathParameters['id'],
-                ),
+                path: '/diary',
+                builder: (context, state) => const DiaryPage(),
+                routes: [
+                  GoRoute(
+                    path: 'create',
+                    builder: (context, state) => const DiaryEntryPage(),
+                  ),
+                  GoRoute(
+                    path: 'edit/:id',
+                    builder: (context, state) => DiaryEntryPage(
+                      entryId: state.pathParameters['id'],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
-          GoRoute(
-            path: '/tasks',
-            builder: (context, state) => const TasksPage(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/tasks',
+                builder: (context, state) => const TasksPage(),
+              ),
+            ],
           ),
-          GoRoute(
-            path: '/finance',
-            builder: (context, state) => const FinancePage(),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/finance',
+                builder: (context, state) => const FinancePage(),
+              ),
+            ],
           ),
         ],
       ),
