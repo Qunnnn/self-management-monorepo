@@ -81,3 +81,35 @@ func (h *AuthHandler) Refresh(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(res)
 }
+
+// ForgotPassword requests a password reset
+func (h *AuthHandler) ForgotPassword(w http.ResponseWriter, r *http.Request) {
+	var req entity.ForgotPasswordRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.svc.ForgotPassword(r.Context(), req); err != nil {
+		utils.WriteError(w, "Failed to process request", http.StatusInternalServerError, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// ResetPassword resets the password using a token
+func (h *AuthHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
+	var req entity.ResetPasswordRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		utils.WriteError(w, "Invalid request body", http.StatusBadRequest, err)
+		return
+	}
+
+	if err := h.svc.ResetPassword(r.Context(), req); err != nil {
+		utils.WriteError(w, err.Error(), http.StatusBadRequest, nil)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

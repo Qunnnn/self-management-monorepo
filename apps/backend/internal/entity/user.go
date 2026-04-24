@@ -8,8 +8,11 @@ type User struct {
 	Name        string    `json:"name"`
 	Email       string    `json:"email"`
 	CreatedAt   time.Time `json:"createdAt"`
-	PhoneNumber string    `json:"phoneNumber,omitempty"`
-	Password    string    `json:"-"`
+	PhoneNumber           string     `json:"phoneNumber,omitempty"`
+	Password              string     `json:"-"`
+	DeletedAt             *time.Time `json:"deletedAt,omitempty"`
+	ResetToken            *string    `json:"-"`
+	ResetTokenExpiresAt   *time.Time `json:"-"`
 }
 
 // CreateUserRequest is used when creating a new user
@@ -49,4 +52,15 @@ type AuthResponse struct {
 // RefreshRequest is used to get a new access token
 type RefreshRequest struct {
 	RefreshToken string `json:"refreshToken"`
+}
+
+// ForgotPasswordRequest is used when a user requests a password reset
+type ForgotPasswordRequest struct {
+	Email string `json:"email"`
+}
+
+// ResetPasswordRequest is used when a user submits a new password with a token
+type ResetPasswordRequest struct {
+	Token       string `json:"token"`
+	NewPassword string `json:"newPassword"`
 }

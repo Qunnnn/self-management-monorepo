@@ -101,6 +101,28 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// DeleteMe deletes the currently authenticated user
+func (h *UserHandler) DeleteMe(w http.ResponseWriter, r *http.Request) {
+	idVal := r.Context().Value(constants.UserIDKey)
+	id, ok := idVal.(string)
+	if !ok {
+		utils.WriteError(w, "Unauthorized", http.StatusUnauthorized, nil)
+		return
+	}
+
+	err := h.svc.DeleteUser(r.Context(), id)
+	if errors.Is(err, sql.ErrNoRows) {
+		utils.WriteError(w, "User not found", http.StatusNotFound, nil)
+		return
+	}
+	if err != nil {
+		utils.WriteError(w, "Internal server error", http.StatusInternalServerError, err)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}
+
 // ModifyUser updates an existing user
 func (h *UserHandler) ModifyUser(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")

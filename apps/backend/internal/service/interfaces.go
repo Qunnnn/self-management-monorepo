@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"time"
 
 	"self-management-monorepo/apps/backend/internal/entity"
 )
@@ -15,6 +16,9 @@ type UserRepository interface {
 	Update(ctx context.Context, id string, name, email, phone string) (*entity.User, error)
 	Delete(ctx context.Context, id string) error
 	GetStats(ctx context.Context) (*entity.UserStats, error)
+	SetResetToken(ctx context.Context, email, token string, expiresAt time.Time) error
+	GetUserByResetToken(ctx context.Context, token string) (*entity.User, error)
+	UpdatePasswordAndClearToken(ctx context.Context, id, hashedPassword string) error
 }
 
 // TaskRepository defines the operations for task data access
@@ -34,7 +38,7 @@ type DiaryRepository interface {
 	Create(ctx context.Context, req entity.CreateDiaryEntryRequest) (*entity.DiaryEntry, error)
 	Update(ctx context.Context, id string, req entity.UpdateDiaryEntryRequest) (*entity.DiaryEntry, error)
 	Delete(ctx context.Context, id string) error
-	
+
 	// Attachments
 	AddAttachment(ctx context.Context, entryID string, fileURL string, fileType *string) (*entity.DiaryAttachment, error)
 	GetAttachments(ctx context.Context, entryID string) ([]entity.DiaryAttachment, error)

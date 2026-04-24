@@ -14,11 +14,14 @@ func New(authH *AuthHandler, userH *UserHandler, taskH *TaskHandler, diaryH *Dia
 	mux.HandleFunc("POST /auth/login", authH.Login)
 	mux.HandleFunc("POST /auth/register", authH.Register)
 	mux.HandleFunc("POST /auth/refresh", authH.Refresh)
+	mux.HandleFunc("POST /auth/forgot-password", authH.ForgotPassword)
+	mux.HandleFunc("POST /auth/reset-password", authH.ResetPassword)
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	})
 
 	mux.Handle("GET /users/me", middleware.AuthMiddleware(http.HandlerFunc(userH.GetMe)))
+	mux.Handle("DELETE /users/me", middleware.AuthMiddleware(http.HandlerFunc(userH.DeleteMe)))
 	mux.Handle("GET /users/stats", middleware.AuthMiddleware(http.HandlerFunc(userH.GetUserStats)))
 	mux.Handle("GET /users", middleware.AuthMiddleware(http.HandlerFunc(userH.GetUsers)))
 	mux.Handle("GET /users/{id}", middleware.AuthMiddleware(http.HandlerFunc(userH.GetUser)))
