@@ -21,41 +21,46 @@ class DiaryPage extends ConsumerWidget {
         onRefresh: () => ref.read(diaryProvider.notifier).refresh(),
         child: Column(
           children: [
-            TextField(
-              onChanged: (value) =>
-                  ref.read(diaryProvider.notifier).search(value),
-              decoration: InputDecoration(
+            ReactiveForm(
+              formGroup: ref.read(diaryProvider.notifier).searchForm,
+              child: ReactiveAppTextField<String>(
+                formControlName: 'query',
                 hintText: 'Search entries...',
                 prefixIcon: const Icon(Icons.search, size: 20),
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                fillColor: AppColors.white,
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.whisperBorder),
+                onChanged: (control) =>
+                    ref.read(diaryProvider.notifier).search(control.value ?? ''),
+                decoration: InputDecoration(
+                  fillColor: AppColors.white,
+                  filled: true,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppColors.whisperBorder),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: AppColors.whisperBorder),
+                  ),
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.whisperBorder),
-                ),
-              ),
-            ).px(24).py(8),
+              ).px(24).py(8),
+            ),
             Consumer(
               builder: (context, ref, child) {
-                final entriesAsync = ref.watch(diaryProvider);
-                return switch (entriesAsync) {
-                  AsyncData(:final value) => value.isEmpty
+                final diaryAsync = ref.watch(diaryProvider);
+                return switch (diaryAsync) {
+                  AsyncData(:final value) => value.items.isEmpty
                       ? const Text('No entries found').center()
                       : ListView.builder(
                           padding: const EdgeInsets.all(24),
-                          itemCount: value.length,
+                          itemCount: value.items.length,
                           itemBuilder: (context, index) {
-                            final entry = value[index];
+                            final entry = value.items[index];
                             return DiaryCard(
                               entryId: entry.id,
-                              onTap: () => context.push('/diary/edit/${entry.id}'),
+                              onTap: () =>
+                                  context.push('/diary/edit/${entry.id}'),
                               onTogglePin: () => ref
-                                  .read(diaryProvider.notifier)
+                                  .read(diaryActionProvider.notifier)
                                   .togglePin(entry),
                             );
                           },

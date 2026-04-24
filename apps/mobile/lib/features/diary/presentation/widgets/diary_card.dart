@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:collection/collection.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/index.dart';
-import '../providers/diary_provider.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
 class DiaryCard extends ConsumerWidget {
   final String entryId;
@@ -22,7 +16,7 @@ class DiaryCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final entry = ref.watch(
       diaryProvider.select(
-        (s) => s.value?.firstWhereOrNull((e) => e.id == entryId),
+        (s) => s.value?.items.firstWhereOrNull((e) => e.id == entryId),
       ),
     );
     if (entry == null) return const SizedBox.shrink();

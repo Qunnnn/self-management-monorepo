@@ -1,74 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/index.dart';
-import '../../domain/entities/transaction.dart';
-import '../providers/finance_provider.dart';
-import '../../../../core/utils/index.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
-class AddTransactionSheet extends ConsumerStatefulWidget {
+class AddTransactionSheet extends ConsumerWidget {
   const AddTransactionSheet({super.key});
 
   @override
-  ConsumerState<AddTransactionSheet> createState() => _AddTransactionSheetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(addTransactionProvider.notifier);
+    final state = ref.watch(addTransactionProvider);
 
-class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
-  late FormGroup form;
-  bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    form = fb.group({
-      'type': [TransactionType.expense, Validators.required],
-      'title': ['', Validators.required],
-      'amount': [
-        null as double?,
-        Validators.required,
-        Validators.min(0.01),
-      ],
-      'category': ['', Validators.required],
-    });
-  }
-
-  Future<void> _submit() async {
-    if (form.invalid) {
-      form.markAllAsTouched();
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final values = form.value;
-      final transaction = Transaction(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        userId: 'user-1',
-        title: values['title'] as String,
-        amount: values['amount'] as double,
-        type: values['type'] as TransactionType,
-        category: values['category'] as String,
-        date: DateTime.now(),
-      );
-
-      await ref.read(financeProvider.notifier).addTransaction(transaction);
-      if (mounted) Navigator.pop(context);
-    } catch (e) {
-      if (mounted) {
+    ref.listen(addTransactionProvider, (previous, next) {
+      if (next is AsyncData && next.value == null && previous is AsyncLoading) {
+        Navigator.pop(context);
+      }
+      if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add transaction: $e')),
+          SnackBar(content: Text('Failed to add transaction: ${next.error}')),
         );
       }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
+    });
 
-  @override
-  Widget build(BuildContext context) {
     return ReactiveForm(
-      formGroup: form,
+      formGroup: notifier.form,
       child: Container(
         padding: EdgeInsets.only(
           left: 24,
@@ -122,7 +74,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
               autofocus: true,
               textInputAction: TextInputAction.next,
               validationMessages: {
-                ValidationMessage.required: (_) => 'Title is required',
+                'required': (_) => 'Title is required',
               },
             ),
             16.h,
@@ -133,11 +85,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                   formControlName: 'amount',
                   label: 'Amount',
                   hintText: '0.00',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      TextInputType.numberWithOptions(decimal: true),
                   textInputAction: TextInputAction.next,
                   validationMessages: {
-                    ValidationMessage.required: (_) => 'Required',
-                    ValidationMessage.min: (_) => 'Must be > 0',
+                    'required': (_) => 'Required',
+                    'min': (_) => 'Must be > 0',
                   },
                 ).expanded(2),
                 16.w,
@@ -146,9 +99,9 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                   label: 'Category',
                   hintText: 'e.g. Food, Work',
                   textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _submit(),
+                  onSubmitted: (_) => notifier.submit(),
                   validationMessages: {
-                    ValidationMessage.required: (_) => 'Required',
+                    'required': (_) => 'Required',
                   },
                 ).expanded(3),
               ],
@@ -158,8 +111,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
               builder: (context, form, child) {
                 return AppButton(
                   text: 'Save Transaction',
-                  isLoading: _isLoading,
-                  onPressed: form.valid ? _submit : null,
+                  isLoading: state is AsyncLoading,
+                  onPressed: form.valid ? () => notifier.submit() : null,
                 );
               },
             ),

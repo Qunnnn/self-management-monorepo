@@ -6,7 +6,7 @@ import '../utils/context_extensions.dart';
 class ReactiveAppTextField<T> extends StatelessWidget {
   const ReactiveAppTextField({
     required this.formControlName,
-    required this.label,
+    this.label,
     this.hintText,
     this.obscureText = false,
     this.keyboardType,
@@ -15,13 +15,16 @@ class ReactiveAppTextField<T> extends StatelessWidget {
     this.maxLines = 1,
     this.textInputAction,
     this.onSubmitted,
+    this.onChanged,
     this.enabled,
     this.theme,
+    this.prefixIcon,
+    this.decoration,
     super.key,
   });
 
   final String formControlName;
-  final String label;
+  final String? label;
   final String? hintText;
   final bool obscureText;
   final TextInputType? keyboardType;
@@ -30,8 +33,11 @@ class ReactiveAppTextField<T> extends StatelessWidget {
   final int maxLines;
   final TextInputAction? textInputAction;
   final ReactiveFormFieldCallback<T>? onSubmitted;
+  final ReactiveFormFieldCallback<T>? onChanged;
   final bool? enabled;
   final AppInputTheme? theme;
+  final Widget? prefixIcon;
+  final InputDecoration? decoration;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +47,15 @@ class ReactiveAppTextField<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: isEnabled ? effectiveTheme.labelStyle : effectiveTheme.disabledLabelStyle,
-        ),
-        const SizedBox(height: AppSpacing.xs),
+        if (label != null) ...[
+          Text(
+            label!,
+            style: isEnabled
+                ? effectiveTheme.labelStyle
+                : effectiveTheme.disabledLabelStyle,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+        ],
         ReactiveTextField<T>(
           formControlName: formControlName,
           obscureText: obscureText,
@@ -54,15 +64,17 @@ class ReactiveAppTextField<T> extends StatelessWidget {
           maxLines: maxLines,
           textInputAction: textInputAction,
           onSubmitted: onSubmitted,
+          onChanged: onChanged,
           style: isEnabled
               ? context.textTheme.bodyMedium
               : context.textTheme.bodyMedium?.copyWith(
                     color: context.theme.disabledColor,
                   ),
-          decoration: effectiveTheme.inputDecoration
+          decoration: (decoration ?? effectiveTheme.inputDecoration)
               .applyDefaults(context.theme.inputDecorationTheme)
               .copyWith(
                 hintText: hintText,
+                prefixIcon: prefixIcon,
               ),
           validationMessages: validationMessages,
         ),

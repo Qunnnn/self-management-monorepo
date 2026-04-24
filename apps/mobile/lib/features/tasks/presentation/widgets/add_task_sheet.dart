@@ -1,56 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/widgets/index.dart';
-import '../providers/tasks_provider.dart';
-import '../../../../core/utils/index.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
-class AddTaskSheet extends ConsumerStatefulWidget {
+class AddTaskSheet extends ConsumerWidget {
   const AddTaskSheet({super.key});
 
   @override
-  ConsumerState<AddTaskSheet> createState() => _AddTaskSheetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(createTaskProvider.notifier);
+    final state = ref.watch(createTaskProvider);
 
-class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
-  final form = fb.group({
-    'title': ['', Validators.required],
-    'description': [''],
-  });
-  bool _isLoading = false;
-
-  Future<void> _submit() async {
-    if (form.invalid) {
-      form.markAllAsTouched();
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final values = form.value;
-      await ref.read(tasksProvider.notifier).addTask(
-            values['title'] as String,
-            (values['description'] as String?)?.isEmpty ?? true
-                ? null
-                : values['description'] as String,
-          );
-      if (mounted) Navigator.pop(context);
-    } catch (e) {
-      if (mounted) {
+    ref.listen(createTaskProvider, (previous, next) {
+      if (next is AsyncData && next.value == null) {
+        Navigator.pop(context);
+      }
+      if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add task: $e')),
+          SnackBar(content: Text('Failed to add task: ${next.error}')),
         );
       }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
+    });
 
-  @override
-  Widget build(BuildContext context) {
     return ReactiveForm(
-      formGroup: form,
+      formGroup: notifier.form,
       child: Container(
         padding: EdgeInsets.only(
           left: 24,
@@ -90,7 +60,7 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
               autofocus: true,
               textInputAction: TextInputAction.next,
               validationMessages: {
-                ValidationMessage.required: (_) => 'Title is required',
+                'required': (_) => 'Title is required',
               },
             ),
             16.h,
@@ -100,15 +70,15 @@ class _AddTaskSheetState extends ConsumerState<AddTaskSheet> {
               hintText: 'Optional details',
               maxLines: 3,
               textInputAction: TextInputAction.done,
-              onSubmitted: (_) => _submit(),
+              onSubmitted: (_) => notifier.submit(),
             ),
             32.h,
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 return AppButton(
                   text: 'Create Task',
-                  isLoading: _isLoading,
-                  onPressed: form.valid ? _submit : null,
+                  isLoading: state is AsyncLoading,
+                  onPressed: form.valid ? () => notifier.submit() : null,
                 );
               },
             ),

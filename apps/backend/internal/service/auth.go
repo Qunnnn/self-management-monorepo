@@ -6,6 +6,7 @@ import (
 	"log/slog"
 
 	"self-management-monorepo/apps/backend/internal/entity"
+	"self-management-monorepo/apps/backend/pkg/constants"
 	"self-management-monorepo/apps/backend/pkg/utils"
 
 	"golang.org/x/crypto/bcrypt"
@@ -26,7 +27,7 @@ func NewAuthService(repo UserRepository) AuthService {
 }
 
 func (s *authService) Register(ctx context.Context, req entity.CreateUserRequest) (*entity.AuthResponse, error) {
-	if req.Name == "" || req.Email == "" {
+	if req.Name == "" || req.Email == "" || req.Password == "" {
 		return nil, ErrInvalidInput
 	}
 	if !utils.IsValidEmail(req.Email) {
@@ -99,7 +100,7 @@ func (s *authService) RefreshToken(ctx context.Context, refreshToken string) (*e
 		return nil, errors.New("invalid refresh token")
 	}
 
-	userID, ok := claims["user_id"].(string)
+	userID, ok := claims[constants.JWTUserIDClaim].(string)
 	if !ok {
 		return nil, errors.New("invalid token claims")
 	}

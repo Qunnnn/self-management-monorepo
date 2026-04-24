@@ -25,16 +25,17 @@ UserRepository userRepository(Ref ref) {
 FutureOr<User?> currentUser(Ref ref) async {
   final authState = ref.watch(authProvider);
 
-  return authState.when(
-    data: (state) async {
-      if (state.tokens == null) return null;
-      final result = await ref.read(userRepositoryProvider).fetchCurrentUser();
-      return result.match(
-        (failure) => null,
-        (user) => user,
-      );
-    },
-    loading: () => null,
-    error: (_, __) => null,
+  return switch (authState) {
+    AsyncData(:final value) => await _fetchUser(ref, value),
+    _ => null,
+  };
+}
+
+Future<User?> _fetchUser(Ref ref, AuthState state) async {
+  if (state.tokens == null) return null;
+  final result = await ref.read(userRepositoryProvider).fetchCurrentUser();
+  return result.match(
+    (failure) => null,
+    (user) => user,
   );
 }

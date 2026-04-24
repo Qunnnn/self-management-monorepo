@@ -9,3 +9,5 @@ export 'package:json_annotation/json_annotation.dart';
 export 'package:fpdart/fpdart.dart' hide State;
 export 'package:reactive_forms/reactive_forms.dart';
 export 'package:dio/dio.dart';
+export 'package:intl/intl.dart' hide TextDirection;
+export 'package:collection/collection.dart';

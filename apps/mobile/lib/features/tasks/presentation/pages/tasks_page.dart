@@ -63,10 +63,10 @@ class TasksPage extends ConsumerWidget {
                           return TaskCard(
                             taskId: task.id,
                             onToggle: () => ref
-                                .read(tasksProvider.notifier)
+                                .read(tasksActionProvider.notifier)
                                 .toggleTaskCompletion(task),
                             onDelete: () => ref
-                                .read(tasksProvider.notifier)
+                                .read(tasksActionProvider.notifier)
                                 .deleteTask(task.id),
                           );
                         },

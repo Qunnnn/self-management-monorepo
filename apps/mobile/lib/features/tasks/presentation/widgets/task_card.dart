@@ -1,10 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:collection/collection.dart';
-import '../../../../core/theme/index.dart';
-import '../../tasks.dart';
-import '../../../../core/utils/index.dart';
-import '../providers/tasks_provider.dart';
+import 'package:mobile/core/import/app_imports.dart';
 
 class TaskCard extends ConsumerWidget {
   final String taskId;
