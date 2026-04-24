@@ -14,4 +14,9 @@ class UserRepositoryImpl implements UserRepository {
     final result = await _remoteDataSource.fetchCurrentUser();
     return result.map((model) => model.toEntity());
   }
+
+  @override
+  Future<Either<Failure, void>> deleteAccount() async {
+    return await _remoteDataSource.deleteAccount();
+  }
 }

@@ -14,16 +14,16 @@ GoRouter router(Ref ref) {
       // If still loading or initial, don't redirect yet
       if (status == AuthStatus.initial) return null;
 
-      final loggingIn = state.uri.path == '/login';
+      final isAuthRoute = state.uri.path == '/login' || state.uri.path == '/forgot-password';
 
       if (status == AuthStatus.unAuthenticated) {
         // If not authenticated, force them to login unless they are already there
-        return loggingIn ? null : '/login';
+        return isAuthRoute ? null : '/login';
       }
 
       if (status == AuthStatus.authenticated) {
-        // If authenticated, don't allow them to stay on the login page
-        return loggingIn ? '/tasks' : null;
+        // If authenticated, don't allow them to stay on the auth pages
+        return isAuthRoute ? '/tasks' : null;
       }
 
       return null;
@@ -32,6 +32,10 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (context, state) => const ForgotPasswordPage(),
       ),
       ShellRoute(
         builder: (context, state, child) => MainShell(child: child),

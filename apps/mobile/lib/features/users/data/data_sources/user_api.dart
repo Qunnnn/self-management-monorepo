@@ -10,4 +10,7 @@ abstract class UserApi {
 
   @GET('/users/me')
   Future<UserModel> fetchCurrentUser();
+
+  @DELETE('/users/me')
+  Future<void> deleteAccount();
 }

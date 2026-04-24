@@ -10,5 +10,4 @@ abstract class AuthApi {
 
   @POST('/auth/login')
   Future<LoginResponseModel> login(@Body() Map<String, dynamic> body);
-
 }

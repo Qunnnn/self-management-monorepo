@@ -5,6 +5,7 @@ import 'package:mobile/features/users/data/data_sources/user_api.dart';
 
 abstract class UserRemoteDataSource {
   Future<Either<Failure, UserModel>> fetchCurrentUser();
+  Future<Either<Failure, void>> deleteAccount();
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
@@ -17,6 +18,13 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<Either<Failure, UserModel>> fetchCurrentUser() async {
     return _dioClient.request(() async {
       return await _api.fetchCurrentUser();
+    });
+  }
+
+  @override
+  Future<Either<Failure, void>> deleteAccount() async {
+    return _dioClient.request(() async {
+      await _api.deleteAccount();
     });
   }
 }
