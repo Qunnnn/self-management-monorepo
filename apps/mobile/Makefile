@@ -1,12 +1,13 @@
 FLUTTER = fvm flutter
 
-.PHONY: get clean build watch format analyze test run build-apk build-ios build-bundle upgrade help clean-get clean-build-get
+.PHONY: get clean build watch format analyze test run build-apk build-ios build-bundle upgrade help clean-get clean-build-get l10n
 
 help:
 	@echo "Usage: make [target]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  get              Install dependencies"
+	@echo "  get              Install dependencies and generate localization"
+	@echo "  l10n             Generate localization code"
 	@echo "  clean            Clean build artifacts"
 	@echo "  clean-get        Clean and install dependencies"
 	@echo "  clean-build-get  Clean, install dependencies, and run build-runner"
@@ -23,6 +24,10 @@ help:
 
 get:
 	$(FLUTTER) pub get
+	$(FLUTTER) gen-l10n
+
+l10n:
+	$(FLUTTER) gen-l10n
 
 clean:
 	$(FLUTTER) clean

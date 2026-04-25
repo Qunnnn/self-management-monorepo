@@ -37,6 +37,10 @@ GoRouter router(Ref ref) {
         path: '/forgot-password',
         builder: (context, state) => const ForgotPasswordPage(),
       ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsPage(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) => MainShell(navigationShell: navigationShell),
         branches: [

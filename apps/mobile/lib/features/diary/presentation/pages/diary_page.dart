@@ -16,6 +16,12 @@ class DiaryPage extends ConsumerWidget {
               fontWeight: FontWeight.bold,
               color: AppColors.nearBlack,
             ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => context.push('/settings'),
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () => ref.read(diaryProvider.notifier).refresh(),

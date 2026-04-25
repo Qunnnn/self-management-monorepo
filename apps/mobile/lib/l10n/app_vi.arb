@@ -1,0 +1,16 @@
+{
+  "@@locale": "vi",
+  "appTitle": "Quản lý bản thân",
+  "commonSave": "Lưu",
+  "commonCancel": "Hủy",
+  "commonError": "Lỗi",
+  "commonSuccess": "Thành công",
+  "settingsTitle": "Cài đặt",
+  "settingsTheme": "Giao diện",
+  "settingsLanguage": "Ngôn ngữ",
+  "themeSystem": "Hệ thống",
+  "themeLight": "Sáng",
+  "themeDark": "Tối",
+  "languageSystem": "Theo hệ thống",
+  "languageVietnamese": "Tiếng Việt"
+}

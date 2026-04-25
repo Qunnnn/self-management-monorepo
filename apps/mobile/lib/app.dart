@@ -6,12 +6,16 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final preferences = ref.watch(preferencesProvider);
 
     return MaterialApp.router(
-      title: 'Self Management',
+      onGenerateTitle: (context) => context.l10n.appTitle,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: preferences.localeCode != null ? Locale(preferences.localeCode!) : null,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: preferences.themeMode,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/index.dart';
-
+import 'package:mobile/l10n/app_localizations.dart';
 /// Shorthand extensions for [BuildContext] to access theme and layout tokens.
 extension BuildContextX on BuildContext {
   // Theme shorthand
@@ -11,6 +11,9 @@ extension BuildContextX on BuildContext {
   AppDecorationTheme get decorationTheme => theme.extension<AppDecorationTheme>()!;
   AppInputTheme get inputTheme => theme.extension<AppInputTheme>()!;
   AppShadows get shadows => theme.extension<AppShadows>()!;
+  
+  // Localization shorthand
+  AppLocalizations get l10n => AppLocalizations.of(this)!;
 
   // Spacing (Notion-inspired 8px base unit)
   double get spacingXXS => 4.0;

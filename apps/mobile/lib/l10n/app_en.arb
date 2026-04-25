@@ -1,0 +1,20 @@
+{
+  "@@locale": "en",
+  "appTitle": "Self Management",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "commonSave": "Save",
+  "commonCancel": "Cancel",
+  "commonError": "Error",
+  "commonSuccess": "Success",
+  "settingsTitle": "Settings",
+  "settingsTheme": "Theme",
+  "settingsLanguage": "Language",
+  "themeSystem": "System Default",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "languageSystem": "System Default",
+  "languageEnglish": "English",
+  "languageVietnamese": "Vietnamese"
+}

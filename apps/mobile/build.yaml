@@ -7,6 +7,7 @@ targets:
           include:
             - lib/**/entities/**.dart
             - lib/**/providers/**.dart
+            - lib/core/preferences/**.dart
           exclude:
             - lib/**/index.dart
             - test/**
@@ -16,6 +17,7 @@ targets:
           include:
             - lib/**/models/**.dart
             - lib/features/auth/domain/entities/auth_tokens.dart
+            - lib/core/preferences/**.dart
           exclude:
             - lib/**/index.dart
             - test/**

@@ -11,3 +11,4 @@ export 'package:reactive_forms/reactive_forms.dart';
 export 'package:dio/dio.dart';
 export 'package:intl/intl.dart' hide TextDirection;
 export 'package:collection/collection.dart';
+export 'package:mobile/l10n/app_localizations.dart';
