@@ -181,6 +181,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Vietnamese'**
   String get languageVietnamese;
+
+  /// No description provided for @authForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password'**
+  String get authForgotPassword;
+
+  /// No description provided for @authResetLinkSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset link sent!'**
+  String get authResetLinkSent;
+
+  /// No description provided for @authEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get authEmail;
+
+  /// No description provided for @authEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get authEmailHint;
+
+  /// No description provided for @authPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authPassword;
+
+  /// No description provided for @authPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get authPasswordHint;
+
+  /// No description provided for @tasksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get tasksTitle;
+
+  /// No description provided for @tasksTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What needs to be done?'**
+  String get tasksTitleHint;
+
+  /// No description provided for @tasksDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get tasksDescription;
+
+  /// No description provided for @tasksDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional details'**
+  String get tasksDescriptionHint;
+
+  /// No description provided for @financeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finance'**
+  String get financeTitle;
+
+  /// No description provided for @financeAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get financeAdd;
+
+  /// No description provided for @financeNoTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions yet'**
+  String get financeNoTransactions;
+
+  /// No description provided for @financeExpense.
+  ///
+  /// In en, this message translates to:
+  /// **'Expense'**
+  String get financeExpense;
+
+  /// No description provided for @financeIncome.
+  ///
+  /// In en, this message translates to:
+  /// **'Income'**
+  String get financeIncome;
+
+  /// No description provided for @financeTransactionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get financeTransactionTitle;
+
+  /// No description provided for @financeTransactionTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What was it for?'**
+  String get financeTransactionTitleHint;
+
+  /// No description provided for @financeAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get financeAmount;
+
+  /// No description provided for @financeAmountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0.00'**
+  String get financeAmountHint;
+
+  /// No description provided for @financeCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get financeCategory;
+
+  /// No description provided for @financeCategoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Food, Work'**
+  String get financeCategoryHint;
+
+  /// No description provided for @diaryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Diary'**
+  String get diaryTitle;
+
+  /// No description provided for @diarySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search entries...'**
+  String get diarySearchHint;
+
+  /// No description provided for @diaryNoEntries.
+  ///
+  /// In en, this message translates to:
+  /// **'No entries found'**
+  String get diaryNoEntries;
+
+  /// No description provided for @diaryEditEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Entry'**
+  String get diaryEditEntry;
+
+  /// No description provided for @diaryNewEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'New Entry'**
+  String get diaryNewEntry;
+
+  /// No description provided for @diaryEntryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get diaryEntryTitle;
+
+  /// No description provided for @diaryEntryTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened today?'**
+  String get diaryEntryTitleHint;
+
+  /// No description provided for @diaryNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get diaryNotes;
+
+  /// No description provided for @diaryNotesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Write down your thoughts...'**
+  String get diaryNotesHint;
+
+  /// No description provided for @commonErrorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String commonErrorPrefix(String message);
+
+  /// No description provided for @commonErrorLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading: {message}'**
+  String commonErrorLoading(String message);
+
+  /// No description provided for @authWelcomeBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome Back'**
+  String get authWelcomeBack;
+
+  /// No description provided for @authLoginPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Log in to your account'**
+  String get authLoginPrompt;
+
+  /// No description provided for @authLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Log In'**
+  String get authLogin;
+
+  /// No description provided for @authSendResetLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Link'**
+  String get authSendResetLink;
+
+  /// No description provided for @authEnterEmailPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email and we will send you a reset link.'**
+  String get authEnterEmailPrompt;
+
+  /// No description provided for @tasksNewTask.
+  ///
+  /// In en, this message translates to:
+  /// **'New Task'**
+  String get tasksNewTask;
+
+  /// No description provided for @tasksCreateTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Task'**
+  String get tasksCreateTask;
+
+  /// No description provided for @financeRecentTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'RECENT TRANSACTIONS'**
+  String get financeRecentTransactions;
+
+  /// No description provided for @financeAddTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Transaction'**
+  String get financeAddTransaction;
+
+  /// No description provided for @financeSaveTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Transaction'**
+  String get financeSaveTransaction;
+
+  /// No description provided for @diaryHowAreYouFeeling.
+  ///
+  /// In en, this message translates to:
+  /// **'HOW ARE YOU FEELING?'**
+  String get diaryHowAreYouFeeling;
+
+  /// No description provided for @diarySaveEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Entry'**
+  String get diarySaveEntry;
 }
 
 class _AppLocalizationsDelegate

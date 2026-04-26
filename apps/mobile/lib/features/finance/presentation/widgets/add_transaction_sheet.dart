@@ -14,7 +14,7 @@ class AddTransactionSheet extends ConsumerWidget {
       }
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add transaction: ${next.error}')),
+          SnackBar(content: Text(context.l10n.commonErrorPrefix(next.error.toString()))),
         );
       }
     });
@@ -37,7 +37,7 @@ class AddTransactionSheet extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Add Transaction',
+              context.l10n.financeAddTransaction,
               style: context.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -50,14 +50,14 @@ class AddTransactionSheet extends ConsumerWidget {
                 return Row(
                   children: [
                     _TypeButton(
-                      label: 'Expense',
+                      label: context.l10n.financeExpense,
                       isSelected: type == TransactionType.expense,
                       onTap: () => control.value = TransactionType.expense,
                       color: AppColors.orange,
                     ).expanded(),
                     12.w,
                     _TypeButton(
-                      label: 'Income',
+                      label: context.l10n.financeIncome,
                       isSelected: type == TransactionType.income,
                       onTap: () => control.value = TransactionType.income,
                       color: AppColors.teal,
@@ -69,8 +69,8 @@ class AddTransactionSheet extends ConsumerWidget {
             24.h,
             ReactiveAppTextField<String>(
               formControlName: 'title',
-              label: 'Title',
-              hintText: 'What was it for?',
+              label: context.l10n.financeTransactionTitle,
+              hintText: context.l10n.financeTransactionTitleHint,
               autofocus: true,
               textInputAction: TextInputAction.next,
               validationMessages: {
@@ -83,8 +83,8 @@ class AddTransactionSheet extends ConsumerWidget {
               children: [
                 ReactiveAppTextField<double>(
                   formControlName: 'amount',
-                  label: 'Amount',
-                  hintText: '0.00',
+                  label: context.l10n.financeAmount,
+                  hintText: context.l10n.financeAmountHint,
                   keyboardType:
                       TextInputType.numberWithOptions(decimal: true),
                   textInputAction: TextInputAction.next,
@@ -96,8 +96,8 @@ class AddTransactionSheet extends ConsumerWidget {
                 16.w,
                 ReactiveAppTextField<String>(
                   formControlName: 'category',
-                  label: 'Category',
-                  hintText: 'e.g. Food, Work',
+                  label: context.l10n.financeCategory,
+                  hintText: context.l10n.financeCategoryHint,
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => notifier.submit(),
                   validationMessages: {
@@ -110,7 +110,7 @@ class AddTransactionSheet extends ConsumerWidget {
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 return AppButton(
-                  text: 'Save Transaction',
+                  text: context.l10n.financeSaveTransaction,
                   isLoading: state is AsyncLoading,
                   onPressed: form.valid ? () => notifier.submit() : null,
                 );

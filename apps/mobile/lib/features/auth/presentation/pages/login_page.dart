@@ -16,7 +16,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (next.hasError) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(next.error.toString())));
+        ).showSnackBar(SnackBar(content: Text(context.l10n.commonErrorPrefix(next.error.toString()))));
       }
     });
 
@@ -36,13 +36,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                'Welcome Back',
+                context.l10n.authWelcomeBack,
                 style: context.textTheme.displaySmall,
                 textAlign: TextAlign.center,
               ),
               8.h,
               Text(
-                'Log in to your account',
+                context.l10n.authLoginPrompt,
                 style: context.textTheme.bodyLarge?.copyWith(
                   color: AppColors.warmGray500,
                 ),
@@ -51,8 +51,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               48.h,
               ReactiveAppTextField<String>(
                 formControlName: 'email',
-                label: 'Email',
-                hintText: 'Enter your email',
+                label: context.l10n.authEmail,
+                hintText: context.l10n.authEmailHint,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 onSubmitted: (_) => form.focus('password'),
@@ -64,8 +64,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               16.h,
               ReactiveAppTextField<String>(
                 formControlName: 'password',
-                label: 'Password',
-                hintText: 'Enter your password',
+                label: context.l10n.authPassword,
+                hintText: context.l10n.authPasswordHint,
                 obscureText: true,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _onSubmit(),
@@ -82,7 +82,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     builder: (context, ref, child) {
                       final isLoading = ref.watch(loginProvider).isLoading;
                       return AppButton(
-                        text: 'Log In',
+                        text: context.l10n.authLogin,
                         isLoading: isLoading,
                         onPressed: form.valid ? _onSubmit : null,
                       );
@@ -92,7 +92,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               16.h,
               AppButton(
-                text: 'Forgot password?',
+                text: context.l10n.authForgotPassword,
                 style: AppButtonStyle.secondary,
                 onPressed: () {},
               ),

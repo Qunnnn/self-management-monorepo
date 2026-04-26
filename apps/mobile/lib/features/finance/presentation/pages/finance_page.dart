@@ -8,7 +8,7 @@ class FinancePage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.warmWhite,
       appBar: AppBar(
-        title: const Text('Finance'),
+        title: Text(context.l10n.financeTitle),
         backgroundColor: AppColors.warmWhite,
         elevation: 0,
         centerTitle: false,
@@ -28,7 +28,7 @@ class FinancePage extends ConsumerWidget {
                 return switch (balanceAsync) {
                   AsyncData(:final value) => BalanceCard(balance: value),
                   AsyncLoading() => const BalanceCard(balance: 0, isLoading: true),
-                  AsyncError(:final error) => Text('Error loading balance: $error').center(),
+                  AsyncError(:final error) => Text(context.l10n.commonErrorLoading(error.toString())).center(),
                 };
               },
             ),
@@ -37,7 +37,7 @@ class FinancePage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'RECENT TRANSACTIONS',
+                  context.l10n.financeRecentTransactions,
                   style: context.textTheme.labelSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1.2,
@@ -47,7 +47,7 @@ class FinancePage extends ConsumerWidget {
                 TextButton.icon(
                   onPressed: () => _showAddTransaction(context),
                   icon: const Icon(Icons.add, size: 18),
-                  label: const Text('Add'),
+                  label: Text(context.l10n.financeAdd),
                 ),
               ],
             ),
@@ -57,7 +57,7 @@ class FinancePage extends ConsumerWidget {
                 final transactionsAsync = ref.watch(financeProvider);
                 return switch (transactionsAsync) {
                   AsyncData(:final value) => value.isEmpty
-                      ? const Text('No transactions yet')
+                      ? Text(context.l10n.financeNoTransactions)
                           .center()
                           .py(40)
                       : Column(
@@ -65,7 +65,7 @@ class FinancePage extends ConsumerWidget {
                               .map((t) => TransactionTile(transaction: t))
                               .toList(),
                         ),
-                  AsyncError(:final error) => Text('Error: $error').center(),
+                  AsyncError(:final error) => Text(context.l10n.commonErrorPrefix(error.toString())).center(),
                   AsyncLoading() => const CircularProgressIndicator()
                       .center()
                       .py(40),

@@ -16,7 +16,7 @@ class DiaryEntryPage extends ConsumerWidget {
       }
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${next.error}')),
+          SnackBar(content: Text(context.l10n.commonErrorPrefix(next.error.toString()))),
         );
       }
     });
@@ -24,7 +24,7 @@ class DiaryEntryPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: Text(entryId != null ? 'Edit Entry' : 'New Entry'),
+        title: Text(entryId != null ? context.l10n.diaryEditEntry : context.l10n.diaryNewEntry),
         backgroundColor: AppColors.white,
         elevation: 0,
         actions: [
@@ -38,7 +38,7 @@ class DiaryEntryPage extends ConsumerWidget {
       body: switch (state) {
         AsyncLoading() when !state.hasValue =>
           const CircularProgressIndicator().center(),
-        AsyncError(:final error) => Text('Error: $error').center(),
+        AsyncError(:final error) => Text(context.l10n.commonErrorPrefix(error.toString())).center(),
         _ => ReactiveForm(
             formGroup: notifier.form,
             child: SingleChildScrollView(
@@ -47,8 +47,8 @@ class DiaryEntryPage extends ConsumerWidget {
                 children: [
                   ReactiveAppTextField<String>(
                     formControlName: 'title',
-                    label: 'Title',
-                    hintText: 'What happened today?',
+                    label: context.l10n.diaryEntryTitle,
+                    hintText: context.l10n.diaryEntryTitleHint,
                     autofocus: true,
                     validationMessages: {
                       'required': (_) => 'Title is required',
@@ -56,7 +56,7 @@ class DiaryEntryPage extends ConsumerWidget {
                   ),
                   24.h,
                   Text(
-                    'HOW ARE YOU FEELING?',
+                    context.l10n.diaryHowAreYouFeeling,
                     style: context.textTheme.labelSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           letterSpacing: 1.1,
@@ -110,15 +110,15 @@ class DiaryEntryPage extends ConsumerWidget {
                     },
                   ),
                   24.h,
-                  const ReactiveAppTextField<String>(
+                  ReactiveAppTextField<String>(
                     formControlName: 'content',
-                    label: 'Notes',
-                    hintText: 'Write down your thoughts...',
+                    label: context.l10n.diaryNotes,
+                    hintText: context.l10n.diaryNotesHint,
                     maxLines: 10,
                   ),
                   40.h,
                   AppButton(
-                    text: 'Save Entry',
+                    text: context.l10n.diarySaveEntry,
                     isLoading: state is AsyncLoading,
                     onPressed: () => notifier.save(),
                   ),

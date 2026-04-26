@@ -10,20 +10,20 @@ class ForgotPasswordPage extends ConsumerWidget {
     final state = ref.watch(forgotPasswordProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Forgot Password')),
+      appBar: AppBar(title: Text(context.l10n.authForgotPassword)),
       body: ReactiveForm(
         formGroup: form,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Enter your email and we will send you a reset link.',
+            Text(
+              context.l10n.authEnterEmailPrompt,
               textAlign: TextAlign.center,
             ),
             24.h,
             ReactiveAppTextField<String>(
               formControlName: 'email',
-              label: 'Email',
+              label: context.l10n.authEmail,
               prefixIcon: const Icon(Icons.email),
               validationMessages: {
                 ValidationMessage.required: (error) => 'Email is required',
@@ -32,7 +32,7 @@ class ForgotPasswordPage extends ConsumerWidget {
             ),
             24.h,
             AppButton(
-              text: 'Send Reset Link',
+              text: context.l10n.authSendResetLink,
               isLoading: state.isLoading,
               onPressed: () async {
                 final success = await ref
@@ -40,7 +40,7 @@ class ForgotPasswordPage extends ConsumerWidget {
                     .submit();
                 if (success && context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Reset link sent!')),
+                    SnackBar(content: Text(context.l10n.authResetLinkSent)),
                   );
                   context.pop(); // Go back to login
                 }

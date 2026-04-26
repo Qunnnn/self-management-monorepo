@@ -14,7 +14,7 @@ class AddTaskSheet extends ConsumerWidget {
       }
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to add task: ${next.error}')),
+          SnackBar(content: Text(context.l10n.commonErrorPrefix(next.error.toString()))),
         );
       }
     });
@@ -40,7 +40,7 @@ class AddTaskSheet extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'New Task',
+                  context.l10n.tasksNewTask,
                   style: context.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -55,8 +55,8 @@ class AddTaskSheet extends ConsumerWidget {
             24.h,
             ReactiveAppTextField<String>(
               formControlName: 'title',
-              label: 'Title',
-              hintText: 'What needs to be done?',
+              label: context.l10n.tasksTitle,
+              hintText: context.l10n.tasksTitleHint,
               autofocus: true,
               textInputAction: TextInputAction.next,
               validationMessages: {
@@ -66,8 +66,8 @@ class AddTaskSheet extends ConsumerWidget {
             16.h,
             ReactiveAppTextField<String>(
               formControlName: 'description',
-              label: 'Description',
-              hintText: 'Optional details',
+              label: context.l10n.tasksDescription,
+              hintText: context.l10n.tasksDescriptionHint,
               maxLines: 3,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => notifier.submit(),
@@ -76,7 +76,7 @@ class AddTaskSheet extends ConsumerWidget {
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 return AppButton(
-                  text: 'Create Task',
+                  text: context.l10n.tasksCreateTask,
                   isLoading: state is AsyncLoading,
                   onPressed: form.valid ? () => notifier.submit() : null,
                 );

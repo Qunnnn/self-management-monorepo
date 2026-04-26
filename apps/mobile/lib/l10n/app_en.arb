@@ -16,5 +16,63 @@
   "themeDark": "Dark",
   "languageSystem": "System Default",
   "languageEnglish": "English",
-  "languageVietnamese": "Vietnamese"
+  "languageVietnamese": "Vietnamese",
+  "authForgotPassword": "Forgot Password",
+  "authResetLinkSent": "Reset link sent!",
+  "authEmail": "Email",
+  "authEmailHint": "Enter your email",
+  "authPassword": "Password",
+  "authPasswordHint": "Enter your password",
+  "tasksTitle": "Title",
+  "tasksTitleHint": "What needs to be done?",
+  "tasksDescription": "Description",
+  "tasksDescriptionHint": "Optional details",
+  "financeTitle": "Finance",
+  "financeAdd": "Add",
+  "financeNoTransactions": "No transactions yet",
+  "financeExpense": "Expense",
+  "financeIncome": "Income",
+  "financeTransactionTitle": "Title",
+  "financeTransactionTitleHint": "What was it for?",
+  "financeAmount": "Amount",
+  "financeAmountHint": "0.00",
+  "financeCategory": "Category",
+  "financeCategoryHint": "e.g. Food, Work",
+  "diaryTitle": "Diary",
+  "diarySearchHint": "Search entries...",
+  "diaryNoEntries": "No entries found",
+  "diaryEditEntry": "Edit Entry",
+  "diaryNewEntry": "New Entry",
+  "diaryEntryTitle": "Title",
+  "diaryEntryTitleHint": "What happened today?",
+  "diaryNotes": "Notes",
+  "diaryNotesHint": "Write down your thoughts...",
+  "commonErrorPrefix": "Error: {message}",
+  "@commonErrorPrefix": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "commonErrorLoading": "Error loading: {message}",
+  "@commonErrorLoading": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "authWelcomeBack": "Welcome Back",
+  "authLoginPrompt": "Log in to your account",
+  "authLogin": "Log In",
+  "authSendResetLink": "Send Reset Link",
+  "authEnterEmailPrompt": "Enter your email and we will send you a reset link.",
+  "tasksNewTask": "New Task",
+  "tasksCreateTask": "Create Task",
+  "financeRecentTransactions": "RECENT TRANSACTIONS",
+  "financeAddTransaction": "Add Transaction",
+  "financeSaveTransaction": "Save Transaction",
+  "diaryHowAreYouFeeling": "HOW ARE YOU FEELING?",
+  "diarySaveEntry": "Save Entry"
 }

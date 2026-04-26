@@ -8,7 +8,7 @@ class DiaryPage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: AppColors.warmWhite,
       appBar: AppBar(
-        title: const Text('Diary'),
+        title: Text(context.l10n.diaryTitle),
         backgroundColor: AppColors.warmWhite,
         elevation: 0,
         centerTitle: false,
@@ -31,7 +31,7 @@ class DiaryPage extends ConsumerWidget {
               formGroup: ref.read(diaryProvider.notifier).searchForm,
               child: ReactiveAppTextField<String>(
                 formControlName: 'query',
-                hintText: 'Search entries...',
+                hintText: context.l10n.diarySearchHint,
                 prefixIcon: const Icon(Icons.search, size: 20),
                 onChanged: (control) =>
                     ref.read(diaryProvider.notifier).search(control.value ?? ''),
@@ -55,7 +55,7 @@ class DiaryPage extends ConsumerWidget {
                 final diaryAsync = ref.watch(diaryProvider);
                 return switch (diaryAsync) {
                   AsyncData(:final value) => value.items.isEmpty
-                      ? const Text('No entries found').center()
+                      ? Text(context.l10n.diaryNoEntries).center()
                       : ListView.builder(
                           padding: const EdgeInsets.all(24),
                           itemCount: value.items.length,
@@ -71,7 +71,7 @@ class DiaryPage extends ConsumerWidget {
                             );
                           },
                         ),
-                  AsyncError(:final error) => Text('Error: $error').center(),
+                  AsyncError(:final error) => Text(context.l10n.commonErrorPrefix(error.toString())).center(),
                   AsyncLoading() => const CircularProgressIndicator().center(),
                 };
               },
