@@ -23,7 +23,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.listen(authProvider, (previous, next) {
       final status = next.value?.status;
       if (status == AuthStatus.authenticated) {
-        context.go('/tasks');
+        context.go(AppRoutes.tasks);
       }
     });
 
@@ -94,7 +94,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               AppButton(
                 text: context.l10n.authForgotPassword,
                 style: AppButtonStyle.secondary,
-                onPressed: () {},
+                onPressed: () => context.push(AppRoutes.forgotPassword),
               ),
             ],
           ).p(24),

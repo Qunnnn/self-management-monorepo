@@ -19,7 +19,7 @@ class DiaryPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            onPressed: () => context.push('/settings'),
+            onPressed: () => context.push(AppRoutes.settings),
           ),
         ],
       ),
@@ -64,7 +64,7 @@ class DiaryPage extends ConsumerWidget {
                             return DiaryCard(
                               entryId: entry.id,
                               onTap: () =>
-                                  context.push('/diary/edit/${entry.id}'),
+                                  context.push(AppRoutes.diaryEditFullPath(entry.id)),
                               onTogglePin: () => ref
                                   .read(diaryActionProvider.notifier)
                                   .togglePin(entry),
@@ -80,7 +80,7 @@ class DiaryPage extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/diary/create'),
+        onPressed: () => context.push(AppRoutes.diaryCreateFullPath),
         backgroundColor: AppColors.blue,
         child: const Icon(Icons.add, color: AppColors.white),
       ),

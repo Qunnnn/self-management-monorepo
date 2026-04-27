@@ -7,38 +7,38 @@ GoRouter router(Ref ref) {
   final authState = ref.watch(authProvider);
 
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: AppRoutes.login,
     redirect: (context, state) {
       final status = authState.value?.status ?? AuthStatus.initial;
 
       // If still loading or initial, don't redirect yet
       if (status == AuthStatus.initial) return null;
 
-      final isAuthRoute = state.uri.path == '/login' || state.uri.path == '/forgot-password';
+      final isAuthRoute = state.uri.path == AppRoutes.login || state.uri.path == AppRoutes.forgotPassword;
 
       if (status == AuthStatus.unAuthenticated) {
         // If not authenticated, force them to login unless they are already there
-        return isAuthRoute ? null : '/login';
+        return isAuthRoute ? null : AppRoutes.login;
       }
 
       if (status == AuthStatus.authenticated) {
         // If authenticated, don't allow them to stay on the auth pages
-        return isAuthRoute ? '/tasks' : null;
+        return isAuthRoute ? AppRoutes.tasks : null;
       }
 
       return null;
     },
     routes: [
       GoRoute(
-        path: '/login',
+        path: AppRoutes.login,
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
-        path: '/forgot-password',
+        path: AppRoutes.forgotPassword,
         builder: (context, state) => const ForgotPasswordPage(),
       ),
       GoRoute(
-        path: '/settings',
+        path: AppRoutes.settings,
         builder: (context, state) => const SettingsPage(),
       ),
       StatefulShellRoute.indexedStack(
@@ -47,15 +47,15 @@ GoRouter router(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/diary',
+                path: AppRoutes.diary,
                 builder: (context, state) => const DiaryPage(),
                 routes: [
                   GoRoute(
-                    path: 'create',
+                    path: AppRoutes.diaryCreate,
                     builder: (context, state) => const DiaryEntryPage(),
                   ),
                   GoRoute(
-                    path: 'edit/:id',
+                    path: AppRoutes.diaryEdit,
                     builder: (context, state) => DiaryEntryPage(
                       entryId: state.pathParameters['id'],
                     ),
@@ -67,7 +67,7 @@ GoRouter router(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/tasks',
+                path: AppRoutes.tasks,
                 builder: (context, state) => const TasksPage(),
               ),
             ],
@@ -75,7 +75,7 @@ GoRouter router(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/finance',
+                path: AppRoutes.finance,
                 builder: (context, state) => const FinancePage(),
               ),
             ],
@@ -83,8 +83,8 @@ GoRouter router(Ref ref) {
         ],
       ),
       GoRoute(
-        path: '/home',
-        redirect: (context, state) => '/diary',
+        path: AppRoutes.home,
+        redirect: (context, state) => AppRoutes.diary,
       ),
     ],
   );
