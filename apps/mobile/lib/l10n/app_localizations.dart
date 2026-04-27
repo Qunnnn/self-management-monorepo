@@ -445,6 +445,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save Entry'**
   String get diarySaveEntry;
+
+  /// No description provided for @validationRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} is required'**
+  String validationRequired(String field);
+
+  /// No description provided for @validationEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid {field}'**
+  String validationEmail(String field);
+
+  /// No description provided for @validationMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} must be at least {count} characters'**
+  String validationMinLength(String field, String count);
+
+  /// No description provided for @validationMaxLength.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} must be at most {count} characters'**
+  String validationMaxLength(String field, String count);
+
+  /// No description provided for @validationNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} must be a number'**
+  String validationNumber(String field);
+
+  /// No description provided for @validationMin.
+  ///
+  /// In en, this message translates to:
+  /// **'{field} must be at least {value}'**
+  String validationMin(String field, String value);
 }
 
 class _AppLocalizationsDelegate

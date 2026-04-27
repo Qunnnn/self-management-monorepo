@@ -57,5 +57,17 @@
   "financeAddTransaction": "Thêm giao dịch",
   "financeSaveTransaction": "Lưu giao dịch",
   "diaryHowAreYouFeeling": "BẠN ĐANG CẢM THẤY THẾ NÀO?",
-  "diarySaveEntry": "Lưu mục nhật ký"
+  "diarySaveEntry": "Lưu mục nhật ký",
+  "validationRequired": "{field} là bắt buộc",
+  "validationEmail": "Vui lòng nhập {field} hợp lệ",
+  "validationMinLength": "{field} phải có ít nhất {count} ký tự",
+  "validationMaxLength": "{field} không được quá {count} ký tự",
+  "validationNumber": "{field} phải là một số",
+  "validationMin": "{field} phải tối thiểu là {value}",
+  "validationRequiredGeneric": "Trường này là bắt buộc",
+  "validationEmailGeneric": "Định dạng email không hợp lệ",
+  "validationMinLengthGeneric": "Giá trị quá ngắn",
+  "validationMaxLengthGeneric": "Giá trị quá dài",
+  "validationNumberGeneric": "Phải là một số",
+  "validationMinGeneric": "Giá trị quá nhỏ"
 }

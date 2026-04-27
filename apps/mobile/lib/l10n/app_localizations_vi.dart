@@ -186,4 +186,34 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get diarySaveEntry => 'Lưu mục nhật ký';
+
+  @override
+  String validationRequired(String field) {
+    return '$field là bắt buộc';
+  }
+
+  @override
+  String validationEmail(String field) {
+    return 'Vui lòng nhập $field hợp lệ';
+  }
+
+  @override
+  String validationMinLength(String field, String count) {
+    return '$field phải có ít nhất $count ký tự';
+  }
+
+  @override
+  String validationMaxLength(String field, String count) {
+    return '$field không được quá $count ký tự';
+  }
+
+  @override
+  String validationNumber(String field) {
+    return '$field phải là một số';
+  }
+
+  @override
+  String validationMin(String field, String value) {
+    return '$field phải tối thiểu là $value';
+  }
 }

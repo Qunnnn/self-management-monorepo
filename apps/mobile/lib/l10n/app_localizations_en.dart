@@ -186,4 +186,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get diarySaveEntry => 'Save Entry';
+
+  @override
+  String validationRequired(String field) {
+    return '$field is required';
+  }
+
+  @override
+  String validationEmail(String field) {
+    return 'Enter a valid $field';
+  }
+
+  @override
+  String validationMinLength(String field, String count) {
+    return '$field must be at least $count characters';
+  }
+
+  @override
+  String validationMaxLength(String field, String count) {
+    return '$field must be at most $count characters';
+  }
+
+  @override
+  String validationNumber(String field) {
+    return '$field must be a number';
+  }
+
+  @override
+  String validationMin(String field, String value) {
+    return '$field must be at least $value';
+  }
 }

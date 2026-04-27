@@ -74,5 +74,68 @@
   "financeAddTransaction": "Add Transaction",
   "financeSaveTransaction": "Save Transaction",
   "diaryHowAreYouFeeling": "HOW ARE YOU FEELING?",
-  "diarySaveEntry": "Save Entry"
+  "diarySaveEntry": "Save Entry",
+  "validationRequired": "{field} is required",
+  "@validationRequired": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "validationEmail": "Enter a valid {field}",
+  "@validationEmail": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "validationMinLength": "{field} must be at least {count} characters",
+  "@validationMinLength": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "validationMaxLength": "{field} must be at most {count} characters",
+  "@validationMaxLength": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "validationNumber": "{field} must be a number",
+  "@validationNumber": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "validationMin": "{field} must be at least {value}",
+  "@validationMin": {
+    "placeholders": {
+      "field": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "validationRequiredGeneric": "This field is required",
+  "validationEmailGeneric": "Invalid email format",
+  "validationMinLengthGeneric": "Value is too short",
+  "validationMaxLengthGeneric": "Value is too long",
+  "validationNumberGeneric": "Must be a number",
+  "validationMinGeneric": "Value is too small"
 }
