@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../theme/index.dart';
 import 'package:mobile/l10n/app_localizations.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+
 /// Shorthand extensions for [BuildContext] to access theme and layout tokens.
 extension BuildContextX on BuildContext {
   // Theme shorthand
@@ -28,7 +30,18 @@ extension BuildContextX on BuildContext {
   bool get isMobile => MediaQuery.of(this).size.width < 600;
   bool get isTablet => MediaQuery.of(this).size.width >= 600 && MediaQuery.of(this).size.width < 1200;
   bool get isDesktop => MediaQuery.of(this).size.width >= 1200;
+
+  // Form Validation shorthand
+  Map<String, String Function(Object)> get formValidationMessages => {
+        ValidationMessage.required: (error) => l10n.validationRequiredGeneric,
+        ValidationMessage.email: (error) => l10n.validationEmailGeneric,
+        ValidationMessage.minLength: (error) => l10n.validationMinLengthGeneric,
+        ValidationMessage.maxLength: (error) => l10n.validationMaxLengthGeneric,
+        ValidationMessage.number: (error) => l10n.validationNumberGeneric,
+        ValidationMessage.min: (error) => l10n.validationMinGeneric,
+      };
 }
+
 
 /// Shorthand extensions for [Widget] to apply common layout wrappers.
 extension WidgetX on Widget {
