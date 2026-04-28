@@ -49,9 +49,11 @@ class AppButtonTheme extends ThemeExtension<AppButtonTheme> {
           elevation: 0,
         ).copyWith(
           backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed))
+            if (states.contains(WidgetState.pressed)) {
               return AppColors.activeBlue;
+            }
             return AppColors.blue;
+
           }),
         ),
     secondaryStyle: ElevatedButton.styleFrom(
@@ -82,9 +84,11 @@ class AppButtonTheme extends ThemeExtension<AppButtonTheme> {
           elevation: 0,
         ).copyWith(
           backgroundColor: WidgetStateProperty.resolveWith((states) {
-            if (states.contains(WidgetState.pressed))
+            if (states.contains(WidgetState.pressed)) {
               return AppColors.activeBlue;
+            }
             return AppColors.blue;
+
           }),
         ),
     secondaryStyle: ElevatedButton.styleFrom(

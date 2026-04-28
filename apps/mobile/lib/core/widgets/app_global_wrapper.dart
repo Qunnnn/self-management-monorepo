@@ -1,5 +1,4 @@
 import 'package:mobile/core/import/app_imports.dart';
-import 'package:mobile/core/utils/context_extensions.dart';
 
 class AppGlobalWrapper extends StatelessWidget {
   final Widget child;
