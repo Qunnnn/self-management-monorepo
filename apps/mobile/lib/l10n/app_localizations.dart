@@ -481,6 +481,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{field} must be at least {value}'**
   String validationMin(String field, String value);
+
+  /// No description provided for @validationRequiredGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'This field is required'**
+  String get validationRequiredGeneric;
+
+  /// No description provided for @validationEmailGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid email format'**
+  String get validationEmailGeneric;
+
+  /// No description provided for @validationMinLengthGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Value is too short'**
+  String get validationMinLengthGeneric;
+
+  /// No description provided for @validationMaxLengthGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Value is too long'**
+  String get validationMaxLengthGeneric;
+
+  /// No description provided for @validationNumberGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be a number'**
+  String get validationNumberGeneric;
+
+  /// No description provided for @validationMinGeneric.
+  ///
+  /// In en, this message translates to:
+  /// **'Value is too small'**
+  String get validationMinGeneric;
 }
 
 class _AppLocalizationsDelegate

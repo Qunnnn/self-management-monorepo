@@ -29,7 +29,9 @@ class DiaryCard extends ConsumerWidget {
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: entry.isPinned ? AppColors.blue.withAlpha(50) : AppColors.whisperBorder,
+          color: entry.isPinned
+              ? AppColors.blue.withAlpha(50)
+              : AppColors.whisperBorder,
           width: entry.isPinned ? 2 : 1,
         ),
       ),
@@ -45,10 +47,10 @@ class DiaryCard extends ConsumerWidget {
                 Text(
                   dateFormatter.format(entry.createdAt).toUpperCase(),
                   style: context.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.1,
-                        color: AppColors.warmGray500,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.1,
+                    color: AppColors.warmGray500,
+                  ),
                 ),
                 Row(
                   children: [
@@ -60,9 +62,13 @@ class DiaryCard extends ConsumerWidget {
                     GestureDetector(
                       onTap: onTogglePin,
                       child: Icon(
-                        entry.isPinned ? Icons.push_pin : Icons.push_pin_outlined,
+                        entry.isPinned
+                            ? Icons.push_pin
+                            : Icons.push_pin_outlined,
                         size: 16,
-                        color: entry.isPinned ? AppColors.blue : AppColors.warmGray300,
+                        color: entry.isPinned
+                            ? AppColors.blue
+                            : AppColors.warmGray300,
                       ),
                     ),
                   ],
@@ -73,9 +79,9 @@ class DiaryCard extends ConsumerWidget {
             Text(
               entry.title,
               style: context.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.nearBlack,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: AppColors.nearBlack,
+              ),
             ),
             if (entry.content.isNotEmpty) ...[
               4.h,
@@ -84,9 +90,9 @@ class DiaryCard extends ConsumerWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: context.textTheme.bodyMedium?.copyWith(
-                      color: AppColors.warmGray600,
-                      height: 1.4,
-                    ),
+                  color: AppColors.warmGray600,
+                  height: 1.4,
+                ),
               ),
             ],
           ],

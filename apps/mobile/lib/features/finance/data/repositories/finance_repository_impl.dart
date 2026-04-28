@@ -10,7 +10,10 @@ class FinanceRepositoryImpl implements FinanceRepository {
 
   @override
   Future<List<Transaction>> getTransactions({int? limit, int? offset}) async {
-    final models = await _dataSource.getTransactions(limit: limit, offset: offset);
+    final models = await _dataSource.getTransactions(
+      limit: limit,
+      offset: offset,
+    );
     return models.map((m) => m.toEntity()).toList();
   }
 

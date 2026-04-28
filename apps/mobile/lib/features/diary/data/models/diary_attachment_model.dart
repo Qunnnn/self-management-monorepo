@@ -30,9 +30,9 @@ class DiaryAttachmentModel {
       );
 
   DiaryAttachment toEntity() => DiaryAttachment(
-        id: id,
-        fileUrl: fileUrl,
-        fileType: fileType,
-        createdAt: createdAt,
-      );
+    id: id,
+    fileUrl: fileUrl,
+    fileType: fileType,
+    createdAt: createdAt,
+  );
 }

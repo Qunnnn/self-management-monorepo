@@ -20,14 +20,11 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
-    return loginResult.match(
-      (failure) => Left(failure),
-      (tokensModel) async {
-        final tokens = tokensModel.toEntity();
-        await _tokenStorage.saveTokens(tokens);
-        return Right(tokens);
-      },
-    );
+    return loginResult.match((failure) => Left(failure), (tokensModel) async {
+      final tokens = tokensModel.toEntity();
+      await _tokenStorage.saveTokens(tokens);
+      return Right(tokens);
+    });
   }
 
   @override

@@ -6,3 +6,4 @@ export 'domain/repositories/index.dart';
 export 'domain/use_cases/index.dart';
 export 'presentation/pages/index.dart';
 export 'presentation/providers/index.dart';
+export 'presentation/constants/auth_form_controls.dart';

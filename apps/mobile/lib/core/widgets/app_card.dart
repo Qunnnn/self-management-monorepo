@@ -29,11 +29,11 @@ class AppCard extends StatelessWidget {
     final effectiveTheme = context.decorationTheme.merge(theme);
     final decoration = enabled
         ? (style == AppCardStyle.standard
-            ? effectiveTheme.cardDecoration
-            : effectiveTheme.featuredCardDecoration)
+              ? effectiveTheme.cardDecoration
+              : effectiveTheme.featuredCardDecoration)
         : (style == AppCardStyle.standard
-            ? effectiveTheme.disabledCardDecoration
-            : effectiveTheme.disabledFeaturedCardDecoration);
+              ? effectiveTheme.disabledCardDecoration
+              : effectiveTheme.disabledFeaturedCardDecoration);
     final borderRadius = style == AppCardStyle.standard
         ? effectiveTheme.cardRadius
         : effectiveTheme.featuredCardRadius;

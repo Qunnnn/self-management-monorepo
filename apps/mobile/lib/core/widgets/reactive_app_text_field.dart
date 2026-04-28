@@ -68,14 +68,11 @@ class ReactiveAppTextField<T> extends StatelessWidget {
           style: isEnabled
               ? context.textTheme.bodyMedium
               : context.textTheme.bodyMedium?.copyWith(
-                    color: context.theme.disabledColor,
-                  ),
+                  color: context.theme.disabledColor,
+                ),
           decoration: (decoration ?? effectiveTheme.inputDecoration)
               .applyDefaults(context.theme.inputDecorationTheme)
-              .copyWith(
-                hintText: hintText,
-                prefixIcon: prefixIcon,
-              ),
+              .copyWith(hintText: hintText, prefixIcon: prefixIcon),
           validationMessages: validationMessages,
         ),
       ],

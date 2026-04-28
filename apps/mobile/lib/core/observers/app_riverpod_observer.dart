@@ -3,18 +3,17 @@ import '../utils/logger.dart';
 
 final class AppRiverPodObserver extends ProviderObserver {
   @override
-  void didAddProvider(
-    ProviderObserverContext context,
-    Object? value,
-  ) {
-    logger.d('Provider ${context.provider.name ?? context.provider.runtimeType} initialized: $value');
+  void didAddProvider(ProviderObserverContext context, Object? value) {
+    logger.d(
+      'Provider ${context.provider.name ?? context.provider.runtimeType} initialized: $value',
+    );
   }
 
   @override
-  void didDisposeProvider(
-    ProviderObserverContext context,
-  ) {
-    logger.d('Provider ${context.provider.name ?? context.provider.runtimeType} disposed');
+  void didDisposeProvider(ProviderObserverContext context) {
+    logger.d(
+      'Provider ${context.provider.name ?? context.provider.runtimeType} disposed',
+    );
   }
 
   @override
@@ -23,7 +22,9 @@ final class AppRiverPodObserver extends ProviderObserver {
     Object? previousValue,
     Object? newValue,
   ) {
-    logger.d('Provider ${context.provider.name ?? context.provider.runtimeType} updated: $previousValue -> $newValue');
+    logger.d(
+      'Provider ${context.provider.name ?? context.provider.runtimeType} updated: $previousValue -> $newValue',
+    );
   }
 
   @override

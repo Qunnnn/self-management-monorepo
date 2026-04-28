@@ -2,10 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'transaction.freezed.dart';
 
-enum TransactionType {
-  income,
-  expense,
-}
+enum TransactionType { income, expense }
 
 @freezed
 abstract class Transaction with _$Transaction {

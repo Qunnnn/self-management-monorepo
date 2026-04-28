@@ -23,26 +23,27 @@ class TaskModel {
     this.deletedAt,
   });
 
-  factory TaskModel.fromJson(Map<String, dynamic> json) => _$TaskModelFromJson(json);
+  factory TaskModel.fromJson(Map<String, dynamic> json) =>
+      _$TaskModelFromJson(json);
   Map<String, dynamic> toJson() => _$TaskModelToJson(this);
 
   factory TaskModel.fromEntity(TodoTask entity) => TaskModel(
-        id: entity.id,
-        userId: entity.userId,
-        title: entity.title,
-        description: entity.description,
-        isCompleted: entity.isCompleted,
-        createdAt: entity.createdAt,
-        deletedAt: entity.deletedAt,
-      );
+    id: entity.id,
+    userId: entity.userId,
+    title: entity.title,
+    description: entity.description,
+    isCompleted: entity.isCompleted,
+    createdAt: entity.createdAt,
+    deletedAt: entity.deletedAt,
+  );
 
   TodoTask toEntity() => TodoTask(
-        id: id,
-        userId: userId,
-        title: title,
-        description: description,
-        isCompleted: isCompleted,
-        createdAt: createdAt,
-        deletedAt: deletedAt,
-      );
+    id: id,
+    userId: userId,
+    title: title,
+    description: description,
+    isCompleted: isCompleted,
+    createdAt: createdAt,
+    deletedAt: deletedAt,
+  );
 }

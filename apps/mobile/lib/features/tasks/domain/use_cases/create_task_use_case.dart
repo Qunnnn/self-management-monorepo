@@ -15,9 +15,6 @@ class CreateTaskUseCase {
     if (title.trim().isEmpty) {
       return const Left(ValidationFailure('Task title cannot be empty'));
     }
-    return await _repository.createTask(
-      title: title,
-      description: description,
-    );
+    return await _repository.createTask(title: title, description: description);
   }
 }

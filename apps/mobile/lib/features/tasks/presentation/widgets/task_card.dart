@@ -50,58 +50,58 @@ class TaskCard extends ConsumerWidget {
             onTap: onToggle,
             child: Row(
               children: [
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: Icon(
-                      task.isCompleted
-                          ? Icons.check_circle
-                          : Icons.radio_button_unchecked,
-                      key: ValueKey(task.isCompleted),
-                      color: task.isCompleted
-                          ? AppColors.green
-                          : AppColors.warmGray300,
-                      size: 26,
-                    ),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: Icon(
+                    task.isCompleted
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    key: ValueKey(task.isCompleted),
+                    color: task.isCompleted
+                        ? AppColors.green
+                        : AppColors.warmGray300,
+                    size: 26,
                   ),
-                  16.w,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                        Text(
-                          task.title,
-                          style: context.textTheme.titleMedium?.copyWith(
-                                decoration: task.isCompleted
-                                    ? TextDecoration.lineThrough
-                                    : null,
-                                color: task.isCompleted
-                                    ? AppColors.warmGray300
-                                    : AppColors.nearBlack,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                        if (task.description != null &&
-                            task.description!.isNotEmpty) ...[
-                          4.h,
-                          Text(
-                            task.description!,
-                            style: context.textTheme.bodySmall?.copyWith(
-                                  color: AppColors.warmGray500,
-                                ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ],
-                    ).expanded(),
-                  if (task.isCompleted)
-                    const Icon(
-                      Icons.auto_awesome,
-                      color: AppColors.orange,
-                      size: 16,
+                ),
+                16.w,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      task.title,
+                      style: context.textTheme.titleMedium?.copyWith(
+                        decoration: task.isCompleted
+                            ? TextDecoration.lineThrough
+                            : null,
+                        color: task.isCompleted
+                            ? AppColors.warmGray300
+                            : AppColors.nearBlack,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                ],
-              ).p(16),
-            ),
+                    if (task.description != null &&
+                        task.description!.isNotEmpty) ...[
+                      4.h,
+                      Text(
+                        task.description!,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: AppColors.warmGray500,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ],
+                ).expanded(),
+                if (task.isCompleted)
+                  const Icon(
+                    Icons.auto_awesome,
+                    color: AppColors.orange,
+                    size: 16,
+                  ),
+              ],
+            ).p(16),
+          ),
         ),
       ),
     );

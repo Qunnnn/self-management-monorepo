@@ -12,7 +12,7 @@ class LogoutNotifier extends _$LogoutNotifier {
     final result = await ref.read(authRepositoryProvider).logout();
 
     if (!ref.mounted) return;
-    
+
     state = result.match(
       (failure) => AsyncValue.error(failure, StackTrace.current),
       (_) {

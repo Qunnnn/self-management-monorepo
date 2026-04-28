@@ -22,13 +22,9 @@ class ForgotPasswordPage extends ConsumerWidget {
             ),
             24.h,
             ReactiveAppTextField<String>(
-              formControlName: 'email',
+              formControlName: AppFormControls.email,
               label: context.l10n.authEmail,
               prefixIcon: const Icon(Icons.email),
-              validationMessages: {
-                ValidationMessage.required: (error) => 'Email is required',
-                ValidationMessage.email: (error) => 'Must be a valid email',
-              },
             ),
             24.h,
             AppButton(

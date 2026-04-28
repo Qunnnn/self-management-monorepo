@@ -216,4 +216,22 @@ class AppLocalizationsVi extends AppLocalizations {
   String validationMin(String field, String value) {
     return '$field phải tối thiểu là $value';
   }
+
+  @override
+  String get validationRequiredGeneric => 'Trường này là bắt buộc';
+
+  @override
+  String get validationEmailGeneric => 'Định dạng email không hợp lệ';
+
+  @override
+  String get validationMinLengthGeneric => 'Giá trị quá ngắn';
+
+  @override
+  String get validationMaxLengthGeneric => 'Giá trị quá dài';
+
+  @override
+  String get validationNumberGeneric => 'Phải là một số';
+
+  @override
+  String get validationMinGeneric => 'Giá trị quá nhỏ';
 }

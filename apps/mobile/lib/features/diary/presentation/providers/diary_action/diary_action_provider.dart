@@ -21,9 +21,11 @@ class DiaryActionNotifier extends _$DiaryActionNotifier {
     }
 
     final currentEntries = ref.read(diaryProvider).value?.items ?? [];
-    ref.read(diaryProvider.notifier).updateState(
-      currentEntries.map((e) => e.id == entry.id ? entry : e).toList(),
-    );
+    ref
+        .read(diaryProvider.notifier)
+        .updateState(
+          currentEntries.map((e) => e.id == entry.id ? entry : e).toList(),
+        );
     state = const AsyncValue.data(null);
   }
 
@@ -41,9 +43,9 @@ class DiaryActionNotifier extends _$DiaryActionNotifier {
     }
 
     final currentEntries = ref.read(diaryProvider).value?.items ?? [];
-    ref.read(diaryProvider.notifier).updateState(
-      currentEntries.where((e) => e.id != id).toList(),
-    );
+    ref
+        .read(diaryProvider.notifier)
+        .updateState(currentEntries.where((e) => e.id != id).toList());
     state = const AsyncValue.data(null);
   }
 
@@ -62,9 +64,11 @@ class DiaryActionNotifier extends _$DiaryActionNotifier {
     }
 
     final currentEntries = ref.read(diaryProvider).value?.items ?? [];
-    ref.read(diaryProvider.notifier).updateState(
-      currentEntries.map((e) => e.id == entry.id ? updated : e).toList(),
-    );
+    ref
+        .read(diaryProvider.notifier)
+        .updateState(
+          currentEntries.map((e) => e.id == entry.id ? updated : e).toList(),
+        );
     state = const AsyncValue.data(null);
   }
 }

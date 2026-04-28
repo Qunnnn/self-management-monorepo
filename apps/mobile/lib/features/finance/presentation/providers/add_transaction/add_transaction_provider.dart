@@ -9,14 +9,14 @@ class AddTransactionNotifier extends _$AddTransactionNotifier {
   @override
   FutureOr<void> build() {
     form = fb.group({
-      'type': [TransactionType.expense, Validators.required],
-      'title': ['', Validators.required],
-      'amount': [
+      AppFormControls.type: [TransactionType.expense, Validators.required],
+      AppFormControls.title: ['', Validators.required],
+      AppFormControls.amount: [
         null as double?,
         Validators.required,
         Validators.min(0.01),
       ],
-      'category': ['', Validators.required],
+      AppFormControls.category: ['', Validators.required],
     });
 
     ref.onDispose(form.dispose);
@@ -29,27 +29,33 @@ class AddTransactionNotifier extends _$AddTransactionNotifier {
     }
 
     state = const AsyncValue.loading();
-    
+
     final values = form.value;
     final transaction = Transaction(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      userId: 'user-1', // Should ideally come from auth
-      title: values['title'] as String,
-      amount: values['amount'] as double,
-      type: values['type'] as TransactionType,
-      category: values['category'] as String,
+      userId: 'user-1',
+      // Should ideally come from auth
+      title: values[AppFormControls.title] as String,
+      amount: values[AppFormControls.amount] as double,
+      type: values[AppFormControls.type] as TransactionType,
+      category: values[AppFormControls.category] as String,
       date: DateTime.now(),
     );
 
     try {
-      final newTransaction = await ref.read(addTransactionUseCaseProvider).execute(transaction);
-      
+      final newTransaction = await ref
+          .read(addTransactionUseCaseProvider)
+          .execute(transaction);
+
       if (!ref.mounted) return;
 
       // Update core state
       final currentTransactions = ref.read(financeProvider).value ?? [];
-      ref.read(financeProvider.notifier).updateState([newTransaction, ...currentTransactions]);
-      
+      ref.read(financeProvider.notifier).updateState([
+        newTransaction,
+        ...currentTransactions,
+      ]);
+
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

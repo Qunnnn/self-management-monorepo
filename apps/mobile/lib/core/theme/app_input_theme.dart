@@ -30,7 +30,11 @@ class AppInputTheme extends ThemeExtension<AppInputTheme> {
     if (other is! AppInputTheme) return this;
     return AppInputTheme(
       labelStyle: TextStyle.lerp(labelStyle, other.labelStyle, t)!,
-      disabledLabelStyle: TextStyle.lerp(disabledLabelStyle, other.disabledLabelStyle, t)!,
+      disabledLabelStyle: TextStyle.lerp(
+        disabledLabelStyle,
+        other.disabledLabelStyle,
+        t,
+      )!,
       inputDecoration: t < 0.5 ? inputDecoration : other.inputDecoration,
     );
   }
@@ -57,90 +61,90 @@ class AppInputTheme extends ThemeExtension<AppInputTheme> {
   }
 
   static AppInputTheme get light => AppInputTheme(
-        labelStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.nearBlack,
-        ),
-        disabledLabelStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.warmGray300,
-        ),
-        inputDecoration: InputDecoration(
-          filled: true,
-          fillColor: AppColors.white,
-          contentPadding: const EdgeInsets.all(6),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.inputBorder),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.inputBorder),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: BorderSide(color: AppColors.inputBorder.withAlpha(128)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.focusBlue, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.orange, width: 1),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.orange, width: 2),
-          ),
-          hintStyle: const TextStyle(color: AppColors.warmGray300, fontSize: 16),
-          errorStyle: const TextStyle(color: AppColors.orange, fontSize: 12),
-        ),
-      );
+    labelStyle: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.nearBlack,
+    ),
+    disabledLabelStyle: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.warmGray300,
+    ),
+    inputDecoration: InputDecoration(
+      filled: true,
+      fillColor: AppColors.white,
+      contentPadding: const EdgeInsets.all(6),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.inputBorder),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.inputBorder),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: BorderSide(color: AppColors.inputBorder.withAlpha(128)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.focusBlue, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.orange, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.orange, width: 2),
+      ),
+      hintStyle: const TextStyle(color: AppColors.warmGray300, fontSize: 16),
+      errorStyle: const TextStyle(color: AppColors.orange, fontSize: 12),
+    ),
+  );
 
   static AppInputTheme get dark => AppInputTheme(
-        labelStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.warmWhite,
-        ),
-        disabledLabelStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-          color: AppColors.warmGray600,
-        ),
-        inputDecoration: InputDecoration(
-          filled: true,
-          fillColor: AppColors.darkSurface,
-          contentPadding: const EdgeInsets.all(6),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.inputBorderDark),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.inputBorderDark),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: BorderSide(color: AppColors.inputBorderDark.withAlpha(128)),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.focusBlue, width: 2),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.orange, width: 1),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: const BorderSide(color: AppColors.orange, width: 2),
-          ),
-          hintStyle: const TextStyle(color: AppColors.warmGray600, fontSize: 16),
-          errorStyle: const TextStyle(color: AppColors.orange, fontSize: 12),
-        ),
-      );
+    labelStyle: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.warmWhite,
+    ),
+    disabledLabelStyle: const TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
+      color: AppColors.warmGray600,
+    ),
+    inputDecoration: InputDecoration(
+      filled: true,
+      fillColor: AppColors.darkSurface,
+      contentPadding: const EdgeInsets.all(6),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.inputBorderDark),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.inputBorderDark),
+      ),
+      disabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: BorderSide(color: AppColors.inputBorderDark.withAlpha(128)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.focusBlue, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.orange, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: const BorderSide(color: AppColors.orange, width: 2),
+      ),
+      hintStyle: const TextStyle(color: AppColors.warmGray600, fontSize: 16),
+      errorStyle: const TextStyle(color: AppColors.orange, fontSize: 12),
+    ),
+  );
 }

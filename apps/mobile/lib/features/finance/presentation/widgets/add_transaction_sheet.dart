@@ -14,7 +14,11 @@ class AddTransactionSheet extends ConsumerWidget {
       }
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.commonErrorPrefix(next.error.toString()))),
+          SnackBar(
+            content: Text(
+              context.l10n.commonErrorPrefix(next.error.toString()),
+            ),
+          ),
         );
       }
     });
@@ -39,12 +43,12 @@ class AddTransactionSheet extends ConsumerWidget {
             Text(
               context.l10n.financeAddTransaction,
               style: context.textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                fontWeight: FontWeight.bold,
+              ),
             ),
             24.h,
             ReactiveValueListenableBuilder<TransactionType>(
-              formControlName: 'type',
+              formControlName: AppFormControls.type,
               builder: (context, control, child) {
                 final type = control.value;
                 return Row(
@@ -68,41 +72,30 @@ class AddTransactionSheet extends ConsumerWidget {
             ),
             24.h,
             ReactiveAppTextField<String>(
-              formControlName: 'title',
+              formControlName: AppFormControls.title,
               label: context.l10n.financeTransactionTitle,
               hintText: context.l10n.financeTransactionTitleHint,
               autofocus: true,
               textInputAction: TextInputAction.next,
-              validationMessages: {
-                'required': (_) => 'Title is required',
-              },
             ),
             16.h,
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ReactiveAppTextField<double>(
-                  formControlName: 'amount',
+                  formControlName: AppFormControls.amount,
                   label: context.l10n.financeAmount,
                   hintText: context.l10n.financeAmountHint,
-                  keyboardType:
-                      TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   textInputAction: TextInputAction.next,
-                  validationMessages: {
-                    'required': (_) => 'Required',
-                    'min': (_) => 'Must be > 0',
-                  },
                 ).expanded(2),
                 16.w,
                 ReactiveAppTextField<String>(
-                  formControlName: 'category',
+                  formControlName: AppFormControls.category,
                   label: context.l10n.financeCategory,
                   hintText: context.l10n.financeCategoryHint,
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => notifier.submit(),
-                  validationMessages: {
-                    'required': (_) => 'Required',
-                  },
                 ).expanded(3),
               ],
             ),
@@ -153,9 +146,9 @@ class _TypeButton extends StatelessWidget {
         child: Text(
           label,
           style: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: isSelected ? AppColors.white : AppColors.warmGray500,
-              ),
+            fontWeight: FontWeight.w600,
+            color: isSelected ? AppColors.white : AppColors.warmGray500,
+          ),
         ),
       ),
     );

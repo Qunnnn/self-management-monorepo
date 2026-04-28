@@ -13,9 +13,9 @@ class FinancePage extends ConsumerWidget {
         elevation: 0,
         centerTitle: false,
         titleTextStyle: context.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.nearBlack,
-            ),
+          fontWeight: FontWeight.bold,
+          color: AppColors.nearBlack,
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () => ref.read(financeProvider.notifier).refresh(),
@@ -27,8 +27,13 @@ class FinancePage extends ConsumerWidget {
                 final balanceAsync = ref.watch(balanceProvider);
                 return switch (balanceAsync) {
                   AsyncData(:final value) => BalanceCard(balance: value),
-                  AsyncLoading() => const BalanceCard(balance: 0, isLoading: true),
-                  AsyncError(:final error) => Text(context.l10n.commonErrorLoading(error.toString())).center(),
+                  AsyncLoading() => const BalanceCard(
+                    balance: 0,
+                    isLoading: true,
+                  ),
+                  AsyncError(:final error) => Text(
+                    context.l10n.commonErrorLoading(error.toString()),
+                  ).center(),
                 };
               },
             ),
@@ -39,10 +44,10 @@ class FinancePage extends ConsumerWidget {
                 Text(
                   context.l10n.financeRecentTransactions,
                   style: context.textTheme.labelSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.2,
-                        color: AppColors.warmGray500,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    color: AppColors.warmGray500,
+                  ),
                 ),
                 TextButton.icon(
                   onPressed: () => _showAddTransaction(context),
@@ -56,19 +61,21 @@ class FinancePage extends ConsumerWidget {
               builder: (context, ref, child) {
                 final transactionsAsync = ref.watch(financeProvider);
                 return switch (transactionsAsync) {
-                  AsyncData(:final value) => value.isEmpty
-                      ? Text(context.l10n.financeNoTransactions)
-                          .center()
-                          .py(40)
-                      : Column(
-                          children: value
-                              .map((t) => TransactionTile(transaction: t))
-                              .toList(),
-                        ),
-                  AsyncError(:final error) => Text(context.l10n.commonErrorPrefix(error.toString())).center(),
-                  AsyncLoading() => const CircularProgressIndicator()
-                      .center()
-                      .py(40),
+                  AsyncData(:final value) =>
+                    value.isEmpty
+                        ? Text(
+                            context.l10n.financeNoTransactions,
+                          ).center().py(40)
+                        : Column(
+                            children: value
+                                .map((t) => TransactionTile(transaction: t))
+                                .toList(),
+                          ),
+                  AsyncError(:final error) => Text(
+                    context.l10n.commonErrorPrefix(error.toString()),
+                  ).center(),
+                  AsyncLoading() =>
+                    const CircularProgressIndicator().center().py(40),
                 };
               },
             ),

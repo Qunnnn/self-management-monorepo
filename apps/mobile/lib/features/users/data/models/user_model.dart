@@ -17,20 +17,17 @@ class UserModel {
     this.avatarUrl,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => _$UserModelFromJson(json);
+  factory UserModel.fromJson(Map<String, dynamic> json) =>
+      _$UserModelFromJson(json);
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
 
   factory UserModel.fromEntity(User user) => UserModel(
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        avatarUrl: user.avatarUrl,
-      );
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    avatarUrl: user.avatarUrl,
+  );
 
-  User toEntity() => User(
-        id: id,
-        email: email,
-        name: name,
-        avatarUrl: avatarUrl,
-      );
+  User toEntity() =>
+      User(id: id, email: email, name: name, avatarUrl: avatarUrl);
 }

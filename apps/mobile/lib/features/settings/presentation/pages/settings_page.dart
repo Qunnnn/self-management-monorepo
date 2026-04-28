@@ -8,9 +8,7 @@ class SettingsPage extends ConsumerWidget {
     final prefs = ref.watch(preferencesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.l10n.settingsTitle),
-      ),
+      appBar: AppBar(title: Text(context.l10n.settingsTitle)),
       body: ListView(
         children: [
           ListTile(
@@ -23,9 +21,18 @@ class SettingsPage extends ConsumerWidget {
                 }
               },
               items: [
-                DropdownMenuItem(value: ThemeMode.system, child: Text(context.l10n.themeSystem)),
-                DropdownMenuItem(value: ThemeMode.light, child: Text(context.l10n.themeLight)),
-                DropdownMenuItem(value: ThemeMode.dark, child: Text(context.l10n.themeDark)),
+                DropdownMenuItem(
+                  value: ThemeMode.system,
+                  child: Text(context.l10n.themeSystem),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.light,
+                  child: Text(context.l10n.themeLight),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.dark,
+                  child: Text(context.l10n.themeDark),
+                ),
               ],
             ),
           ),
@@ -37,9 +44,18 @@ class SettingsPage extends ConsumerWidget {
                 ref.read(preferencesProvider.notifier).setLocaleCode(code);
               },
               items: [
-                DropdownMenuItem(value: null, child: Text(context.l10n.languageSystem)),
-                DropdownMenuItem(value: 'en', child: Text(context.l10n.languageEnglish)),
-                DropdownMenuItem(value: 'vi', child: Text(context.l10n.languageVietnamese)),
+                DropdownMenuItem(
+                  value: null,
+                  child: Text(context.l10n.languageSystem),
+                ),
+                DropdownMenuItem(
+                  value: 'en',
+                  child: Text(context.l10n.languageEnglish),
+                ),
+                DropdownMenuItem(
+                  value: 'vi',
+                  child: Text(context.l10n.languageVietnamese),
+                ),
               ],
             ),
           ),

@@ -14,7 +14,9 @@ GoRouter router(Ref ref) {
       // If still loading or initial, don't redirect yet
       if (status == AuthStatus.initial) return null;
 
-      final isAuthRoute = state.uri.path == AppRoutes.login || state.uri.path == AppRoutes.forgotPassword;
+      final isAuthRoute =
+          state.uri.path == AppRoutes.login ||
+          state.uri.path == AppRoutes.forgotPassword;
 
       if (status == AuthStatus.unAuthenticated) {
         // If not authenticated, force them to login unless they are already there
@@ -42,7 +44,8 @@ GoRouter router(Ref ref) {
         builder: (context, state) => const SettingsPage(),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => MainShell(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) =>
+            MainShell(navigationShell: navigationShell),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -56,9 +59,8 @@ GoRouter router(Ref ref) {
                   ),
                   GoRoute(
                     path: AppRoutes.diaryEdit,
-                    builder: (context, state) => DiaryEntryPage(
-                      entryId: state.pathParameters['id'],
-                    ),
+                    builder: (context, state) =>
+                        DiaryEntryPage(entryId: state.pathParameters['id']),
                   ),
                 ],
               ),

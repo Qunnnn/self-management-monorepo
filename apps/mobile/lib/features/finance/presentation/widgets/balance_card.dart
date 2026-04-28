@@ -7,15 +7,14 @@ class BalanceCard extends StatelessWidget {
   final double balance;
   final bool isLoading;
 
-  const BalanceCard({
-    super.key,
-    required this.balance,
-    this.isLoading = false,
-  });
+  const BalanceCard({super.key, required this.balance, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormatter = NumberFormat.currency(symbol: r'$', decimalDigits: 2);
+    final currencyFormatter = NumberFormat.currency(
+      symbol: r'$',
+      decimalDigits: 2,
+    );
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -37,10 +36,10 @@ class BalanceCard extends StatelessWidget {
           Text(
             'TOTAL BALANCE',
             style: context.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.2,
-                  color: AppColors.warmGray500,
-                ),
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+              color: AppColors.warmGray500,
+            ),
           ),
           8.h,
           if (isLoading)
@@ -52,10 +51,10 @@ class BalanceCard extends StatelessWidget {
             Text(
               currencyFormatter.format(balance),
               style: context.textTheme.displaySmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.nearBlack,
-                    letterSpacing: -1.0,
-                  ),
+                fontWeight: FontWeight.w700,
+                color: AppColors.nearBlack,
+                letterSpacing: -1.0,
+              ),
             ),
         ],
       ).p(24),

@@ -6,14 +6,8 @@ class FetchTransactionsUseCase {
 
   FetchTransactionsUseCase(this._repository);
 
-  Future<List<Transaction>> execute({
-    int? limit,
-    int? offset,
-  }) async {
-    return await _repository.getTransactions(
-      limit: limit,
-      offset: offset,
-    );
+  Future<List<Transaction>> execute({int? limit, int? offset}) async {
+    return await _repository.getTransactions(limit: limit, offset: offset);
   }
 }
 

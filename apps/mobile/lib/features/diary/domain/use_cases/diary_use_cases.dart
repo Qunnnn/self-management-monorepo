@@ -25,13 +25,12 @@ class FetchDiaryEntriesUseCase {
   }
 
   List<DiaryEntry> _sortEntries(List<DiaryEntry> entries) {
-    return entries.toList()
-      ..sort((a, b) {
-        if (a.isPinned != b.isPinned) {
-          return a.isPinned ? -1 : 1;
-        }
-        return b.updatedAt.compareTo(a.updatedAt);
-      });
+    return entries.toList()..sort((a, b) {
+      if (a.isPinned != b.isPinned) {
+        return a.isPinned ? -1 : 1;
+      }
+      return b.updatedAt.compareTo(a.updatedAt);
+    });
   }
 }
 

@@ -14,7 +14,11 @@ class AddTaskSheet extends ConsumerWidget {
       }
       if (next is AsyncError) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.commonErrorPrefix(next.error.toString()))),
+          SnackBar(
+            content: Text(
+              context.l10n.commonErrorPrefix(next.error.toString()),
+            ),
+          ),
         );
       }
     });
@@ -42,8 +46,8 @@ class AddTaskSheet extends ConsumerWidget {
                 Text(
                   context.l10n.tasksNewTask,
                   style: context.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 IconButton(
                   onPressed: () => Navigator.pop(context),
@@ -54,18 +58,15 @@ class AddTaskSheet extends ConsumerWidget {
             ),
             24.h,
             ReactiveAppTextField<String>(
-              formControlName: 'title',
+              formControlName: AppFormControls.title,
               label: context.l10n.tasksTitle,
               hintText: context.l10n.tasksTitleHint,
               autofocus: true,
               textInputAction: TextInputAction.next,
-              validationMessages: {
-                'required': (_) => 'Title is required',
-              },
             ),
             16.h,
             ReactiveAppTextField<String>(
-              formControlName: 'description',
+              formControlName: AppFormControls.description,
               label: context.l10n.tasksDescription,
               hintText: context.l10n.tasksDescriptionHint,
               maxLines: 3,

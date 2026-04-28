@@ -12,14 +12,15 @@ class App extends ConsumerWidget {
       onGenerateTitle: (context) => context.l10n.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: preferences.localeCode != null ? Locale(preferences.localeCode!) : null,
+      locale: preferences.localeCode != null
+          ? Locale(preferences.localeCode!)
+          : null,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: preferences.themeMode,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       builder: (context, child) => AppGlobalWrapper(child: child!),
-
     );
   }
 }

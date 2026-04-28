@@ -6,7 +6,8 @@ class DiaryMockDataSource {
     DiaryEntryModel(
       id: '1',
       title: 'Productive Monday',
-      content: 'Finished the migration phase 3 today! Feeling great about the progress.',
+      content:
+          'Finished the migration phase 3 today! Feeling great about the progress.',
       createdAt: DateTime.now().subtract(const Duration(days: 1)),
       updatedAt: DateTime.now().subtract(const Duration(days: 1)),
       isPinned: true,
@@ -16,7 +17,8 @@ class DiaryMockDataSource {
     DiaryEntryModel(
       id: '2',
       title: 'Evening Walk',
-      content: 'The weather was perfect for a long walk. Saw a beautiful sunset.',
+      content:
+          'The weather was perfect for a long walk. Saw a beautiful sunset.',
       createdAt: DateTime.now().subtract(const Duration(hours: 4)),
       updatedAt: DateTime.now().subtract(const Duration(hours: 4)),
       isPinned: false,

@@ -10,10 +10,11 @@ extension BuildContextX on BuildContext {
   TextTheme get textTheme => theme.textTheme;
   ColorScheme get colorScheme => theme.colorScheme;
   AppButtonTheme get buttonTheme => theme.extension<AppButtonTheme>()!;
-  AppDecorationTheme get decorationTheme => theme.extension<AppDecorationTheme>()!;
+  AppDecorationTheme get decorationTheme =>
+      theme.extension<AppDecorationTheme>()!;
   AppInputTheme get inputTheme => theme.extension<AppInputTheme>()!;
   AppShadows get shadows => theme.extension<AppShadows>()!;
-  
+
   // Localization shorthand
   AppLocalizations get l10n => AppLocalizations.of(this)!;
 
@@ -28,41 +29,62 @@ extension BuildContextX on BuildContext {
 
   // Responsive shorthand
   bool get isMobile => MediaQuery.of(this).size.width < 600;
-  bool get isTablet => MediaQuery.of(this).size.width >= 600 && MediaQuery.of(this).size.width < 1200;
+  bool get isTablet =>
+      MediaQuery.of(this).size.width >= 600 &&
+      MediaQuery.of(this).size.width < 1200;
   bool get isDesktop => MediaQuery.of(this).size.width >= 1200;
 
   // Form Validation shorthand
   Map<String, String Function(Object)> get formValidationMessages => {
-        ValidationMessage.required: (error) => l10n.validationRequiredGeneric,
-        ValidationMessage.email: (error) => l10n.validationEmailGeneric,
-        ValidationMessage.minLength: (error) => l10n.validationMinLengthGeneric,
-        ValidationMessage.maxLength: (error) => l10n.validationMaxLengthGeneric,
-        ValidationMessage.number: (error) => l10n.validationNumberGeneric,
-        ValidationMessage.min: (error) => l10n.validationMinGeneric,
-      };
+    ValidationMessage.required: (error) => l10n.validationRequiredGeneric,
+    ValidationMessage.email: (error) => l10n.validationEmailGeneric,
+    ValidationMessage.minLength: (error) => l10n.validationMinLengthGeneric,
+    ValidationMessage.maxLength: (error) => l10n.validationMaxLengthGeneric,
+    ValidationMessage.number: (error) => l10n.validationNumberGeneric,
+    ValidationMessage.min: (error) => l10n.validationMinGeneric,
+  };
 }
-
 
 /// Shorthand extensions for [Widget] to apply common layout wrappers.
 extension WidgetX on Widget {
   // Padding shorthand
-  Widget p(double value) => Padding(padding: EdgeInsets.all(value), child: this);
-  Widget px(double value) => Padding(padding: EdgeInsets.symmetric(horizontal: value), child: this);
-  Widget py(double value) => Padding(padding: EdgeInsets.symmetric(vertical: value), child: this);
-  Widget pt(double value) => Padding(padding: EdgeInsets.only(top: value), child: this);
-  Widget pb(double value) => Padding(padding: EdgeInsets.only(bottom: value), child: this);
-  Widget pl(double value) => Padding(padding: EdgeInsets.only(left: value), child: this);
-  Widget pr(double value) => Padding(padding: EdgeInsets.only(right: value), child: this);
+  Widget p(double value) =>
+      Padding(padding: EdgeInsets.all(value), child: this);
+  Widget px(double value) => Padding(
+    padding: EdgeInsets.symmetric(horizontal: value),
+    child: this,
+  );
+  Widget py(double value) => Padding(
+    padding: EdgeInsets.symmetric(vertical: value),
+    child: this,
+  );
+  Widget pt(double value) => Padding(
+    padding: EdgeInsets.only(top: value),
+    child: this,
+  );
+  Widget pb(double value) => Padding(
+    padding: EdgeInsets.only(bottom: value),
+    child: this,
+  );
+  Widget pl(double value) => Padding(
+    padding: EdgeInsets.only(left: value),
+    child: this,
+  );
+  Widget pr(double value) => Padding(
+    padding: EdgeInsets.only(right: value),
+    child: this,
+  );
 
   // Layout shorthand
   Widget expanded([int flex = 1]) => Expanded(flex: flex, child: this);
-  Widget flexible([int flex = 1, FlexFit fit = FlexFit.loose]) => Flexible(flex: flex, fit: fit, child: this);
+  Widget flexible([int flex = 1, FlexFit fit = FlexFit.loose]) =>
+      Flexible(flex: flex, fit: fit, child: this);
   Widget center() => Center(child: this);
-  
+
   // Sizing shorthand
   Widget h(double value) => SizedBox(height: value, child: this);
   Widget w(double value) => SizedBox(width: value, child: this);
-  
+
   // Visibility shorthand
   Widget visible(bool condition) => condition ? this : const SizedBox.shrink();
 }

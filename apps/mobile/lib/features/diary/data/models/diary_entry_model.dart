@@ -36,30 +36,30 @@ class DiaryEntryModel {
   Map<String, dynamic> toJson() => _$DiaryEntryModelToJson(this);
 
   factory DiaryEntryModel.fromEntity(DiaryEntry entity) => DiaryEntryModel(
-        id: entity.id,
-        title: entity.title,
-        content: entity.content,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-        isPinned: entity.isPinned,
-        mood: entity.mood,
-        latitude: entity.latitude,
-        longitude: entity.longitude,
-        attachments: entity.attachments
-            .map((a) => DiaryAttachmentModel.fromEntity(a))
-            .toList(),
-      );
+    id: entity.id,
+    title: entity.title,
+    content: entity.content,
+    createdAt: entity.createdAt,
+    updatedAt: entity.updatedAt,
+    isPinned: entity.isPinned,
+    mood: entity.mood,
+    latitude: entity.latitude,
+    longitude: entity.longitude,
+    attachments: entity.attachments
+        .map((a) => DiaryAttachmentModel.fromEntity(a))
+        .toList(),
+  );
 
   DiaryEntry toEntity() => DiaryEntry(
-        id: id,
-        title: title,
-        content: content,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        isPinned: isPinned,
-        mood: mood,
-        latitude: latitude,
-        longitude: longitude,
-        attachments: attachments.map((a) => a.toEntity()).toList(),
-      );
+    id: id,
+    title: title,
+    content: content,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    isPinned: isPinned,
+    mood: mood,
+    latitude: latitude,
+    longitude: longitude,
+    attachments: attachments.map((a) => a.toEntity()).toList(),
+  );
 }

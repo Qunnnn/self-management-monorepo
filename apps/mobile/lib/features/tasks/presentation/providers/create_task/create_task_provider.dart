@@ -9,8 +9,8 @@ class CreateTaskNotifier extends _$CreateTaskNotifier {
   @override
   FutureOr<void> build() {
     form = fb.group({
-      'title': ['', Validators.required],
-      'description': [''],
+      AppFormControls.title: ['', Validators.required],
+      AppFormControls.description: [''],
     });
 
     ref.onDispose(form.dispose);
@@ -23,15 +23,18 @@ class CreateTaskNotifier extends _$CreateTaskNotifier {
     }
 
     state = const AsyncValue.loading();
-    
-    final title = form.control('title').value as String;
-    final description = form.control('description').value as String?;
-    
-    final result = await ref.read(createTaskUseCaseProvider).execute(
+
+    final title = form.control(AppFormControls.title).value as String;
+    final description =
+        form.control(AppFormControls.description).value as String?;
+
+    final result = await ref
+        .read(createTaskUseCaseProvider)
+        .execute(
           title: title,
           description: description?.isEmpty ?? true ? null : description,
         );
-    
+
     if (!ref.mounted) return;
 
     result.match(
@@ -39,8 +42,11 @@ class CreateTaskNotifier extends _$CreateTaskNotifier {
       (newTask) {
         // Update core state
         final currentTasks = ref.read(tasksProvider).value ?? [];
-        ref.read(tasksProvider.notifier).updateState([...currentTasks, newTask]);
-        
+        ref.read(tasksProvider.notifier).updateState([
+          ...currentTasks,
+          newTask,
+        ]);
+
         state = const AsyncValue.data(null);
       },
     );

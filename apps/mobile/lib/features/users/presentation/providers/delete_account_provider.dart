@@ -12,7 +12,7 @@ class DeleteAccountNotifier extends _$DeleteAccountNotifier {
   Future<void> deleteAccount() async {
     state = const AsyncValue.loading();
     final result = await ref.read(userRepositoryProvider).deleteAccount();
-    
+
     result.match(
       (failure) {
         state = AsyncValue.error(failure, StackTrace.current);

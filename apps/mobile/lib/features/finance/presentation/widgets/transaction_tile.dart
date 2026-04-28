@@ -7,14 +7,14 @@ import '../../../../core/utils/index.dart';
 class TransactionTile extends StatelessWidget {
   final Transaction transaction;
 
-  const TransactionTile({
-    super.key,
-    required this.transaction,
-  });
+  const TransactionTile({super.key, required this.transaction});
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormatter = NumberFormat.currency(symbol: r'$', decimalDigits: 2);
+    final currencyFormatter = NumberFormat.currency(
+      symbol: r'$',
+      decimalDigits: 2,
+    );
     final dateFormatter = DateFormat('MMM d, yyyy');
     final isIncome = transaction.type == TransactionType.income;
 
@@ -47,24 +47,24 @@ class TransactionTile extends StatelessWidget {
               Text(
                 transaction.title,
                 style: context.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.nearBlack,
-                    ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.nearBlack,
+                ),
               ),
               Text(
                 '${transaction.category} • ${dateFormatter.format(transaction.date)}',
                 style: context.textTheme.bodySmall?.copyWith(
-                      color: AppColors.warmGray500,
-                    ),
+                  color: AppColors.warmGray500,
+                ),
               ),
             ],
           ).expanded(),
           Text(
             '${isIncome ? '+' : '-'}${currencyFormatter.format(transaction.amount)}',
             style: context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: isIncome ? AppColors.teal : AppColors.orange,
-                ),
+              fontWeight: FontWeight.w700,
+              color: isIncome ? AppColors.teal : AppColors.orange,
+            ),
           ),
         ],
       ).px(16).py(12),

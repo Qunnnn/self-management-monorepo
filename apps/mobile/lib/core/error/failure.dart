@@ -13,7 +13,8 @@ class ConnectionFailure extends Failure {
 }
 
 class DecodingFailure extends Failure {
-  const DecodingFailure(Object error) : super('Failed to decode response: $error');
+  const DecodingFailure(Object error)
+    : super('Failed to decode response: $error');
 }
 
 class ValidationFailure extends Failure {

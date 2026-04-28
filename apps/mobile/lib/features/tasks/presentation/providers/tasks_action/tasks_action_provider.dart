@@ -9,18 +9,20 @@ class TasksActionNotifier extends _$TasksActionNotifier {
 
   Future<void> addTask(String title, String? description) async {
     state = const AsyncValue.loading();
-    final result = await ref.read(createTaskUseCaseProvider).execute(
-          title: title,
-          description: description,
-        );
-    
+    final result = await ref
+        .read(createTaskUseCaseProvider)
+        .execute(title: title, description: description);
+
     if (!ref.mounted) return;
 
     result.match(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (newTask) {
         final currentTasks = ref.read(tasksProvider).value ?? [];
-        ref.read(tasksProvider.notifier).updateState([...currentTasks, newTask]);
+        ref.read(tasksProvider.notifier).updateState([
+          ...currentTasks,
+          newTask,
+        ]);
         state = const AsyncValue.data(null);
       },
     );
@@ -29,17 +31,23 @@ class TasksActionNotifier extends _$TasksActionNotifier {
   Future<void> toggleTaskCompletion(TodoTask task) async {
     state = const AsyncValue.loading();
     final updatedTask = task.copyWith(isCompleted: !task.isCompleted);
-    final result = await ref.read(updateTasksUseCaseProvider).execute(updatedTask);
-    
+    final result = await ref
+        .read(updateTasksUseCaseProvider)
+        .execute(updatedTask);
+
     if (!ref.mounted) return;
 
     result.match(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (_) {
         final currentTasks = ref.read(tasksProvider).value ?? [];
-        ref.read(tasksProvider.notifier).updateState(
-          currentTasks.map((t) => t.id == task.id ? updatedTask : t).toList(),
-        );
+        ref
+            .read(tasksProvider.notifier)
+            .updateState(
+              currentTasks
+                  .map((t) => t.id == task.id ? updatedTask : t)
+                  .toList(),
+            );
         state = const AsyncValue.data(null);
       },
     );
@@ -48,16 +56,16 @@ class TasksActionNotifier extends _$TasksActionNotifier {
   Future<void> deleteTask(String id) async {
     state = const AsyncValue.loading();
     final result = await ref.read(deleteTaskUseCaseProvider).execute(id);
-    
+
     if (!ref.mounted) return;
 
     result.match(
       (failure) => state = AsyncValue.error(failure, StackTrace.current),
       (_) {
         final currentTasks = ref.read(tasksProvider).value ?? [];
-        ref.read(tasksProvider.notifier).updateState(
-          currentTasks.where((t) => t.id != id).toList(),
-        );
+        ref
+            .read(tasksProvider.notifier)
+            .updateState(currentTasks.where((t) => t.id != id).toList());
         state = const AsyncValue.data(null);
       },
     );

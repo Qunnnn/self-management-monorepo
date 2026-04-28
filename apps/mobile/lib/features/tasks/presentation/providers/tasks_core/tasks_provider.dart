@@ -11,10 +11,7 @@ class TasksNotifier extends _$TasksNotifier {
 
   Future<List<TodoTask>> _fetchTasks() async {
     final result = await ref.read(fetchTasksUseCaseProvider).execute();
-    return result.match(
-      (failure) => throw failure,
-      (tasks) => tasks,
-    );
+    return result.match((failure) => throw failure, (tasks) => tasks);
   }
 
   /// Updates the current state with a new list of tasks or error.

@@ -61,7 +61,9 @@ class AppTheme {
           borderSide: const BorderSide(color: AppColors.orange, width: 2),
         ),
         contentPadding: const EdgeInsets.all(6),
-        hintStyle: AppTextTheme.light.bodyMedium?.copyWith(color: AppColors.warmGray300),
+        hintStyle: AppTextTheme.light.bodyMedium?.copyWith(
+          color: AppColors.warmGray300,
+        ),
         errorStyle: const TextStyle(color: AppColors.orange, fontSize: 12),
       ),
       extensions: [
@@ -112,7 +114,9 @@ class AppTheme {
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
-          borderSide: BorderSide(color: AppColors.inputBorderDark.withAlpha(128)),
+          borderSide: BorderSide(
+            color: AppColors.inputBorderDark.withAlpha(128),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(4),
@@ -127,7 +131,9 @@ class AppTheme {
           borderSide: const BorderSide(color: AppColors.orange, width: 2),
         ),
         contentPadding: const EdgeInsets.all(6),
-        hintStyle: AppTextTheme.dark.bodyMedium?.copyWith(color: AppColors.warmGray600),
+        hintStyle: AppTextTheme.dark.bodyMedium?.copyWith(
+          color: AppColors.warmGray600,
+        ),
         errorStyle: const TextStyle(color: AppColors.orange, fontSize: 12),
       ),
       extensions: [

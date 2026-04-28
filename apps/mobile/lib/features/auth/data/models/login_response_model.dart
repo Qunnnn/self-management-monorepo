@@ -14,6 +14,7 @@ class LoginResponseModel {
     required this.refreshToken,
   });
 
-  factory LoginResponseModel.fromJson(Map<String, dynamic> json) => _$LoginResponseModelFromJson(json);
+  factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginResponseModelFromJson(json);
   Map<String, dynamic> toJson() => _$LoginResponseModelToJson(this);
 }

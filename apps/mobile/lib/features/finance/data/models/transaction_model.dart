@@ -28,22 +28,22 @@ class TransactionModel {
   Map<String, dynamic> toJson() => _$TransactionModelToJson(this);
 
   factory TransactionModel.fromEntity(Transaction entity) => TransactionModel(
-        id: entity.id,
-        userId: entity.userId,
-        title: entity.title,
-        amount: entity.amount,
-        type: entity.type,
-        category: entity.category,
-        date: entity.date,
-      );
+    id: entity.id,
+    userId: entity.userId,
+    title: entity.title,
+    amount: entity.amount,
+    type: entity.type,
+    category: entity.category,
+    date: entity.date,
+  );
 
   Transaction toEntity() => Transaction(
-        id: id,
-        userId: userId,
-        title: title,
-        amount: amount,
-        type: type,
-        category: category,
-        date: date,
-      );
+    id: id,
+    userId: userId,
+    title: title,
+    amount: amount,
+    type: type,
+    category: category,
+    date: date,
+  );
 }

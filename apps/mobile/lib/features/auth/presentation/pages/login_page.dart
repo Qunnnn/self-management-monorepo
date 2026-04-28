@@ -14,9 +14,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final form = loginNotifier.form;
     ref.listen(loginProvider, (previous, next) {
       if (next.hasError) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(context.l10n.commonErrorPrefix(next.error.toString()))));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              context.l10n.commonErrorPrefix(next.error.toString()),
+            ),
+          ),
+        );
       }
     });
 
@@ -50,30 +54,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               ),
               48.h,
               ReactiveAppTextField<String>(
-                formControlName: 'email',
+                formControlName: AppFormControls.email,
                 label: context.l10n.authEmail,
                 hintText: context.l10n.authEmailHint,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
-                onSubmitted: (_) => form.focus('password'),
-                validationMessages: {
-                  ValidationMessage.required: (_) => 'Email is required',
-                  ValidationMessage.email: (_) => 'Enter a valid email',
-                },
+                onSubmitted: (_) => form.focus(AppFormControls.password),
               ),
               16.h,
               ReactiveAppTextField<String>(
-                formControlName: 'password',
+                formControlName: AppFormControls.password,
                 label: context.l10n.authPassword,
                 hintText: context.l10n.authPasswordHint,
                 obscureText: true,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _onSubmit(),
-                validationMessages: {
-                  ValidationMessage.required: (_) => 'Password is required',
-                  ValidationMessage.minLength: (error) =>
-                      'At least ${(error as Map)['requiredLength']} characters',
-                },
               ),
               24.h,
               ReactiveFormConsumer(

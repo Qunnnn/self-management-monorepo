@@ -9,8 +9,12 @@ class LoginNotifier extends _$LoginNotifier {
   @override
   FutureOr<void> build() {
     form = fb.group({
-      'email': ['', Validators.required, Validators.email],
-      'password': ['', Validators.required, Validators.minLength(6)],
+      AppFormControls.email: ['', Validators.required, Validators.email],
+      AppFormControls.password: [
+        '',
+        Validators.required,
+        Validators.minLength(6),
+      ],
     });
 
     ref.onDispose(form.dispose);
@@ -23,10 +27,12 @@ class LoginNotifier extends _$LoginNotifier {
     }
 
     state = const AsyncValue.loading();
-    final result = await ref.read(loginUseCaseProvider).execute(
-      email: form.control('email').value as String,
-      password: form.control('password').value as String,
-    );
+    final result = await ref
+        .read(loginUseCaseProvider)
+        .execute(
+          email: form.control(AppFormControls.email).value as String,
+          password: form.control(AppFormControls.password).value as String,
+        );
 
     if (!ref.mounted) return;
 

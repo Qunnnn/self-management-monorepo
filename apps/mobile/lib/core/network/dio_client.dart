@@ -8,39 +8,47 @@ import '../error/failure.dart';
 
 class DioClient {
   DioClient(TokenStorage tokenStorage) {
-    _publicDio = Dio(BaseOptions(
-      baseUrl: NetworkConfig.baseURL,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-      contentType: 'application/json',
-    ));
-    _publicDio.interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-      compact: true,
-      maxWidth: 90,
-    ));
+    _publicDio = Dio(
+      BaseOptions(
+        baseUrl: NetworkConfig.baseURL,
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+        contentType: 'application/json',
+      ),
+    );
+    _publicDio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90,
+      ),
+    );
 
-    _dio = Dio(BaseOptions(
-      baseUrl: NetworkConfig.baseURL,
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-      contentType: 'application/json',
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: NetworkConfig.baseURL,
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+        contentType: 'application/json',
+      ),
+    );
 
     _dio.interceptors.add(AuthInterceptor(tokenStorage));
-    _dio.interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-      compact: true,
-      maxWidth: 90,
-    ));
+    _dio.interceptors.add(
+      PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90,
+      ),
+    );
   }
 
   late final Dio _dio;

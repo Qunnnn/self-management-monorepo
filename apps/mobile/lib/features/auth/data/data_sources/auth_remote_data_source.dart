@@ -13,10 +13,7 @@ class AuthRemoteDataSource {
     required String password,
   }) async {
     return _dioClient.request(() async {
-      final response = await _api.login({
-        'email': email,
-        'password': password,
-      });
+      final response = await _api.login({'email': email, 'password': password});
 
       return AuthTokensModel(
         accessToken: response.accessToken,

@@ -10,9 +10,9 @@ class EntryEditorNotifier extends _$EntryEditorNotifier {
   @override
   FutureOr<void> build({String? entryId}) async {
     form = fb.group({
-      'title': ['', Validators.required],
-      'content': [''],
-      'mood': [null as DiaryMood?],
+      AppFormControls.title: ['', Validators.required],
+      DiaryFormControls.content: [''],
+      DiaryFormControls.mood: [null as DiaryMood?],
     });
 
     if (entryId != null) {
@@ -20,9 +20,9 @@ class EntryEditorNotifier extends _$EntryEditorNotifier {
       _existingEntry = entries.items.firstWhere((e) => e.id == entryId);
       if (_existingEntry != null) {
         form.patchValue({
-          'title': _existingEntry!.title,
-          'content': _existingEntry!.content,
-          'mood': _existingEntry!.mood,
+          AppFormControls.title: _existingEntry!.title,
+          DiaryFormControls.content: _existingEntry!.content,
+          DiaryFormControls.mood: _existingEntry!.mood,
         });
       }
     }
@@ -37,11 +37,11 @@ class EntryEditorNotifier extends _$EntryEditorNotifier {
     }
 
     state = const AsyncValue.loading();
-    
+
     final values = form.value;
-    final title = values['title'] as String;
-    final content = values['content'] as String;
-    final mood = values['mood'] as DiaryMood?;
+    final title = values[AppFormControls.title] as String;
+    final content = values[DiaryFormControls.content] as String;
+    final mood = values[DiaryFormControls.mood] as DiaryMood?;
 
     try {
       if (_existingEntry != null) {
@@ -52,12 +52,16 @@ class EntryEditorNotifier extends _$EntryEditorNotifier {
           updatedAt: DateTime.now(),
         );
         await ref.read(updateDiaryEntryUseCaseProvider).execute(updated);
-        
+
         // Update core state
         final currentEntries = ref.read(diaryProvider).value?.items ?? [];
-        ref.read(diaryProvider.notifier).updateState(
-          currentEntries.map((e) => e.id == updated.id ? updated : e).toList(),
-        );
+        ref
+            .read(diaryProvider.notifier)
+            .updateState(
+              currentEntries
+                  .map((e) => e.id == updated.id ? updated : e)
+                  .toList(),
+            );
       } else {
         final entry = DiaryEntry(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -68,10 +72,13 @@ class EntryEditorNotifier extends _$EntryEditorNotifier {
           updatedAt: DateTime.now(),
         );
         await ref.read(createDiaryEntryUseCaseProvider).execute(entry);
-        
+
         // Update core state
         final currentEntries = ref.read(diaryProvider).value?.items ?? [];
-        ref.read(diaryProvider.notifier).updateState([entry, ...currentEntries]);
+        ref.read(diaryProvider.notifier).updateState([
+          entry,
+          ...currentEntries,
+        ]);
       }
       state = const AsyncValue.data(null);
     } catch (e, st) {
@@ -84,13 +91,17 @@ class EntryEditorNotifier extends _$EntryEditorNotifier {
 
     state = const AsyncValue.loading();
     try {
-      await ref.read(deleteDiaryEntryUseCaseProvider).execute(_existingEntry!.id);
-      
+      await ref
+          .read(deleteDiaryEntryUseCaseProvider)
+          .execute(_existingEntry!.id);
+
       // Update core state
       final currentEntries = ref.read(diaryProvider).value?.items ?? [];
-      ref.read(diaryProvider.notifier).updateState(
-        currentEntries.where((e) => e.id != _existingEntry!.id).toList(),
-      );
+      ref
+          .read(diaryProvider.notifier)
+          .updateState(
+            currentEntries.where((e) => e.id != _existingEntry!.id).toList(),
+          );
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(e, st);

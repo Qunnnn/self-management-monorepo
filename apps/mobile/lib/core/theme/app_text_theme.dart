@@ -103,7 +103,9 @@ class AppTextTheme {
         fontSize: 14,
         fontWeight: FontWeight.w500,
         height: 1.43,
-        color: textColor == AppColors.nearBlack ? AppColors.warmGray500 : AppColors.warmGray300,
+        color: textColor == AppColors.nearBlack
+            ? AppColors.warmGray500
+            : AppColors.warmGray300,
       ),
       // Micro Label (12px, 400, 0.125px tracking)
       labelSmall: TextStyle(
@@ -112,7 +114,9 @@ class AppTextTheme {
         fontWeight: FontWeight.w400,
         height: 1.33,
         letterSpacing: 0.125,
-        color: textColor == AppColors.nearBlack ? AppColors.warmGray500 : AppColors.warmGray300,
+        color: textColor == AppColors.nearBlack
+            ? AppColors.warmGray500
+            : AppColors.warmGray300,
       ),
     );
   }

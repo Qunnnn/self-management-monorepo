@@ -31,8 +31,10 @@ class AppDecorationTheme extends ThemeExtension<AppDecorationTheme> {
   }) {
     return AppDecorationTheme(
       cardDecoration: cardDecoration ?? this.cardDecoration,
-      featuredCardDecoration: featuredCardDecoration ?? this.featuredCardDecoration,
-      disabledCardDecoration: disabledCardDecoration ?? this.disabledCardDecoration,
+      featuredCardDecoration:
+          featuredCardDecoration ?? this.featuredCardDecoration,
+      disabledCardDecoration:
+          disabledCardDecoration ?? this.disabledCardDecoration,
       disabledFeaturedCardDecoration:
           disabledFeaturedCardDecoration ?? this.disabledFeaturedCardDecoration,
       cardRadius: cardRadius ?? this.cardRadius,
@@ -44,15 +46,30 @@ class AppDecorationTheme extends ThemeExtension<AppDecorationTheme> {
   AppDecorationTheme lerp(ThemeExtension<AppDecorationTheme>? other, double t) {
     if (other is! AppDecorationTheme) return this;
     return AppDecorationTheme(
-      cardDecoration: BoxDecoration.lerp(cardDecoration, other.cardDecoration, t)!,
-      featuredCardDecoration:
-          BoxDecoration.lerp(featuredCardDecoration, other.featuredCardDecoration, t)!,
-      disabledCardDecoration:
-          BoxDecoration.lerp(disabledCardDecoration, other.disabledCardDecoration, t)!,
+      cardDecoration: BoxDecoration.lerp(
+        cardDecoration,
+        other.cardDecoration,
+        t,
+      )!,
+      featuredCardDecoration: BoxDecoration.lerp(
+        featuredCardDecoration,
+        other.featuredCardDecoration,
+        t,
+      )!,
+      disabledCardDecoration: BoxDecoration.lerp(
+        disabledCardDecoration,
+        other.disabledCardDecoration,
+        t,
+      )!,
       disabledFeaturedCardDecoration: BoxDecoration.lerp(
-          disabledFeaturedCardDecoration, other.disabledFeaturedCardDecoration, t)!,
+        disabledFeaturedCardDecoration,
+        other.disabledFeaturedCardDecoration,
+        t,
+      )!,
       cardRadius: t < 0.5 ? cardRadius : other.cardRadius,
-      featuredCardRadius: t < 0.5 ? featuredCardRadius : other.featuredCardRadius,
+      featuredCardRadius: t < 0.5
+          ? featuredCardRadius
+          : other.featuredCardRadius,
     );
   }
 
@@ -83,63 +100,66 @@ class AppDecorationTheme extends ThemeExtension<AppDecorationTheme> {
         boxShadow: other.disabledFeaturedCardDecoration.boxShadow,
         borderRadius: other.disabledFeaturedCardDecoration.borderRadius,
       ),
-      cardRadius: other.cardRadius != AppSpacing.sm ? other.cardRadius : cardRadius,
-      featuredCardRadius:
-          other.featuredCardRadius != AppSpacing.m ? other.featuredCardRadius : featuredCardRadius,
+      cardRadius: other.cardRadius != AppSpacing.sm
+          ? other.cardRadius
+          : cardRadius,
+      featuredCardRadius: other.featuredCardRadius != AppSpacing.m
+          ? other.featuredCardRadius
+          : featuredCardRadius,
     );
   }
 
   static AppDecorationTheme get light => AppDecorationTheme(
-        cardRadius: AppSpacing.sm,
-        featuredCardRadius: AppSpacing.m,
-        cardDecoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-          border: Border.all(color: AppColors.whisperBorder),
-          boxShadow: AppShadows.light.cardShadow,
-        ),
-        featuredCardDecoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppSpacing.m),
-          border: Border.all(color: AppColors.whisperBorder),
-          boxShadow: AppShadows.light.deepShadow,
-        ),
-        disabledCardDecoration: BoxDecoration(
-          color: AppColors.warmWhite,
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-          border: Border.all(color: AppColors.whisperBorder.withAlpha(128)),
-        ),
-        disabledFeaturedCardDecoration: BoxDecoration(
-          color: AppColors.warmWhite,
-          borderRadius: BorderRadius.circular(AppSpacing.m),
-          border: Border.all(color: AppColors.whisperBorder.withAlpha(128)),
-        ),
-      );
+    cardRadius: AppSpacing.sm,
+    featuredCardRadius: AppSpacing.m,
+    cardDecoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(AppSpacing.sm),
+      border: Border.all(color: AppColors.whisperBorder),
+      boxShadow: AppShadows.light.cardShadow,
+    ),
+    featuredCardDecoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(AppSpacing.m),
+      border: Border.all(color: AppColors.whisperBorder),
+      boxShadow: AppShadows.light.deepShadow,
+    ),
+    disabledCardDecoration: BoxDecoration(
+      color: AppColors.warmWhite,
+      borderRadius: BorderRadius.circular(AppSpacing.sm),
+      border: Border.all(color: AppColors.whisperBorder.withAlpha(128)),
+    ),
+    disabledFeaturedCardDecoration: BoxDecoration(
+      color: AppColors.warmWhite,
+      borderRadius: BorderRadius.circular(AppSpacing.m),
+      border: Border.all(color: AppColors.whisperBorder.withAlpha(128)),
+    ),
+  );
 
   static AppDecorationTheme get dark => AppDecorationTheme(
-        cardRadius: AppSpacing.sm,
-        featuredCardRadius: AppSpacing.m,
-        cardDecoration: BoxDecoration(
-          color: AppColors.darkSurface,
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-          border: Border.all(color: AppColors.whisperBorderDark),
-          boxShadow: AppShadows.dark.cardShadow,
-        ),
-        featuredCardDecoration: BoxDecoration(
-          color: AppColors.darkSurface,
-          borderRadius: BorderRadius.circular(AppSpacing.m),
-          border: Border.all(color: AppColors.whisperBorderDark),
-          boxShadow: AppShadows.dark.deepShadow,
-        ),
-        disabledCardDecoration: BoxDecoration(
-          color: AppColors.darkBackground,
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-          border: Border.all(color: AppColors.whisperBorderDark.withAlpha(128)),
-        ),
-        disabledFeaturedCardDecoration: BoxDecoration(
-          color: AppColors.darkBackground,
-          borderRadius: BorderRadius.circular(AppSpacing.m),
-          border: Border.all(color: AppColors.whisperBorderDark.withAlpha(128)),
-        ),
-      );
+    cardRadius: AppSpacing.sm,
+    featuredCardRadius: AppSpacing.m,
+    cardDecoration: BoxDecoration(
+      color: AppColors.darkSurface,
+      borderRadius: BorderRadius.circular(AppSpacing.sm),
+      border: Border.all(color: AppColors.whisperBorderDark),
+      boxShadow: AppShadows.dark.cardShadow,
+    ),
+    featuredCardDecoration: BoxDecoration(
+      color: AppColors.darkSurface,
+      borderRadius: BorderRadius.circular(AppSpacing.m),
+      border: Border.all(color: AppColors.whisperBorderDark),
+      boxShadow: AppShadows.dark.deepShadow,
+    ),
+    disabledCardDecoration: BoxDecoration(
+      color: AppColors.darkBackground,
+      borderRadius: BorderRadius.circular(AppSpacing.sm),
+      border: Border.all(color: AppColors.whisperBorderDark.withAlpha(128)),
+    ),
+    disabledFeaturedCardDecoration: BoxDecoration(
+      color: AppColors.darkBackground,
+      borderRadius: BorderRadius.circular(AppSpacing.m),
+      border: Border.all(color: AppColors.whisperBorderDark.withAlpha(128)),
+    ),
+  );
 }

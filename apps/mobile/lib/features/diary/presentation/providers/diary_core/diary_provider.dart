@@ -9,7 +9,7 @@ class DiaryNotifier extends _$DiaryNotifier {
   @override
   FutureOr<DiaryState> build() async {
     searchForm = fb.group({
-      'query': [''],
+      AppFormControls.query: [''],
     });
 
     ref.onDispose(searchForm.dispose);
@@ -35,7 +35,8 @@ class DiaryNotifier extends _$DiaryNotifier {
   }
 
   Future<void> refresh() async {
-    final currentQuery = searchForm.control('query').value as String? ?? '';
+    final currentQuery =
+        searchForm.control(AppFormControls.query).value as String? ?? '';
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
       final entries = await _fetchEntries(currentQuery);

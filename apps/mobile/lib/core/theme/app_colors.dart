@@ -31,7 +31,9 @@ class AppColors {
 
   // Borders & Dividers
   static const Color whisperBorder = Color(0x1A000000); // rgba(0,0,0,0.1)
-  static const Color whisperBorderDark = Color(0x1AFFFFFF); // rgba(255,255,255,0.1)
+  static const Color whisperBorderDark = Color(
+    0x1AFFFFFF,
+  ); // rgba(255,255,255,0.1)
   static const Color inputBorder = Color(0xFFDDDDDD);
   static const Color inputBorderDark = Color(0xFF4A4A4A);
 

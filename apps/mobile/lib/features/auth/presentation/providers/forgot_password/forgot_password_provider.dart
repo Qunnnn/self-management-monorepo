@@ -9,7 +9,7 @@ class ForgotPasswordNotifier extends _$ForgotPasswordNotifier {
   @override
   FutureOr<void> build() {
     form = fb.group({
-      'email': ['', Validators.required, Validators.email],
+      AppFormControls.email: ['', Validators.required, Validators.email],
     });
 
     ref.onDispose(form.dispose);
@@ -24,10 +24,10 @@ class ForgotPasswordNotifier extends _$ForgotPasswordNotifier {
     state = const AsyncValue.loading();
     try {
       // final email = form.control('email').value as String;
-      
+
       // TODO: Call repo.forgotPassword(email)
       await Future.delayed(const Duration(seconds: 1));
-      
+
       state = const AsyncValue.data(null);
       return true; // Success
     } catch (e, st) {

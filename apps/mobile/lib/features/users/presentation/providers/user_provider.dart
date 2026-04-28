@@ -34,8 +34,5 @@ FutureOr<User?> currentUser(Ref ref) async {
 Future<User?> _fetchUser(Ref ref, AuthState state) async {
   if (state.tokens == null) return null;
   final result = await ref.read(userRepositoryProvider).fetchCurrentUser();
-  return result.match(
-    (failure) => null,
-    (user) => user,
-  );
+  return result.match((failure) => null, (user) => user);
 }

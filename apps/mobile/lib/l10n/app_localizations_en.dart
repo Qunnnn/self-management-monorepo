@@ -216,4 +216,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String validationMin(String field, String value) {
     return '$field must be at least $value';
   }
+
+  @override
+  String get validationRequiredGeneric => 'This field is required';
+
+  @override
+  String get validationEmailGeneric => 'Invalid email format';
+
+  @override
+  String get validationMinLengthGeneric => 'Value is too short';
+
+  @override
+  String get validationMaxLengthGeneric => 'Value is too long';
+
+  @override
+  String get validationNumberGeneric => 'Must be a number';
+
+  @override
+  String get validationMinGeneric => 'Value is too small';
 }

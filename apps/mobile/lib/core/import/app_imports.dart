@@ -10,4 +10,5 @@ export 'package:mobile/core/router/app_routes.dart';
 export 'package:mobile/core/error/failure.dart';
 export 'package:mobile/core/observers/app_riverpod_observer.dart';
 export 'package:mobile/core/preferences/index.dart';
+export 'package:mobile/core/constants/form_controls.dart';
 export 'package:mobile/features/features.dart';
