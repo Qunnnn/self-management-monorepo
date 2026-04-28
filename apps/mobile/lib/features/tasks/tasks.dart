@@ -1,3 +1,4 @@
+export 'core/index.dart';
 export 'data/data_sources/index.dart';
 export 'data/models/index.dart';
 export 'data/repositories/index.dart';
@@ -7,4 +8,3 @@ export 'domain/use_cases/index.dart';
 export 'presentation/pages/index.dart';
 export 'presentation/providers/index.dart';
 export 'presentation/widgets/index.dart';
-export 'presentation/constants/tasks_form_controls.dart';
