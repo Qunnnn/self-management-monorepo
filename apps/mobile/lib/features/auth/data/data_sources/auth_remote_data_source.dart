@@ -1,23 +1,25 @@
 import 'package:fpdart/fpdart.dart';
-import '../models/auth_tokens_model.dart';
+import 'package:mobile/features/auth/domain/entities/auth_tokens.dart';
 import '../../../../core/network/index.dart';
-import 'auth_api.dart';
+import 'package:api_client/api_client.dart';
 
 class AuthRemoteDataSource {
   AuthRemoteDataSource(this._dioClient, this._api);
   final DioClient _dioClient;
-  final AuthApi _api;
+  final DefaultApi _api;
 
-  Future<Either<Failure, AuthTokensModel>> login({
+  Future<Either<Failure, AuthTokens>> login({
     required String email,
     required String password,
   }) async {
     return _dioClient.request(() async {
-      final response = await _api.login({'email': email, 'password': password});
-
-      return AuthTokensModel(
-        accessToken: response.accessToken,
-        refreshToken: response.refreshToken,
+      final response = await _api.authLoginPost(
+        loginRequest: LoginRequest(email: email, password: password),
+      );
+      final data = response.data!;
+      return AuthTokens(
+        accessToken: data.accessToken ?? '',
+        refreshToken: data.refreshToken ?? '',
       );
     });
   }

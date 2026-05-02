@@ -1,18 +1,19 @@
 import 'package:mobile/core/import/app_imports.dart';
+import 'package:api_client/api_client.dart' hide User;
 
 part 'user_provider.g.dart';
 
 @riverpod
-UserApi userApi(Ref ref) {
+DefaultApi protectedApi(Ref ref) {
   final dio = ref.watch(dioClientProvider).dio;
-  return UserApi(dio);
+  return DefaultApi(dio);
 }
 
 @riverpod
 UserRemoteDataSource userRemoteDataSource(Ref ref) {
   return UserRemoteDataSourceImpl(
     ref.watch(dioClientProvider),
-    ref.watch(userApiProvider),
+    ref.watch(protectedApiProvider),
   );
 }
 

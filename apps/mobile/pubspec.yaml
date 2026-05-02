@@ -26,6 +26,8 @@ dependencies:
   retrofit: 4.8.0
   logger: 2.7.0
   pretty_dio_logger: 1.4.0
+  api_client:
+    path: packages/api_client
 
 dev_dependencies:
   flutter_test:

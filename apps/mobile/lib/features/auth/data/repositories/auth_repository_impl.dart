@@ -20,8 +20,7 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
     );
 
-    return loginResult.match((failure) => Left(failure), (tokensModel) async {
-      final tokens = tokensModel.toEntity();
+    return loginResult.match((failure) => Left(failure), (tokens) async {
       await _tokenStorage.saveTokens(tokens);
       return Right(tokens);
     });

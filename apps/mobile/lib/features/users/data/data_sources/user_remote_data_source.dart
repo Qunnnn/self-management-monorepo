@@ -1,30 +1,37 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:mobile/core/network/index.dart';
-import 'package:mobile/features/users/data/models/user_model.dart';
-import 'package:mobile/features/users/data/data_sources/user_api.dart';
+import 'package:api_client/api_client.dart';
+import 'package:mobile/features/users/domain/entities/user.dart' as entity;
 
 abstract class UserRemoteDataSource {
-  Future<Either<Failure, UserModel>> fetchCurrentUser();
+  Future<Either<Failure, entity.User>> fetchCurrentUser();
   Future<Either<Failure, void>> deleteAccount();
 }
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final DioClient _dioClient;
-  final UserApi _api;
+  final DefaultApi _api;
 
   UserRemoteDataSourceImpl(this._dioClient, this._api);
 
   @override
-  Future<Either<Failure, UserModel>> fetchCurrentUser() async {
+  Future<Either<Failure, entity.User>> fetchCurrentUser() async {
     return _dioClient.request(() async {
-      return await _api.fetchCurrentUser();
+      final response = await _api.usersIdGet(id: 'me');
+      final data = response.data!;
+      return entity.User(
+        id: data.id ?? '',
+        name: data.name ?? '',
+        email: data.email ?? '',
+        avatarUrl: null,
+      );
     });
   }
 
   @override
   Future<Either<Failure, void>> deleteAccount() async {
     return _dioClient.request(() async {
-      await _api.deleteAccount();
+      await _api.usersIdDelete(id: 'me');
     });
   }
 }

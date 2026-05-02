@@ -11,8 +11,7 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<Either<Failure, User>> fetchCurrentUser() async {
-    final result = await _remoteDataSource.fetchCurrentUser();
-    return result.map((model) => model.toEntity());
+    return await _remoteDataSource.fetchCurrentUser();
   }
 
   @override

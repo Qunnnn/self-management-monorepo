@@ -3,8 +3,11 @@ import 'package:mobile/core/import/app_imports.dart';
 part 'tasks_data_providers.g.dart';
 
 @riverpod
-TaskMockDataSource taskDataSource(Ref ref) {
-  return TaskMockDataSource();
+TaskRemoteDataSource taskDataSource(Ref ref) {
+  return TaskRemoteDataSourceImpl(
+    ref.watch(dioClientProvider),
+    ref.watch(protectedApiProvider),
+  );
 }
 
 @riverpod
