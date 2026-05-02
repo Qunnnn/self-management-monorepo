@@ -57,7 +57,7 @@ base mixin UserTools on MCPServer, ToolsSupport {
     description: 'Get a specific user by their ID. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'id': Schema.int(description: 'The user ID'),
+        'id': Schema.string(description: 'The user ID'),
       },
       required: ['id'],
     ),
@@ -65,7 +65,7 @@ base mixin UserTools on MCPServer, ToolsSupport {
 
   FutureOr<CallToolResult> _handleGetUser(CallToolRequest request) async {
     try {
-      final id = request.arguments!['id'] as int;
+      final id = request.arguments!['id'] as String;
       final user = await apiClient.getUser(id);
       return CallToolResult(
         content: [TextContent(text: _encoder.convert(user))],
@@ -127,7 +127,7 @@ base mixin UserTools on MCPServer, ToolsSupport {
     description: 'Update an existing user. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'id': Schema.int(description: 'The user ID to update'),
+        'id': Schema.string(description: 'The user ID to update'),
         'name': Schema.string(description: 'New name (optional)'),
         'email': Schema.string(description: 'New email (optional)'),
         'phoneNumber': Schema.string(description: 'New phone number (optional)'),
@@ -140,7 +140,7 @@ base mixin UserTools on MCPServer, ToolsSupport {
     try {
       final args = request.arguments!;
       final user = await apiClient.updateUser(
-        args['id'] as int,
+        args['id'] as String,
         name: args['name'] as String?,
         email: args['email'] as String?,
         phoneNumber: args['phoneNumber'] as String?,
@@ -165,7 +165,7 @@ base mixin UserTools on MCPServer, ToolsSupport {
     description: 'Delete a user by ID. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'id': Schema.int(description: 'The user ID to delete'),
+        'id': Schema.string(description: 'The user ID to delete'),
       },
       required: ['id'],
     ),
@@ -173,7 +173,7 @@ base mixin UserTools on MCPServer, ToolsSupport {
 
   FutureOr<CallToolResult> _handleDeleteUser(CallToolRequest request) async {
     try {
-      final id = request.arguments!['id'] as int;
+      final id = request.arguments!['id'] as String;
       await apiClient.deleteUser(id);
       return CallToolResult(
         content: [TextContent(text: 'User $id deleted successfully.')],

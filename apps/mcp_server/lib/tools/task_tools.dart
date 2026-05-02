@@ -59,7 +59,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
         'List all tasks for a specific user. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'userId': Schema.int(description: 'The user ID to list tasks for'),
+        'userId': Schema.string(description: 'The user ID to list tasks for'),
       },
       required: ['userId'],
     ),
@@ -69,7 +69,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
     CallToolRequest request,
   ) async {
     try {
-      final userId = request.arguments!['userId'] as int;
+      final userId = request.arguments!['userId'] as String;
       final tasks = await apiClient.listUserTasks(userId);
       return CallToolResult(
         content: [TextContent(text: _encoder.convert(tasks))],
@@ -91,7 +91,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
     description: 'Get a specific task by ID. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'id': Schema.int(description: 'The task ID'),
+        'id': Schema.string(description: 'The task ID'),
       },
       required: ['id'],
     ),
@@ -99,7 +99,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
 
   FutureOr<CallToolResult> _handleGetTask(CallToolRequest request) async {
     try {
-      final id = request.arguments!['id'] as int;
+      final id = request.arguments!['id'] as String;
       final task = await apiClient.getTask(id);
       return CallToolResult(
         content: [TextContent(text: _encoder.convert(task))],
@@ -118,16 +118,15 @@ base mixin TaskTools on MCPServer, ToolsSupport {
 
   final _createTaskTool = Tool(
     name: 'create_task',
-    description: 'Create a new task for a user. Requires authentication.',
+    description: 'Create a new task for the logged-in user. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'userId': Schema.int(description: 'The user ID who owns this task'),
         'title': Schema.string(description: 'Title of the task'),
         'description': Schema.string(
           description: 'Optional description of the task',
         ),
       },
-      required: ['userId', 'title'],
+      required: ['title'],
     ),
   );
 
@@ -135,7 +134,6 @@ base mixin TaskTools on MCPServer, ToolsSupport {
     try {
       final args = request.arguments!;
       final task = await apiClient.createTask(
-        userId: args['userId'] as int,
         title: args['title'] as String,
         description: args['description'] as String?,
       );
@@ -162,7 +160,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
         'Mark a task as completed. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'id': Schema.int(description: 'The task ID to mark as completed'),
+        'id': Schema.string(description: 'The task ID to mark as completed'),
       },
       required: ['id'],
     ),
@@ -172,7 +170,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
     CallToolRequest request,
   ) async {
     try {
-      final id = request.arguments!['id'] as int;
+      final id = request.arguments!['id'] as String;
       final task = await apiClient.completeTask(id);
       return CallToolResult(
         content: [
@@ -196,7 +194,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
     description: 'Delete a task by ID. Requires authentication.',
     inputSchema: Schema.object(
       properties: {
-        'id': Schema.int(description: 'The task ID to delete'),
+        'id': Schema.string(description: 'The task ID to delete'),
       },
       required: ['id'],
     ),
@@ -204,7 +202,7 @@ base mixin TaskTools on MCPServer, ToolsSupport {
 
   FutureOr<CallToolResult> _handleDeleteTask(CallToolRequest request) async {
     try {
-      final id = request.arguments!['id'] as int;
+      final id = request.arguments!['id'] as String;
       await apiClient.deleteTask(id);
       return CallToolResult(
         content: [TextContent(text: 'Task $id deleted successfully.')],

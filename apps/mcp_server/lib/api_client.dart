@@ -37,7 +37,7 @@ class ApiClient {
     required String password,
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
-      '/login',
+      '/auth/login',
       data: {'email': email, 'password': password},
     );
     final data = response.data!;
@@ -67,7 +67,7 @@ class ApiClient {
     return response.data ?? [];
   }
 
-  Future<Map<String, dynamic>> getUser(int id) async {
+  Future<Map<String, dynamic>> getUser(String id) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/users/$id',
       options: _authOptions(),
@@ -82,7 +82,7 @@ class ApiClient {
     String? phoneNumber,
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
-      '/users',
+      '/auth/register',
       data: {
         'name': name,
         'email': email,
@@ -94,7 +94,7 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> updateUser(
-    int id, {
+    String id, {
     String? name,
     String? email,
     String? phoneNumber,
@@ -111,7 +111,7 @@ class ApiClient {
     return response.data!;
   }
 
-  Future<void> deleteUser(int id) async {
+  Future<void> deleteUser(String id) async {
     await _dio.delete<void>('/users/$id', options: _authOptions());
   }
 
@@ -127,7 +127,7 @@ class ApiClient {
     return response.data ?? [];
   }
 
-  Future<List<dynamic>> listUserTasks(int userId) async {
+  Future<List<dynamic>> listUserTasks(String userId) async {
     final response = await _dio.get<List<dynamic>>(
       '/users/$userId/tasks',
       options: _authOptions(),
@@ -135,7 +135,7 @@ class ApiClient {
     return response.data ?? [];
   }
 
-  Future<Map<String, dynamic>> getTask(int id) async {
+  Future<Map<String, dynamic>> getTask(String id) async {
     final response = await _dio.get<Map<String, dynamic>>(
       '/tasks/$id',
       options: _authOptions(),
@@ -144,14 +144,12 @@ class ApiClient {
   }
 
   Future<Map<String, dynamic>> createTask({
-    required int userId,
     required String title,
     String? description,
   }) async {
     final response = await _dio.post<Map<String, dynamic>>(
       '/tasks',
       data: {
-        'userId': userId,
         'title': title,
         if (description != null) 'description': description,
       },
@@ -160,7 +158,7 @@ class ApiClient {
     return response.data!;
   }
 
-  Future<Map<String, dynamic>> completeTask(int id) async {
+  Future<Map<String, dynamic>> completeTask(String id) async {
     final response = await _dio.post<Map<String, dynamic>>(
       '/tasks/$id/complete',
       options: _authOptions(),
@@ -168,7 +166,7 @@ class ApiClient {
     return response.data!;
   }
 
-  Future<void> deleteTask(int id) async {
+  Future<void> deleteTask(String id) async {
     await _dio.delete<void>('/tasks/$id', options: _authOptions());
   }
 

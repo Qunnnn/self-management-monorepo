@@ -26,7 +26,7 @@ paths:
                 type: string
                 example: OK
 
-  /login:
+  /auth/login:
     post:
       summary: Authenticate a user
       description: Returns a JWT token if credentials are valid.
@@ -66,8 +66,9 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
     
+  /auth/register:
     post:
-      summary: Create a new user
+      summary: Register a new user
       security: []
       requestBody:
         required: true
@@ -95,7 +96,7 @@ paths:
         name: id
         required: true
         schema:
-          type: integer
+          type: string
         description: The user ID
     
     get:
@@ -160,7 +161,7 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
           description: The user ID
       responses:
         '200':
@@ -219,7 +220,7 @@ paths:
         name: id
         required: true
         schema:
-          type: integer
+          type: string
         description: The task ID
         
     get:
@@ -260,7 +261,7 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
           description: The task ID
       responses:
         '200':
@@ -283,7 +284,7 @@ paths:
           name: id
           required: true
           schema:
-            type: integer
+            type: string
       responses:
         '200':
           description: Task marked as completed
@@ -350,8 +351,8 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          example: 1
+          type: string
+          example: "user_123"
         name:
           type: string
           example: "Alice Johnson"
@@ -407,11 +408,11 @@ components:
       type: object
       properties:
         id:
-          type: integer
-          example: 101
+          type: string
+          example: "task_123"
         userId:
-          type: integer
-          example: 1
+          type: string
+          example: "user_123"
         title:
           type: string
           example: "Learn Go"
@@ -433,12 +434,8 @@ components:
     CreateTaskRequest:
       type: object
       required:
-        - userId
         - title
       properties:
-        userId:
-          type: integer
-          example: 1
         title:
           type: string
           example: "Learn Go"
