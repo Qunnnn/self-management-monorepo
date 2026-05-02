@@ -21,6 +21,22 @@ dart pub get
 dart run bin/server.dart
 ```
 
+### With Docker
+
+From the **root of the monorepo**, build the Docker image:
+
+```bash
+docker build -t self-management-mcp-server -f apps/mcp_server/Dockerfile .
+```
+
+You can then run it locally (interactive mode to keep stdio open):
+
+```bash
+docker run -i --rm -e API_BASE_URL=http://host.docker.internal:8080 self-management-mcp-server
+```
+
+*(Note: `host.docker.internal` is used to reach the backend running on your Mac's localhost)*
+
 ### With a custom backend URL
 
 ```bash
