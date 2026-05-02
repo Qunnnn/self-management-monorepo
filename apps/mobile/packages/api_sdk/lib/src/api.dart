@@ -3,17 +3,17 @@
 //
 
 import 'package:dio/dio.dart';
-import 'package:api_client/src/auth/api_key_auth.dart';
-import 'package:api_client/src/auth/basic_auth.dart';
-import 'package:api_client/src/auth/bearer_auth.dart';
-import 'package:api_client/src/auth/oauth.dart';
-import 'package:api_client/src/api/default_api.dart';
+import 'package:api_sdk/src/auth/api_key_auth.dart';
+import 'package:api_sdk/src/auth/basic_auth.dart';
+import 'package:api_sdk/src/auth/bearer_auth.dart';
+import 'package:api_sdk/src/auth/oauth.dart';
+import 'package:api_sdk/src/api/default_api.dart';
 
-class ApiClient {
+class ApiSdk {
   static const String basePath = r'http://localhost:8080';
 
   final Dio dio;
-  ApiClient({
+  ApiSdk({
     Dio? dio,
     String? basePathOverride,
     List<Interceptor>? interceptors,

@@ -1,6 +1,5 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:mobile/core/network/index.dart';
-import 'package:api_client/api_client.dart';
+
+import 'package:mobile/core/import/app_imports.dart';
 import 'package:mobile/features/users/domain/entities/user.dart' as entity;
 
 abstract class UserRemoteDataSource {

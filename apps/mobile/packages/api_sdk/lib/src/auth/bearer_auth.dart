@@ -3,9 +3,9 @@
 //
 
 import 'package:dio/dio.dart';
-import 'package:api_client/src/auth/auth.dart';
+import 'package:api_sdk/src/auth/auth.dart';
 
-class OAuthInterceptor extends AuthInterceptor {
+class BearerAuthInterceptor extends AuthInterceptor {
   final Map<String, String> tokens = {};
 
   @override
@@ -13,7 +13,7 @@ class OAuthInterceptor extends AuthInterceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) {
-    final authInfo = getAuthInfo(options, (secure) => secure['type'] == 'oauth' || secure['type'] == 'oauth2');
+    final authInfo = getAuthInfo(options, (secure) => secure['type'] == 'http' && secure['scheme']?.toLowerCase() == 'bearer');
     for (final info in authInfo) {
       final token = tokens[info['name']];
       if (token != null) {

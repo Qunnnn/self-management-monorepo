@@ -71,14 +71,14 @@ upgrade:
 	$(FLUTTER) pub upgrade
 
 generate-api:
-	@echo "Generating API Client using Docker..."
-	docker run --rm -v $$(pwd)/../../:/local openapitools/openapi-generator-cli generate -i /local/apps/backend/openapi.yaml -g dart-dio -o /local/apps/mobile/packages/api_client --additional-properties=pubName=api_client,serializationLibrary=json_serializable
+	@echo "Generating API SDK using Docker..."
+	docker run --rm -v $$(pwd)/../../:/local openapitools/openapi-generator-cli generate -i /local/apps/backend/openapi.yaml -g dart-dio -o /local/apps/mobile/packages/api_sdk --additional-properties=pubName=api_sdk,serializationLibrary=json_serializable
 	@echo "Removing generated tests..."
-	rm -rf packages/api_client/test
-	@echo "Updating SDK version in api_client..."
-	sed -i '' 's/>=3.5.0/>=3.10.0/g' packages/api_client/pubspec.yaml
-	@echo "Running pub get in api_client..."
-	cd packages/api_client && $(FLUTTER) pub get
-	@echo "Running build_runner in api_client..."
-	cd packages/api_client && $(FLUTTER) pub run build_runner build --delete-conflicting-outputs
-	@echo "API Client generated successfully."
+	rm -rf packages/api_sdk/test
+	@echo "Updating SDK version in api_sdk..."
+	sed -i '' 's/>=3.5.0/>=3.10.0/g' packages/api_sdk/pubspec.yaml
+	@echo "Running pub get in api_sdk..."
+	cd packages/api_sdk && $(FLUTTER) pub get
+	@echo "Running build_runner in api_sdk..."
+	cd packages/api_sdk && $(FLUTTER) pub run build_runner build --delete-conflicting-outputs
+	@echo "API SDK generated successfully."

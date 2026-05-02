@@ -1,7 +1,5 @@
-import 'package:fpdart/fpdart.dart';
-import 'package:mobile/features/auth/domain/entities/auth_tokens.dart';
-import '../../../../core/network/index.dart';
-import 'package:api_client/api_client.dart';
+
+import 'package:mobile/core/import/app_imports.dart';
 
 class AuthRemoteDataSource {
   AuthRemoteDataSource(this._dioClient, this._api);

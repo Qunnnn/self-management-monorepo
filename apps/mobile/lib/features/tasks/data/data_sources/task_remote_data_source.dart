@@ -1,7 +1,6 @@
-import 'package:fpdart/fpdart.dart' hide Task;
-import 'package:mobile/core/network/index.dart';
-import 'package:api_client/api_client.dart';
-import 'package:mobile/features/tasks/domain/entities/todo_task.dart';
+import 'package:mobile/core/import/app_imports.dart' hide Task;
+
+import 'package:api_sdk/api_sdk.dart' as apiSdk;
 
 abstract class TaskRemoteDataSource {
   Future<Either<Failure, List<TodoTask>>> getTasks({bool? completed, int? limit, int? offset});
@@ -72,7 +71,7 @@ class TaskRemoteDataSourceImpl implements TaskRemoteDataSource {
     });
   }
 
-  TodoTask _mapToEntity(Task task) {
+  TodoTask _mapToEntity(apiSdk.Task task) {
     return TodoTask(
       id: task.id ?? '',
       userId: task.userId ?? '',

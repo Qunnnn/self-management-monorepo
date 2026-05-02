@@ -1,4 +1,5 @@
 .gitignore
+.openapi-generator-ignore
 README.md
 analysis_options.yaml
 build.yaml
@@ -11,7 +12,7 @@ doc/ModifyUserRequest.md
 doc/Task.md
 doc/User.md
 doc/UserStats.md
-lib/api_client.dart
+lib/api_sdk.dart
 lib/src/api.dart
 lib/src/api/default_api.dart
 lib/src/auth/api_key_auth.dart

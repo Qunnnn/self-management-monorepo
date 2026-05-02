@@ -1,29 +1,30 @@
-# api_client.api.DefaultApi
+# api_sdk.api.DefaultApi
 
 ## Load the API package
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 ```
 
 All URIs are relative to *http://localhost:8080*
 
-| Method                                                         | HTTP request                   | Description                               |
-|----------------------------------------------------------------|--------------------------------|-------------------------------------------|
-| [**authLoginPost**](DefaultApi.md#authloginpost)               | **POST** /auth/login           | Authenticate a user                       |
-| [**authRegisterPost**](DefaultApi.md#authregisterpost)         | **POST** /auth/register        | Register a new user                       |
-| [**healthGet**](DefaultApi.md#healthget)                       | **GET** /health                | Health check                              |
-| [**tasksGet**](DefaultApi.md#tasksget)                         | **GET** /tasks                 | Get all tasks across all users            |
-| [**tasksIdCompletePatch**](DefaultApi.md#tasksidcompletepatch) | **PATCH** /tasks/{id}/complete | Mark a task as completed (alias for POST) |
-| [**tasksIdCompletePost**](DefaultApi.md#tasksidcompletepost)   | **POST** /tasks/{id}/complete  | Mark a task as completed                  |
-| [**tasksIdDelete**](DefaultApi.md#tasksiddelete)               | **DELETE** /tasks/{id}         | Delete a task                             |
-| [**tasksIdGet**](DefaultApi.md#tasksidget)                     | **GET** /tasks/{id}            | Get a task by ID                          |
-| [**tasksPost**](DefaultApi.md#taskspost)                       | **POST** /tasks                | Create a new task                         |
-| [**usersGet**](DefaultApi.md#usersget)                         | **GET** /users                 | Get all users                             |
-| [**usersIdDelete**](DefaultApi.md#usersiddelete)               | **DELETE** /users/{id}         | Delete a user                             |
-| [**usersIdGet**](DefaultApi.md#usersidget)                     | **GET** /users/{id}            | Get a user by ID                          |
-| [**usersIdPut**](DefaultApi.md#usersidput)                     | **PUT** /users/{id}            | Update a user completely                  |
-| [**usersIdTasksGet**](DefaultApi.md#usersidtasksget)           | **GET** /users/{id}/tasks      | Get all tasks for a specific user         |
-| [**usersStatsGet**](DefaultApi.md#usersstatsget)               | **GET** /users/stats           | Get user and task statistics              |
+Method | HTTP request | Description
+------------- | ------------- | -------------
+[**authLoginPost**](DefaultApi.md#authloginpost) | **POST** /auth/login | Authenticate a user
+[**authRegisterPost**](DefaultApi.md#authregisterpost) | **POST** /auth/register | Register a new user
+[**healthGet**](DefaultApi.md#healthget) | **GET** /health | Health check
+[**tasksGet**](DefaultApi.md#tasksget) | **GET** /tasks | Get all tasks across all users
+[**tasksIdCompletePatch**](DefaultApi.md#tasksidcompletepatch) | **PATCH** /tasks/{id}/complete | Mark a task as completed (alias for POST)
+[**tasksIdCompletePost**](DefaultApi.md#tasksidcompletepost) | **POST** /tasks/{id}/complete | Mark a task as completed
+[**tasksIdDelete**](DefaultApi.md#tasksiddelete) | **DELETE** /tasks/{id} | Delete a task
+[**tasksIdGet**](DefaultApi.md#tasksidget) | **GET** /tasks/{id} | Get a task by ID
+[**tasksPost**](DefaultApi.md#taskspost) | **POST** /tasks | Create a new task
+[**usersGet**](DefaultApi.md#usersget) | **GET** /users | Get all users
+[**usersIdDelete**](DefaultApi.md#usersiddelete) | **DELETE** /users/{id} | Delete a user
+[**usersIdGet**](DefaultApi.md#usersidget) | **GET** /users/{id} | Get a user by ID
+[**usersIdPut**](DefaultApi.md#usersidput) | **PUT** /users/{id} | Update a user completely
+[**usersIdTasksGet**](DefaultApi.md#usersidtasksget) | **GET** /users/{id}/tasks | Get all tasks for a specific user
+[**usersStatsGet**](DefaultApi.md#usersstatsget) | **GET** /users/stats | Get user and task statistics
+
 
 # **authLoginPost**
 > AuthResponse authLoginPost(loginRequest)
@@ -34,9 +35,9 @@ Returns a JWT token if credentials are valid.
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final LoginRequest loginRequest = ; // LoginRequest | 
 
 try {
@@ -75,9 +76,9 @@ Register a new user
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final CreateUserRequest createUserRequest = ; // CreateUserRequest | 
 
 try {
@@ -118,9 +119,9 @@ Returns OK if the server is running.
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 
 try {
     final response = api.healthGet();
@@ -155,9 +156,9 @@ Get all tasks across all users
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 
 try {
     final response = api.tasksGet();
@@ -192,9 +193,9 @@ Mark a task as completed (alias for POST)
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | 
 
 try {
@@ -233,9 +234,9 @@ Mark a task as completed
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | The task ID
 
 try {
@@ -274,9 +275,9 @@ Delete a task
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | The task ID
 
 try {
@@ -314,9 +315,9 @@ Get a task by ID
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | The task ID
 
 try {
@@ -355,9 +356,9 @@ Create a new task
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final CreateTaskRequest createTaskRequest = ; // CreateTaskRequest | 
 
 try {
@@ -396,9 +397,9 @@ Get all users
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 
 try {
     final response = api.usersGet();
@@ -433,9 +434,9 @@ Delete a user
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | The user ID
 
 try {
@@ -473,9 +474,9 @@ Get a user by ID
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | The user ID
 
 try {
@@ -514,9 +515,9 @@ Update a user completely
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | The user ID
 final ModifyUserRequest modifyUserRequest = ; // ModifyUserRequest | 
 
@@ -557,9 +558,9 @@ Get all tasks for a specific user
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 final String id = id_example; // String | The user ID
 
 try {
@@ -598,9 +599,9 @@ Get user and task statistics
 
 ### Example
 ```dart
-import 'package:api_client/api.dart';
+import 'package:api_sdk/api.dart';
 
-final api = ApiClient().getDefaultApi();
+final api = ApiSdk().getDefaultApi();
 
 try {
     final response = api.usersStatsGet();

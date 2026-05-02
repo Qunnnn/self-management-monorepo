@@ -6,17 +6,17 @@ import 'dart:async';
 
 // ignore: unused_import
 import 'dart:convert';
-import 'package:api_client/src/deserialize.dart';
+import 'package:api_sdk/src/deserialize.dart';
 import 'package:dio/dio.dart';
 
-import 'package:api_client/src/model/auth_response.dart';
-import 'package:api_client/src/model/create_task_request.dart';
-import 'package:api_client/src/model/create_user_request.dart';
-import 'package:api_client/src/model/login_request.dart';
-import 'package:api_client/src/model/modify_user_request.dart';
-import 'package:api_client/src/model/task.dart';
-import 'package:api_client/src/model/user.dart';
-import 'package:api_client/src/model/user_stats.dart';
+import 'package:api_sdk/src/model/auth_response.dart';
+import 'package:api_sdk/src/model/create_task_request.dart';
+import 'package:api_sdk/src/model/create_user_request.dart';
+import 'package:api_sdk/src/model/login_request.dart';
+import 'package:api_sdk/src/model/modify_user_request.dart';
+import 'package:api_sdk/src/model/task.dart';
+import 'package:api_sdk/src/model/user.dart';
+import 'package:api_sdk/src/model/user_stats.dart';
 
 class DefaultApi {
 

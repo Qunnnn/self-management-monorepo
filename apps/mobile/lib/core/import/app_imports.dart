@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_export_of_internal_element
 
 export 'package:mobile/core/import/packages_imports.dart';
+export 'package:api_sdk/api_sdk.dart' hide User, Task, $UserCopyWith, $TaskCopyWith;
 export 'package:mobile/core/network/index.dart';
 export 'package:mobile/core/theme/index.dart';
 export 'package:mobile/core/utils/index.dart';

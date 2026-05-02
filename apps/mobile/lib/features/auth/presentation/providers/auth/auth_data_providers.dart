@@ -1,5 +1,4 @@
 import 'package:mobile/core/import/app_imports.dart';
-import 'package:api_client/api_client.dart';
 
 part 'auth_data_providers.g.dart';
 

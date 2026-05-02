@@ -1,5 +1,4 @@
 import 'package:mobile/core/import/app_imports.dart';
-import 'package:api_client/api_client.dart' hide User;
 
 part 'user_provider.g.dart';
 
